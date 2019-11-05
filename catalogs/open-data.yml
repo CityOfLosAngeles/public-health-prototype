@@ -1,0 +1,1074 @@
+metadata:
+  name: null
+  version: null
+sources:
+  city_boundary:
+    args:
+      urlpath: s3://city-of-los-angeles-data-lake/public-health-dashboard/city_boundary.geojson
+    description: "## City Boundary\n\nCity Boundary\_"
+    driver: intake_geopandas.geopandas.GeoJSONSource
+    metadata:
+      catalog_dir: ''
+      dcat:
+        '@type': dcat:Dataset
+        accessLevel: public
+        contactPoint:
+          '@type': vcard:Contact
+          fn: lahub_admin
+        description: "City Boundary\_"
+        distribution:
+        - '@type': dcat:Distribution
+          accessURL: http://geohub.lacity.org/datasets/09f503229d37414a8e67a7b6ceb9ec43_7
+          format: Web Page
+          mediaType: text/html
+          title: ArcGIS Hub Dataset
+        - '@type': dcat:Distribution
+          accessURL: https://maps.lacity.org/lahub/rest/services/Boundaries/MapServer/7
+          format: Esri REST
+          mediaType: application/json
+          title: Esri Rest API
+        - '@type': dcat:Distribution
+          accessURL: http://geohub.lacity.org/datasets/09f503229d37414a8e67a7b6ceb9ec43_7.geojson
+          format: GeoJSON
+          mediaType: application/vnd.geo+json
+          title: GeoJSON
+        - '@type': dcat:Distribution
+          accessURL: http://geohub.lacity.org/datasets/09f503229d37414a8e67a7b6ceb9ec43_7.csv
+          format: CSV
+          mediaType: text/csv
+          title: CSV
+        - '@type': dcat:Distribution
+          accessURL: https://maps.lacity.org/lahub/services/Boundaries/MapServer/WFSServer?request=GetCapabilities&service=WFS
+          format: OGC WFS
+          mediaType: application/vnd.ogc.wfs_xml
+          title: OGC WFS
+        - '@type': dcat:Distribution
+          accessURL: http://geohub.lacity.org/datasets/09f503229d37414a8e67a7b6ceb9ec43_7.kml
+          format: KML
+          mediaType: application/vnd.google-earth.kml+xml
+          title: KML
+        - '@type': dcat:Distribution
+          accessURL: http://geohub.lacity.org/datasets/09f503229d37414a8e67a7b6ceb9ec43_7.zip
+          format: ZIP
+          mediaType: application/zip
+          title: Shapefile
+        - '@type': dcat:Distribution
+          accessURL: https://maps.lacity.org/lahub/services/Boundaries/MapServer/WMSServer?request=GetCapabilities&service=WMS
+          format: OGC WMS
+          mediaType: application/vnd.ogc.wms_xml
+          title: OGC WMS
+        identifier: http://geohub.lacity.org/datasets/09f503229d37414a8e67a7b6ceb9ec43_7
+        issued: '2015-11-14T01:23:22.000Z'
+        keyword:
+        - NavigateLA
+        - Los Angeles
+        - LA
+        - City of LA
+        - BOE
+        - boundaries
+        - city boundaries
+        landingPage: http://geohub.lacity.org/datasets/09f503229d37414a8e67a7b6ceb9ec43_7
+        license: http://geohub.lacity.org/datasets/09f503229d37414a8e67a7b6ceb9ec43_7/license.json
+        modified: '2018-04-06T16:48:27.000Z'
+        publisher:
+          source: City of Los Angeles Hub
+        spatial: -118.6694,33.7021,-118.1546,34.3383
+        theme:
+        - geospatial
+        title: City Boundary
+  council_districts:
+    args:
+      urlpath: s3://city-of-los-angeles-data-lake/public-health-dashboard/council_districts.geojson
+    description: "## LA City Council Districts (Adopted 2012)\n\nCouncil Districts\_"
+    driver: intake_geopandas.geopandas.GeoJSONSource
+    metadata:
+      catalog_dir: ''
+      dcat:
+        '@type': dcat:Dataset
+        accessLevel: public
+        contactPoint:
+          '@type': vcard:Contact
+          fn: lahub_admin
+        description: "Council Districts\_"
+        distribution:
+        - '@type': dcat:Distribution
+          accessURL: http://geohub.lacity.org/datasets/76104f230e384f38871eb3c4782f903d_13
+          format: Web Page
+          mediaType: text/html
+          title: ArcGIS Hub Dataset
+        - '@type': dcat:Distribution
+          accessURL: https://maps.lacity.org/lahub/rest/services/Boundaries/MapServer/13
+          format: Esri REST
+          mediaType: application/json
+          title: Esri Rest API
+        - '@type': dcat:Distribution
+          accessURL: http://geohub.lacity.org/datasets/76104f230e384f38871eb3c4782f903d_13.geojson
+          format: GeoJSON
+          mediaType: application/vnd.geo+json
+          title: GeoJSON
+        - '@type': dcat:Distribution
+          accessURL: http://geohub.lacity.org/datasets/76104f230e384f38871eb3c4782f903d_13.csv
+          format: CSV
+          mediaType: text/csv
+          title: CSV
+        - '@type': dcat:Distribution
+          accessURL: https://maps.lacity.org/lahub/services/Boundaries/MapServer/WFSServer?request=GetCapabilities&service=WFS
+          format: OGC WFS
+          mediaType: application/vnd.ogc.wfs_xml
+          title: OGC WFS
+        - '@type': dcat:Distribution
+          accessURL: http://geohub.lacity.org/datasets/76104f230e384f38871eb3c4782f903d_13.kml
+          format: KML
+          mediaType: application/vnd.google-earth.kml+xml
+          title: KML
+        - '@type': dcat:Distribution
+          accessURL: http://geohub.lacity.org/datasets/76104f230e384f38871eb3c4782f903d_13.zip
+          format: ZIP
+          mediaType: application/zip
+          title: Shapefile
+        - '@type': dcat:Distribution
+          accessURL: https://maps.lacity.org/lahub/services/Boundaries/MapServer/WMSServer?request=GetCapabilities&service=WMS
+          format: OGC WMS
+          mediaType: application/vnd.ogc.wms_xml
+          title: OGC WMS
+        identifier: http://geohub.lacity.org/datasets/76104f230e384f38871eb3c4782f903d_13
+        issued: '2015-11-14T01:26:36.000Z'
+        keyword:
+        - NavigateLA
+        - Los Angeles
+        - LA
+        - City of LA
+        - BOE
+        - boundaries
+        - council districts
+        - a well-run city
+        - council district
+        landingPage: http://geohub.lacity.org/datasets/76104f230e384f38871eb3c4782f903d_13
+        license: http://geohub.lacity.org/datasets/76104f230e384f38871eb3c4782f903d_13/license.json
+        modified: '2018-10-09T21:36:54.000Z'
+        publisher:
+          source: City of Los Angeles Hub
+        spatial: -118.6694,33.7031,-118.1546,34.3383
+        theme:
+        - geospatial
+        title: LA City Council Districts (Adopted 2012)
+  homeless_2017:
+    args:
+      urlpath: s3://city-of-los-angeles-data-lake/public-health-dashboard/homeless_2017.geojson
+    description: "## Homeless Count by Council District - 2017\n\n<p style='language:en-US;margin-top:0pt;margin-bottom:0pt;margin-left:0in;\n\
+      text-indent:0in'><span style='font-size:12.0pt;font-family:Calibri;mso-ascii-font-family:\n\
+      Calibri;mso-fareast-font-family:+mn-ea;mso-bidi-font-family:+mn-cs;mso-ascii-theme-font:\n\
+      minor-latin;mso-fareast-theme-font:minor-fareast;mso-bidi-theme-font:minor-bidi;\n\
+      color:black;mso-color-index:1;language:en-US;font-weight:bold;mso-style-textfill-type:\n\
+      solid;mso-style-textfill-fill-themecolor:text1;mso-style-textfill-fill-color:\n\
+      black;mso-style-textfill-fill-alpha:100.0%'>Data Prepared by Los Angeles\nHomeless\
+      \ Services Authority</span></p>\n\n<p style='language:en-US;margin-top:0pt;margin-bottom:0pt;margin-left:0in;\n\
+      text-indent:0in'><span style='font-size: 12pt; font-family: Calibri; color:\
+      \ black; vertical-align: baseline;'>July\n26 2017</span></p><p style='language:en-US;margin-top:0pt;margin-bottom:0pt;margin-left:0in;\n\
+      text-indent:0in'><span style='font-size: 12pt; font-family: Calibri; color:\
+      \ black; vertical-align: baseline;'><br /></span></p>\n\n<p style='language:en-US;margin-top:0pt;margin-bottom:0pt;margin-left:0in;\n\
+      text-indent:0in'></p>\n\n<p style='language:en-US;margin-top:0pt;margin-bottom:0pt;margin-left:0in;\n\
+      text-indent:0in'><span style='font-size:14.0pt;font-family:Calibri;mso-ascii-font-family:\n\
+      Calibri;mso-fareast-font-family:+mn-ea;mso-bidi-font-family:+mn-cs;mso-ascii-theme-font:\n\
+      minor-latin;mso-fareast-theme-font:minor-fareast;mso-bidi-theme-font:minor-bidi;\n\
+      color:black;mso-color-index:1;language:en-US;font-weight:bold;mso-style-textfill-type:\n\
+      solid;mso-style-textfill-fill-themecolor:text1;mso-style-textfill-fill-color:\n\
+      black;mso-style-textfill-fill-alpha:100.0%'>Components of the Homeless</span><span\
+      \ style='font-size:14.0pt;font-family:Calibri;mso-ascii-font-family:Calibri;\n\
+      mso-fareast-font-family:+mn-ea;mso-bidi-font-family:+mn-cs;mso-ascii-theme-font:\n\
+      minor-latin;mso-fareast-theme-font:minor-fareast;mso-bidi-theme-font:minor-bidi;\n\
+      color:black;mso-color-index:1;language:en-US;font-weight:bold;vertical-align:\n\
+      baseline;mso-text-raise:0%;mso-style-textfill-type:solid;mso-style-textfill-fill-themecolor:\n\
+      text1;mso-style-textfill-fill-color:black;mso-style-textfill-fill-alpha:100.0%'>\n\
+      </span><span style='font-size:14.0pt;font-family:Calibri;mso-ascii-font-family:\n\
+      Calibri;mso-fareast-font-family:+mn-ea;mso-bidi-font-family:+mn-cs;mso-ascii-theme-font:\n\
+      minor-latin;mso-fareast-theme-font:minor-fareast;mso-bidi-theme-font:minor-bidi;\n\
+      color:black;mso-color-index:1;language:en-US;font-weight:bold;mso-style-textfill-type:\n\
+      solid;mso-style-textfill-fill-themecolor:text1;mso-style-textfill-fill-color:\n\
+      black;mso-style-textfill-fill-alpha:100.0%'>Count</span></p>\n\n<p style='language:en-US;margin-top:0pt;margin-bottom:0pt;margin-left:0in;\n\
+      text-indent:0in'></p>\n\n<p style='language:en-US;margin-top:0pt;margin-bottom:0pt;margin-left:0in;\n\
+      text-indent:0in'><span style='font-size:11.0pt;font-family:Calibri;mso-ascii-font-family:\n\
+      Calibri;mso-fareast-font-family:+mn-ea;mso-bidi-font-family:+mn-cs;mso-ascii-theme-font:\n\
+      minor-latin;mso-fareast-theme-font:minor-fareast;mso-bidi-theme-font:minor-bidi;\n\
+      color:black;mso-color-index:1;language:en-US;font-weight:bold;mso-style-textfill-type:\n\
+      solid;mso-style-textfill-fill-themecolor:text1;mso-style-textfill-fill-color:\n\
+      black;mso-style-textfill-fill-alpha:100.0%'>Street Count (all census tracts):</span><span\
+      \ style='font-size:11.0pt;font-family:Calibri;mso-ascii-font-family:Calibri;\n\
+      mso-fareast-font-family:+mn-ea;mso-bidi-font-family:+mn-cs;mso-ascii-theme-font:\n\
+      minor-latin;mso-fareast-theme-font:minor-fareast;mso-bidi-theme-font:minor-bidi;\n\
+      color:black;mso-color-index:1;language:en-US;mso-style-textfill-type:solid;\n\
+      mso-style-textfill-fill-themecolor:text1;mso-style-textfill-fill-color:black;\n\
+      mso-style-textfill-fill-alpha:100.0%'> Captures a point in time estimate of\
+      \ the\nunsheltered population.</span></p>\n\n<p style='language:en-US;margin-top:0pt;margin-bottom:0pt;margin-left:0in;\n\
+      text-indent:0in'></p>\n\n<p style='language:en-US;margin-top:0pt;margin-bottom:0pt;margin-left:0in;\n\
+      text-indent:0in'><span style='font-size:11.0pt;font-family:Calibri;mso-ascii-font-family:\n\
+      Calibri;mso-fareast-font-family:+mn-ea;mso-bidi-font-family:+mn-cs;mso-ascii-theme-font:\n\
+      minor-latin;mso-fareast-theme-font:minor-fareast;mso-bidi-theme-font:minor-bidi;\n\
+      color:black;mso-color-index:1;language:en-US;font-weight:bold;mso-style-textfill-type:\n\
+      solid;mso-style-textfill-fill-themecolor:text1;mso-style-textfill-fill-color:\n\
+      black;mso-style-textfill-fill-alpha:100.0%'>Shelter Count (from Homeless\nManagement\
+      \ Integration System):</span><span style='font-size:11.0pt;font-family:\nCalibri;mso-ascii-font-family:Calibri;mso-fareast-font-family:+mn-ea;\n\
+      mso-bidi-font-family:+mn-cs;mso-ascii-theme-font:minor-latin;mso-fareast-theme-font:\n\
+      minor-fareast;mso-bidi-theme-font:minor-bidi;color:black;mso-color-index:1;\n\
+      language:en-US;mso-style-textfill-type:solid;mso-style-textfill-fill-themecolor:\n\
+      text1;mso-style-textfill-fill-color:black;mso-style-textfill-fill-alpha:100.0%'>\n\
+      Captures the homeless population in emergency shelters, transitional housing,\n\
+      safe havens and vouchered motels/hotels.</span></p>\n\n<p style='language:en-US;margin-top:0pt;margin-bottom:0pt;margin-left:0in;\n\
+      text-indent:0in'></p>\n\n<p style='language:en-US;margin-top:0pt;margin-bottom:0pt;margin-left:0in;\n\
+      text-indent:0in'><span style='font-size:11.0pt;font-family:Calibri;mso-ascii-font-family:\n\
+      Calibri;mso-fareast-font-family:+mn-ea;mso-bidi-font-family:+mn-cs;mso-ascii-theme-font:\n\
+      minor-latin;mso-fareast-theme-font:minor-fareast;mso-bidi-theme-font:minor-bidi;\n\
+      color:black;mso-color-index:1;language:en-US;font-weight:bold;mso-style-textfill-type:\n\
+      solid;mso-style-textfill-fill-themecolor:text1;mso-style-textfill-fill-color:\n\
+      black;mso-style-textfill-fill-alpha:100.0%'>Youth Count (sample census tracts):</span><span\
+      \ style='font-size:11.0pt;font-family:Calibri;mso-ascii-font-family:Calibri;\n\
+      mso-fareast-font-family:+mn-ea;mso-bidi-font-family:+mn-cs;mso-ascii-theme-font:\n\
+      minor-latin;mso-fareast-theme-font:minor-fareast;mso-bidi-theme-font:minor-bidi;\n\
+      color:black;mso-color-index:1;language:en-US;mso-style-textfill-type:solid;\n\
+      mso-style-textfill-fill-themecolor:text1;mso-style-textfill-fill-color:black;\n\
+      mso-style-textfill-fill-alpha:100.0%'> Collaborative process with youth\nstakeholders\
+      \ to better understand and identify homeless youth.</span></p>\n\n<p style='language:en-US;margin-top:0pt;margin-bottom:0pt;margin-left:0in;\n\
+      text-indent:0in'></p>\n\n<p style='language:en-US;margin-top:0pt;margin-bottom:0pt;margin-left:0in;\n\
+      text-indent:0in'><span style='font-size:11.0pt;font-family:Calibri;mso-ascii-font-family:\n\
+      Calibri;mso-fareast-font-family:+mn-ea;mso-bidi-font-family:+mn-cs;mso-ascii-theme-font:\n\
+      minor-latin;mso-fareast-theme-font:minor-fareast;mso-bidi-theme-font:minor-bidi;\n\
+      color:black;mso-color-index:1;language:en-US;font-weight:bold;mso-style-textfill-type:\n\
+      solid;mso-style-textfill-fill-themecolor:text1;mso-style-textfill-fill-color:\n\
+      black;mso-style-textfill-fill-alpha:100.0%'>Demographic Survey (sample census\n\
+      tracts):</span><span style='font-size:11.0pt;font-family:Calibri;mso-ascii-font-family:\n\
+      Calibri;mso-fareast-font-family:+mn-ea;mso-bidi-font-family:+mn-cs;mso-ascii-theme-font:\n\
+      minor-latin;mso-fareast-theme-font:minor-fareast;mso-bidi-theme-font:minor-bidi;\n\
+      color:black;mso-color-index:1;language:en-US;mso-style-textfill-type:solid;\n\
+      mso-style-textfill-fill-themecolor:text1;mso-style-textfill-fill-color:black;\n\
+      mso-style-textfill-fill-alpha:100.0%'> Captures the demographic characteristics\n\
+      of the unsheltered homeless population.</span></p><p style='language:en-US;margin-top:0pt;margin-bottom:0pt;margin-left:0in;\n\
+      text-indent:0in'><span style='font-size:11.0pt;font-family:Calibri;mso-ascii-font-family:\n\
+      Calibri;mso-fareast-font-family:+mn-ea;mso-bidi-font-family:+mn-cs;mso-ascii-theme-font:\n\
+      minor-latin;mso-fareast-theme-font:minor-fareast;mso-bidi-theme-font:minor-bidi;\n\
+      color:black;mso-color-index:1;language:en-US;mso-style-textfill-type:solid;\n\
+      mso-style-textfill-fill-themecolor:text1;mso-style-textfill-fill-color:black;\n\
+      mso-style-textfill-fill-alpha:100.0%'><br /></span></p>\n\n<p style='language:en-US;margin-top:0pt;margin-bottom:0pt;margin-left:0in;\n\
+      text-indent:0in'></p>\n\n<p style='language:en-US;margin-top:0pt;margin-bottom:0pt;margin-left:0in;\n\
+      text-indent:0in'><span style='font-size:14.0pt;font-family:Calibri;mso-ascii-font-family:\n\
+      Calibri;mso-fareast-font-family:+mn-ea;mso-bidi-font-family:+mn-cs;mso-ascii-theme-font:\n\
+      minor-latin;mso-fareast-theme-font:minor-fareast;mso-bidi-theme-font:minor-bidi;\n\
+      color:black;mso-color-index:1;language:en-US;font-weight:bold;mso-style-textfill-type:\n\
+      solid;mso-style-textfill-fill-themecolor:text1;mso-style-textfill-fill-color:\n\
+      black;mso-style-textfill-fill-alpha:100.0%'>Notes</span></p>\n\n<p style='language:en-US;margin-top:0pt;margin-bottom:0pt;margin-left:0in;\n\
+      text-indent:0in'></p>\n\n<p style='language:en-US;margin-top:0pt;margin-bottom:0pt;margin-left:0in;\n\
+      text-indent:0in'><span style='color: black; font-family: Calibri; font-size:\
+      \ 11pt; text-indent: 0in;'>Street Count Data include persons found\noutside,\
+      \ including persons found living in cars, vans, campers/RVs, tents, and\nmakeshift\
+      \ shelters. The conversion factors used to estimate the number of\npersons found\
+      \ living outside are the following: For families\u2014Makeshift Shelter\n= 3.69,\
+      \ Car = 2.96, Van = 3.46, Camper/RV = 3.52, Tent = 3.78; For\nIndividuals\u2014\
+      Makeshift Shelter = 1.92, Car = 1.52, Van = 1.77, Camper/RV = 2.05,\nTent =\
+      \ 1.69.</span><br /></p>\n\n<p style='language:en-US;margin-top:0pt;margin-bottom:0pt;margin-left:0in;\n\
+      text-indent:0in'><span style='font-size:11.0pt;font-family:Calibri;mso-ascii-font-family:\n\
+      Calibri;mso-fareast-font-family:+mn-ea;mso-bidi-font-family:+mn-cs;mso-ascii-theme-font:\n\
+      minor-latin;mso-fareast-theme-font:minor-fareast;mso-bidi-theme-font:minor-bidi;\n\
+      color:black;mso-color-index:1;language:en-US;mso-style-textfill-type:solid;\n\
+      mso-style-textfill-fill-themecolor:text1;mso-style-textfill-fill-color:black;\n\
+      mso-style-textfill-fill-alpha:100.0%'>\_</span></p>\n\n<p style='language:en-US;margin-top:0pt;margin-bottom:0pt;margin-left:0in;\n\
+      text-indent:0in'><span style='font-size:11.0pt;font-family:Calibri;mso-ascii-font-family:\n\
+      Calibri;mso-fareast-font-family:+mn-ea;mso-bidi-font-family:+mn-cs;mso-ascii-theme-font:\n\
+      minor-latin;mso-fareast-theme-font:minor-fareast;mso-bidi-theme-font:minor-bidi;\n\
+      color:black;mso-color-index:1;language:en-US;mso-style-textfill-type:solid;\n\
+      mso-style-textfill-fill-themecolor:text1;mso-style-textfill-fill-color:black;\n\
+      mso-style-textfill-fill-alpha:100.0%'>Please visit</span><span style='font-size:11.0pt;font-family:Calibri;mso-ascii-font-family:Calibri;\n\
+      mso-fareast-font-family:+mn-ea;mso-bidi-font-family:+mn-cs;mso-ascii-theme-font:\n\
+      minor-latin;mso-fareast-theme-font:minor-fareast;mso-bidi-theme-font:minor-bidi;\n\
+      color:black;mso-color-index:1;language:en-US;vertical-align:baseline;\nmso-text-raise:0%;mso-style-textfill-type:solid;mso-style-textfill-fill-themecolor:\n\
+      text1;mso-style-textfill-fill-color:black;mso-style-textfill-fill-alpha:100.0%'>\n\
+      https://www.lahsa.org/homeless-count/home to view and download data.</span></p>\n\
+      \n<p style='language:en-US;margin-top:0pt;margin-bottom:0pt;margin-left:0in;\n\
+      text-indent:0in'></p>\n\n<p style='language:en-US;margin-top:0pt;margin-bottom:0pt;margin-left:0in;\n\
+      text-indent:0in'><span style='font-size:11.0pt;font-family:Calibri;mso-ascii-font-family:\n\
+      Calibri;mso-fareast-font-family:+mn-ea;mso-bidi-font-family:+mn-cs;mso-ascii-theme-font:\n\
+      minor-latin;mso-fareast-theme-font:minor-fareast;mso-bidi-theme-font:minor-bidi;\n\
+      color:black;mso-color-index:1;language:en-US;vertical-align:baseline;\nmso-text-raise:0%;mso-style-textfill-type:solid;mso-style-textfill-fill-themecolor:\n\
+      text1;mso-style-textfill-fill-color:black;mso-style-textfill-fill-alpha:100.0%'>Last\n\
+      updated 7/26/2017</span></p>"
+    driver: intake_geopandas.geopandas.GeoJSONSource
+    metadata:
+      catalog_dir: ''
+      dcat:
+        '@type': dcat:Dataset
+        accessLevel: public
+        contactPoint:
+          '@type': vcard:Contact
+          fn: nathan@lahsa
+        description: "<p style='language:en-US;margin-top:0pt;margin-bottom:0pt;margin-left:0in;\n\
+          text-indent:0in'><span style='font-size:12.0pt;font-family:Calibri;mso-ascii-font-family:\n\
+          Calibri;mso-fareast-font-family:+mn-ea;mso-bidi-font-family:+mn-cs;mso-ascii-theme-font:\n\
+          minor-latin;mso-fareast-theme-font:minor-fareast;mso-bidi-theme-font:minor-bidi;\n\
+          color:black;mso-color-index:1;language:en-US;font-weight:bold;mso-style-textfill-type:\n\
+          solid;mso-style-textfill-fill-themecolor:text1;mso-style-textfill-fill-color:\n\
+          black;mso-style-textfill-fill-alpha:100.0%'>Data Prepared by Los Angeles\n\
+          Homeless Services Authority</span></p>\n\n<p style='language:en-US;margin-top:0pt;margin-bottom:0pt;margin-left:0in;\n\
+          text-indent:0in'><span style='font-size: 12pt; font-family: Calibri; color:\
+          \ black; vertical-align: baseline;'>July\n26 2017</span></p><p style='language:en-US;margin-top:0pt;margin-bottom:0pt;margin-left:0in;\n\
+          text-indent:0in'><span style='font-size: 12pt; font-family: Calibri; color:\
+          \ black; vertical-align: baseline;'><br /></span></p>\n\n<p style='language:en-US;margin-top:0pt;margin-bottom:0pt;margin-left:0in;\n\
+          text-indent:0in'></p>\n\n<p style='language:en-US;margin-top:0pt;margin-bottom:0pt;margin-left:0in;\n\
+          text-indent:0in'><span style='font-size:14.0pt;font-family:Calibri;mso-ascii-font-family:\n\
+          Calibri;mso-fareast-font-family:+mn-ea;mso-bidi-font-family:+mn-cs;mso-ascii-theme-font:\n\
+          minor-latin;mso-fareast-theme-font:minor-fareast;mso-bidi-theme-font:minor-bidi;\n\
+          color:black;mso-color-index:1;language:en-US;font-weight:bold;mso-style-textfill-type:\n\
+          solid;mso-style-textfill-fill-themecolor:text1;mso-style-textfill-fill-color:\n\
+          black;mso-style-textfill-fill-alpha:100.0%'>Components of the Homeless</span><span\
+          \ style='font-size:14.0pt;font-family:Calibri;mso-ascii-font-family:Calibri;\n\
+          mso-fareast-font-family:+mn-ea;mso-bidi-font-family:+mn-cs;mso-ascii-theme-font:\n\
+          minor-latin;mso-fareast-theme-font:minor-fareast;mso-bidi-theme-font:minor-bidi;\n\
+          color:black;mso-color-index:1;language:en-US;font-weight:bold;vertical-align:\n\
+          baseline;mso-text-raise:0%;mso-style-textfill-type:solid;mso-style-textfill-fill-themecolor:\n\
+          text1;mso-style-textfill-fill-color:black;mso-style-textfill-fill-alpha:100.0%'>\n\
+          </span><span style='font-size:14.0pt;font-family:Calibri;mso-ascii-font-family:\n\
+          Calibri;mso-fareast-font-family:+mn-ea;mso-bidi-font-family:+mn-cs;mso-ascii-theme-font:\n\
+          minor-latin;mso-fareast-theme-font:minor-fareast;mso-bidi-theme-font:minor-bidi;\n\
+          color:black;mso-color-index:1;language:en-US;font-weight:bold;mso-style-textfill-type:\n\
+          solid;mso-style-textfill-fill-themecolor:text1;mso-style-textfill-fill-color:\n\
+          black;mso-style-textfill-fill-alpha:100.0%'>Count</span></p>\n\n<p style='language:en-US;margin-top:0pt;margin-bottom:0pt;margin-left:0in;\n\
+          text-indent:0in'></p>\n\n<p style='language:en-US;margin-top:0pt;margin-bottom:0pt;margin-left:0in;\n\
+          text-indent:0in'><span style='font-size:11.0pt;font-family:Calibri;mso-ascii-font-family:\n\
+          Calibri;mso-fareast-font-family:+mn-ea;mso-bidi-font-family:+mn-cs;mso-ascii-theme-font:\n\
+          minor-latin;mso-fareast-theme-font:minor-fareast;mso-bidi-theme-font:minor-bidi;\n\
+          color:black;mso-color-index:1;language:en-US;font-weight:bold;mso-style-textfill-type:\n\
+          solid;mso-style-textfill-fill-themecolor:text1;mso-style-textfill-fill-color:\n\
+          black;mso-style-textfill-fill-alpha:100.0%'>Street Count (all census tracts):</span><span\
+          \ style='font-size:11.0pt;font-family:Calibri;mso-ascii-font-family:Calibri;\n\
+          mso-fareast-font-family:+mn-ea;mso-bidi-font-family:+mn-cs;mso-ascii-theme-font:\n\
+          minor-latin;mso-fareast-theme-font:minor-fareast;mso-bidi-theme-font:minor-bidi;\n\
+          color:black;mso-color-index:1;language:en-US;mso-style-textfill-type:solid;\n\
+          mso-style-textfill-fill-themecolor:text1;mso-style-textfill-fill-color:black;\n\
+          mso-style-textfill-fill-alpha:100.0%'> Captures a point in time estimate\
+          \ of the\nunsheltered population.</span></p>\n\n<p style='language:en-US;margin-top:0pt;margin-bottom:0pt;margin-left:0in;\n\
+          text-indent:0in'></p>\n\n<p style='language:en-US;margin-top:0pt;margin-bottom:0pt;margin-left:0in;\n\
+          text-indent:0in'><span style='font-size:11.0pt;font-family:Calibri;mso-ascii-font-family:\n\
+          Calibri;mso-fareast-font-family:+mn-ea;mso-bidi-font-family:+mn-cs;mso-ascii-theme-font:\n\
+          minor-latin;mso-fareast-theme-font:minor-fareast;mso-bidi-theme-font:minor-bidi;\n\
+          color:black;mso-color-index:1;language:en-US;font-weight:bold;mso-style-textfill-type:\n\
+          solid;mso-style-textfill-fill-themecolor:text1;mso-style-textfill-fill-color:\n\
+          black;mso-style-textfill-fill-alpha:100.0%'>Shelter Count (from Homeless\n\
+          Management Integration System):</span><span style='font-size:11.0pt;font-family:\n\
+          Calibri;mso-ascii-font-family:Calibri;mso-fareast-font-family:+mn-ea;\n\
+          mso-bidi-font-family:+mn-cs;mso-ascii-theme-font:minor-latin;mso-fareast-theme-font:\n\
+          minor-fareast;mso-bidi-theme-font:minor-bidi;color:black;mso-color-index:1;\n\
+          language:en-US;mso-style-textfill-type:solid;mso-style-textfill-fill-themecolor:\n\
+          text1;mso-style-textfill-fill-color:black;mso-style-textfill-fill-alpha:100.0%'>\n\
+          Captures the homeless population in emergency shelters, transitional housing,\n\
+          safe havens and vouchered motels/hotels.</span></p>\n\n<p style='language:en-US;margin-top:0pt;margin-bottom:0pt;margin-left:0in;\n\
+          text-indent:0in'></p>\n\n<p style='language:en-US;margin-top:0pt;margin-bottom:0pt;margin-left:0in;\n\
+          text-indent:0in'><span style='font-size:11.0pt;font-family:Calibri;mso-ascii-font-family:\n\
+          Calibri;mso-fareast-font-family:+mn-ea;mso-bidi-font-family:+mn-cs;mso-ascii-theme-font:\n\
+          minor-latin;mso-fareast-theme-font:minor-fareast;mso-bidi-theme-font:minor-bidi;\n\
+          color:black;mso-color-index:1;language:en-US;font-weight:bold;mso-style-textfill-type:\n\
+          solid;mso-style-textfill-fill-themecolor:text1;mso-style-textfill-fill-color:\n\
+          black;mso-style-textfill-fill-alpha:100.0%'>Youth Count (sample census tracts):</span><span\
+          \ style='font-size:11.0pt;font-family:Calibri;mso-ascii-font-family:Calibri;\n\
+          mso-fareast-font-family:+mn-ea;mso-bidi-font-family:+mn-cs;mso-ascii-theme-font:\n\
+          minor-latin;mso-fareast-theme-font:minor-fareast;mso-bidi-theme-font:minor-bidi;\n\
+          color:black;mso-color-index:1;language:en-US;mso-style-textfill-type:solid;\n\
+          mso-style-textfill-fill-themecolor:text1;mso-style-textfill-fill-color:black;\n\
+          mso-style-textfill-fill-alpha:100.0%'> Collaborative process with youth\n\
+          stakeholders to better understand and identify homeless youth.</span></p>\n\
+          \n<p style='language:en-US;margin-top:0pt;margin-bottom:0pt;margin-left:0in;\n\
+          text-indent:0in'></p>\n\n<p style='language:en-US;margin-top:0pt;margin-bottom:0pt;margin-left:0in;\n\
+          text-indent:0in'><span style='font-size:11.0pt;font-family:Calibri;mso-ascii-font-family:\n\
+          Calibri;mso-fareast-font-family:+mn-ea;mso-bidi-font-family:+mn-cs;mso-ascii-theme-font:\n\
+          minor-latin;mso-fareast-theme-font:minor-fareast;mso-bidi-theme-font:minor-bidi;\n\
+          color:black;mso-color-index:1;language:en-US;font-weight:bold;mso-style-textfill-type:\n\
+          solid;mso-style-textfill-fill-themecolor:text1;mso-style-textfill-fill-color:\n\
+          black;mso-style-textfill-fill-alpha:100.0%'>Demographic Survey (sample census\n\
+          tracts):</span><span style='font-size:11.0pt;font-family:Calibri;mso-ascii-font-family:\n\
+          Calibri;mso-fareast-font-family:+mn-ea;mso-bidi-font-family:+mn-cs;mso-ascii-theme-font:\n\
+          minor-latin;mso-fareast-theme-font:minor-fareast;mso-bidi-theme-font:minor-bidi;\n\
+          color:black;mso-color-index:1;language:en-US;mso-style-textfill-type:solid;\n\
+          mso-style-textfill-fill-themecolor:text1;mso-style-textfill-fill-color:black;\n\
+          mso-style-textfill-fill-alpha:100.0%'> Captures the demographic characteristics\n\
+          of the unsheltered homeless population.</span></p><p style='language:en-US;margin-top:0pt;margin-bottom:0pt;margin-left:0in;\n\
+          text-indent:0in'><span style='font-size:11.0pt;font-family:Calibri;mso-ascii-font-family:\n\
+          Calibri;mso-fareast-font-family:+mn-ea;mso-bidi-font-family:+mn-cs;mso-ascii-theme-font:\n\
+          minor-latin;mso-fareast-theme-font:minor-fareast;mso-bidi-theme-font:minor-bidi;\n\
+          color:black;mso-color-index:1;language:en-US;mso-style-textfill-type:solid;\n\
+          mso-style-textfill-fill-themecolor:text1;mso-style-textfill-fill-color:black;\n\
+          mso-style-textfill-fill-alpha:100.0%'><br /></span></p>\n\n<p style='language:en-US;margin-top:0pt;margin-bottom:0pt;margin-left:0in;\n\
+          text-indent:0in'></p>\n\n<p style='language:en-US;margin-top:0pt;margin-bottom:0pt;margin-left:0in;\n\
+          text-indent:0in'><span style='font-size:14.0pt;font-family:Calibri;mso-ascii-font-family:\n\
+          Calibri;mso-fareast-font-family:+mn-ea;mso-bidi-font-family:+mn-cs;mso-ascii-theme-font:\n\
+          minor-latin;mso-fareast-theme-font:minor-fareast;mso-bidi-theme-font:minor-bidi;\n\
+          color:black;mso-color-index:1;language:en-US;font-weight:bold;mso-style-textfill-type:\n\
+          solid;mso-style-textfill-fill-themecolor:text1;mso-style-textfill-fill-color:\n\
+          black;mso-style-textfill-fill-alpha:100.0%'>Notes</span></p>\n\n<p style='language:en-US;margin-top:0pt;margin-bottom:0pt;margin-left:0in;\n\
+          text-indent:0in'></p>\n\n<p style='language:en-US;margin-top:0pt;margin-bottom:0pt;margin-left:0in;\n\
+          text-indent:0in'><span style='color: black; font-family: Calibri; font-size:\
+          \ 11pt; text-indent: 0in;'>Street Count Data include persons found\noutside,\
+          \ including persons found living in cars, vans, campers/RVs, tents, and\n\
+          makeshift shelters. The conversion factors used to estimate the number of\n\
+          persons found living outside are the following: For families\u2014Makeshift\
+          \ Shelter\n= 3.69, Car = 2.96, Van = 3.46, Camper/RV = 3.52, Tent = 3.78;\
+          \ For\nIndividuals\u2014Makeshift Shelter = 1.92, Car = 1.52, Van = 1.77,\
+          \ Camper/RV = 2.05,\nTent = 1.69.</span><br /></p>\n\n<p style='language:en-US;margin-top:0pt;margin-bottom:0pt;margin-left:0in;\n\
+          text-indent:0in'><span style='font-size:11.0pt;font-family:Calibri;mso-ascii-font-family:\n\
+          Calibri;mso-fareast-font-family:+mn-ea;mso-bidi-font-family:+mn-cs;mso-ascii-theme-font:\n\
+          minor-latin;mso-fareast-theme-font:minor-fareast;mso-bidi-theme-font:minor-bidi;\n\
+          color:black;mso-color-index:1;language:en-US;mso-style-textfill-type:solid;\n\
+          mso-style-textfill-fill-themecolor:text1;mso-style-textfill-fill-color:black;\n\
+          mso-style-textfill-fill-alpha:100.0%'>\_</span></p>\n\n<p style='language:en-US;margin-top:0pt;margin-bottom:0pt;margin-left:0in;\n\
+          text-indent:0in'><span style='font-size:11.0pt;font-family:Calibri;mso-ascii-font-family:\n\
+          Calibri;mso-fareast-font-family:+mn-ea;mso-bidi-font-family:+mn-cs;mso-ascii-theme-font:\n\
+          minor-latin;mso-fareast-theme-font:minor-fareast;mso-bidi-theme-font:minor-bidi;\n\
+          color:black;mso-color-index:1;language:en-US;mso-style-textfill-type:solid;\n\
+          mso-style-textfill-fill-themecolor:text1;mso-style-textfill-fill-color:black;\n\
+          mso-style-textfill-fill-alpha:100.0%'>Please visit</span><span style='font-size:11.0pt;font-family:Calibri;mso-ascii-font-family:Calibri;\n\
+          mso-fareast-font-family:+mn-ea;mso-bidi-font-family:+mn-cs;mso-ascii-theme-font:\n\
+          minor-latin;mso-fareast-theme-font:minor-fareast;mso-bidi-theme-font:minor-bidi;\n\
+          color:black;mso-color-index:1;language:en-US;vertical-align:baseline;\n\
+          mso-text-raise:0%;mso-style-textfill-type:solid;mso-style-textfill-fill-themecolor:\n\
+          text1;mso-style-textfill-fill-color:black;mso-style-textfill-fill-alpha:100.0%'>\n\
+          https://www.lahsa.org/homeless-count/home to view and download data.</span></p>\n\
+          \n<p style='language:en-US;margin-top:0pt;margin-bottom:0pt;margin-left:0in;\n\
+          text-indent:0in'></p>\n\n<p style='language:en-US;margin-top:0pt;margin-bottom:0pt;margin-left:0in;\n\
+          text-indent:0in'><span style='font-size:11.0pt;font-family:Calibri;mso-ascii-font-family:\n\
+          Calibri;mso-fareast-font-family:+mn-ea;mso-bidi-font-family:+mn-cs;mso-ascii-theme-font:\n\
+          minor-latin;mso-fareast-theme-font:minor-fareast;mso-bidi-theme-font:minor-bidi;\n\
+          color:black;mso-color-index:1;language:en-US;vertical-align:baseline;\n\
+          mso-text-raise:0%;mso-style-textfill-type:solid;mso-style-textfill-fill-themecolor:\n\
+          text1;mso-style-textfill-fill-color:black;mso-style-textfill-fill-alpha:100.0%'>Last\n\
+          updated 7/26/2017</span></p>"
+        distribution:
+        - '@type': dcat:Distribution
+          accessURL: http://geohub.lacity.org/datasets/607614502e93482fa80e5b9b5b4c3267_0
+          format: Web Page
+          mediaType: text/html
+          title: ArcGIS Hub Dataset
+        - '@type': dcat:Distribution
+          accessURL: https://services5.arcgis.com/7nsPwEMP38bSkCjy/arcgis/rest/services/Homeless_Count_2017_Results_CD/FeatureServer/0
+          format: Esri REST
+          mediaType: application/json
+          title: Esri Rest API
+        - '@type': dcat:Distribution
+          accessURL: http://geohub.lacity.org/datasets/607614502e93482fa80e5b9b5b4c3267_0.geojson
+          format: GeoJSON
+          mediaType: application/vnd.geo+json
+          title: GeoJSON
+        - '@type': dcat:Distribution
+          accessURL: http://geohub.lacity.org/datasets/607614502e93482fa80e5b9b5b4c3267_0.csv
+          format: CSV
+          mediaType: text/csv
+          title: CSV
+        - '@type': dcat:Distribution
+          accessURL: http://geohub.lacity.org/datasets/607614502e93482fa80e5b9b5b4c3267_0.kml
+          format: KML
+          mediaType: application/vnd.google-earth.kml+xml
+          title: KML
+        - '@type': dcat:Distribution
+          accessURL: http://geohub.lacity.org/datasets/607614502e93482fa80e5b9b5b4c3267_0.zip
+          format: ZIP
+          mediaType: application/zip
+          title: Shapefile
+        identifier: http://geohub.lacity.org/datasets/607614502e93482fa80e5b9b5b4c3267_0
+        issued: '2017-07-28T16:38:19.000Z'
+        keyword:
+        - LAHSA
+        - '2017'
+        - Homeless Count
+        landingPage: http://geohub.lacity.org/datasets/607614502e93482fa80e5b9b5b4c3267_0
+        license: http://geohub.lacity.org/datasets/607614502e93482fa80e5b9b5b4c3267_0/license.json
+        modified: '2019-09-03T16:31:18.000Z'
+        publisher:
+          source: City of Los Angeles Hub
+        spatial: -118.6695,33.7034,-118.1546,34.3427
+        theme:
+        - geospatial
+        title: Homeless Count by Council District - 2017
+  homeless_2018:
+    args:
+      urlpath: s3://city-of-los-angeles-data-lake/public-health-dashboard/homeless_2018.geojson
+    description: "## Homeless Count by Council District - 2018\n\n<p style='margin-top:\
+      \ 0pt; margin-bottom: 0pt; font-family: &quot;Avenir Next W01&quot;, &quot;Avenir\
+      \ Next W00&quot;, &quot;Avenir Next&quot;, Avenir, &quot;Helvetica Neue&quot;,\
+      \ sans-serif; font-size: 17px; text-indent: 0in; margin-left: 0in;'><span style='font-family:\
+      \ Calibri; font-size: 12pt; color: black; font-weight: bold;'>Data Prepared\
+      \ by Los Angeles Homeless Services Authority</span></p><p style='margin-top:\
+      \ 0pt; margin-bottom: 0pt; font-family: &quot;Avenir Next W01&quot;, &quot;Avenir\
+      \ Next W00&quot;, &quot;Avenir Next&quot;, Avenir, &quot;Helvetica Neue&quot;,\
+      \ sans-serif; font-size: 17px; text-indent: 0in; margin-left: 0in;'><span style='font-family:\
+      \ Calibri; font-size: 12pt; color: black; vertical-align: baseline;'>September\
+      \ 5\_ 2018</span></p><p style='margin-top: 0pt; margin-bottom: 0pt; font-family:\
+      \ &quot;Avenir Next W01&quot;, &quot;Avenir Next W00&quot;, &quot;Avenir Next&quot;,\
+      \ Avenir, &quot;Helvetica Neue&quot;, sans-serif; font-size: 17px; text-indent:\
+      \ 0in; margin-left: 0in;'><span style='font-family: Calibri; font-size: 12pt;\
+      \ color: black; vertical-align: baseline;'><br /></span></p><p style='margin-top:\
+      \ 0pt; margin-bottom: 0pt; margin-left: 0in; font-family: &quot;Avenir Next\
+      \ W01&quot;, &quot;Avenir Next W00&quot;, &quot;Avenir Next&quot;, Avenir, &quot;Helvetica\
+      \ Neue&quot;, sans-serif; font-size: 17px; text-indent: 0in;'></p><p style='margin-top:\
+      \ 0pt; margin-bottom: 0pt; font-family: &quot;Avenir Next W01&quot;, &quot;Avenir\
+      \ Next W00&quot;, &quot;Avenir Next&quot;, Avenir, &quot;Helvetica Neue&quot;,\
+      \ sans-serif; font-size: 17px; text-indent: 0in; margin-left: 0in;'><span style='font-family:\
+      \ Calibri; font-size: 14pt; color: black; font-weight: bold;'>Components of\
+      \ the Homeless</span><span style='font-family: Calibri; font-size: 14pt; color:\
+      \ black; font-weight: bold; vertical-align: baseline;'>\_</span><span style='font-family:\
+      \ Calibri; font-size: 14pt; color: black; font-weight: bold;'>Count</span></p><p\
+      \ style='margin-top: 0pt; margin-bottom: 0pt; margin-left: 0in; font-family:\
+      \ &quot;Avenir Next W01&quot;, &quot;Avenir Next W00&quot;, &quot;Avenir Next&quot;,\
+      \ Avenir, &quot;Helvetica Neue&quot;, sans-serif; font-size: 17px; text-indent:\
+      \ 0in;'></p><p style='margin-top: 0pt; margin-bottom: 0pt; font-family: &quot;Avenir\
+      \ Next W01&quot;, &quot;Avenir Next W00&quot;, &quot;Avenir Next&quot;, Avenir,\
+      \ &quot;Helvetica Neue&quot;, sans-serif; font-size: 17px; text-indent: 0in;\
+      \ margin-left: 0in;'><span style='font-family: Calibri; font-size: 11pt; color:\
+      \ black; font-weight: bold;'>Street Count (all census tracts):</span><span style='font-family:\
+      \ Calibri; font-size: 11pt; color: black;'>\_Captures a point in time estimate\
+      \ of the unsheltered population.</span></p><p style='margin-top: 0pt; margin-bottom:\
+      \ 0pt; margin-left: 0in; font-family: &quot;Avenir Next W01&quot;, &quot;Avenir\
+      \ Next W00&quot;, &quot;Avenir Next&quot;, Avenir, &quot;Helvetica Neue&quot;,\
+      \ sans-serif; font-size: 17px; text-indent: 0in;'></p><p style='margin-top:\
+      \ 0pt; margin-bottom: 0pt; font-family: &quot;Avenir Next W01&quot;, &quot;Avenir\
+      \ Next W00&quot;, &quot;Avenir Next&quot;, Avenir, &quot;Helvetica Neue&quot;,\
+      \ sans-serif; font-size: 17px; text-indent: 0in; margin-left: 0in;'><span style='font-family:\
+      \ Calibri; font-size: 11pt; color: black; font-weight: bold;'>Shelter Count\
+      \ (from Homeless Management Integration System):</span><span style='font-family:\
+      \ Calibri; font-size: 11pt; color: black;'>\_Captures the homeless population\
+      \ in emergency shelters, transitional housing, safe havens and vouchered motels/hotels.</span></p><p\
+      \ style='margin-top: 0pt; margin-bottom: 0pt; margin-left: 0in; font-family:\
+      \ &quot;Avenir Next W01&quot;, &quot;Avenir Next W00&quot;, &quot;Avenir Next&quot;,\
+      \ Avenir, &quot;Helvetica Neue&quot;, sans-serif; font-size: 17px; text-indent:\
+      \ 0in;'></p><p style='margin-top: 0pt; margin-bottom: 0pt; font-family: &quot;Avenir\
+      \ Next W01&quot;, &quot;Avenir Next W00&quot;, &quot;Avenir Next&quot;, Avenir,\
+      \ &quot;Helvetica Neue&quot;, sans-serif; font-size: 17px; text-indent: 0in;\
+      \ margin-left: 0in;'><span style='font-family: Calibri; font-size: 11pt; color:\
+      \ black; font-weight: bold;'>Youth Count (sample census tracts):</span><span\
+      \ style='font-family: Calibri; font-size: 11pt; color: black;'>\_Collaborative\
+      \ process with youth stakeholders to better understand and identify homeless\
+      \ youth.</span></p><p style='margin-top: 0pt; margin-bottom: 0pt; margin-left:\
+      \ 0in; font-family: &quot;Avenir Next W01&quot;, &quot;Avenir Next W00&quot;,\
+      \ &quot;Avenir Next&quot;, Avenir, &quot;Helvetica Neue&quot;, sans-serif; font-size:\
+      \ 17px; text-indent: 0in;'></p><p style='margin-top: 0pt; margin-bottom: 0pt;\
+      \ font-family: &quot;Avenir Next W01&quot;, &quot;Avenir Next W00&quot;, &quot;Avenir\
+      \ Next&quot;, Avenir, &quot;Helvetica Neue&quot;, sans-serif; font-size: 17px;\
+      \ text-indent: 0in; margin-left: 0in;'><span style='font-family: Calibri; font-size:\
+      \ 11pt; color: black; font-weight: bold;'>Demographic Survey (sample census\
+      \ tracts):</span><span style='font-family: Calibri; font-size: 11pt; color:\
+      \ black;'>\_Captures the demographic characteristics of the unsheltered homeless\
+      \ population.</span></p><p style='margin-top: 0pt; margin-bottom: 0pt; font-family:\
+      \ &quot;Avenir Next W01&quot;, &quot;Avenir Next W00&quot;, &quot;Avenir Next&quot;,\
+      \ Avenir, &quot;Helvetica Neue&quot;, sans-serif; font-size: 17px; text-indent:\
+      \ 0in; margin-left: 0in;'><span style='font-family: Calibri; font-size: 11pt;\
+      \ color: black;'><br /></span></p><p style='margin-top: 0pt; margin-bottom:\
+      \ 0pt; margin-left: 0in; font-family: &quot;Avenir Next W01&quot;, &quot;Avenir\
+      \ Next W00&quot;, &quot;Avenir Next&quot;, Avenir, &quot;Helvetica Neue&quot;,\
+      \ sans-serif; font-size: 17px; text-indent: 0in;'></p><p style='margin-top:\
+      \ 0pt; margin-bottom: 0pt; font-family: &quot;Avenir Next W01&quot;, &quot;Avenir\
+      \ Next W00&quot;, &quot;Avenir Next&quot;, Avenir, &quot;Helvetica Neue&quot;,\
+      \ sans-serif; font-size: 17px; text-indent: 0in; margin-left: 0in;'><span style='font-family:\
+      \ Calibri; font-size: 14pt; color: black; font-weight: bold;'>Notes</span></p><p\
+      \ style='margin-top: 0pt; margin-bottom: 0pt; margin-left: 0in; font-family:\
+      \ &quot;Avenir Next W01&quot;, &quot;Avenir Next W00&quot;, &quot;Avenir Next&quot;,\
+      \ Avenir, &quot;Helvetica Neue&quot;, sans-serif; font-size: 17px; text-indent:\
+      \ 0in;'></p><p style='margin-top: 0pt; margin-bottom: 0pt; font-family: &quot;Avenir\
+      \ Next W01&quot;, &quot;Avenir Next W00&quot;, &quot;Avenir Next&quot;, Avenir,\
+      \ &quot;Helvetica Neue&quot;, sans-serif; font-size: 17px; text-indent: 0in;\
+      \ margin-left: 0in;'><span style='font-family: Arial, sans-serif; color: rgb(0,\
+      \ 0, 0); font-size: 14.6667px;'>Street Count data includes homeless persons\
+      \ found outside, including persons found residing in cars, vans, campers/RVs,\
+      \ tents and makeshift shelters. The following conversion factors were used to\
+      \ estimate the number of persons living in cars, vans, campers/RVs, tents and\
+      \ makeshift shelters if enumerators encountered homeless persons living in these\
+      \ environments. Individuals: Cars = 1.54, Vans = 1.62, RV's = 1.76, Tents =\
+      \ 1.52 and Makeshift Shelters = 1.67. Family Members: Cars = 2.96, Vans = 2.43,\
+      \ RV's = 3.45, Tents = 2.75 and Makeshift Shelters = 2.42. Demographic survey\
+      \ interviews conducted with 4,934 homeless persons from December 2017 to March\
+      \ 2018 determined these conversion factors for the average number of homeless\
+      \ persons in cars, vans, campers/RVs, tents and makeshift shelters.</span></p><p\
+      \ style='margin-top: 0pt; margin-bottom: 0pt; font-family: &quot;Avenir Next\
+      \ W01&quot;, &quot;Avenir Next W00&quot;, &quot;Avenir Next&quot;, Avenir, &quot;Helvetica\
+      \ Neue&quot;, sans-serif; font-size: 17px; text-indent: 0in; margin-left: 0in;'><span\
+      \ style='font-family: Calibri; color: black; font-size: 11pt; text-indent: 0in;'>\_\
+      </span></p><p style='margin-top: 0pt; margin-bottom: 0pt; font-family: &quot;Avenir\
+      \ Next W01&quot;, &quot;Avenir Next W00&quot;, &quot;Avenir Next&quot;, Avenir,\
+      \ &quot;Helvetica Neue&quot;, sans-serif; font-size: 17px; text-indent: 0in;\
+      \ margin-left: 0in;'><span style='font-family: Calibri; font-size: 11pt; color:\
+      \ black;'>Please visit</span><span style='font-family: Calibri; font-size: 11pt;\
+      \ color: black; vertical-align: baseline;'>\_https://www.lahsa.org/homeless-count/home\
+      \ to view and download data.</span></p><p style='margin-top: 0pt; margin-bottom:\
+      \ 0pt; margin-left: 0in; font-family: &quot;Avenir Next W01&quot;, &quot;Avenir\
+      \ Next W00&quot;, &quot;Avenir Next&quot;, Avenir, &quot;Helvetica Neue&quot;,\
+      \ sans-serif; font-size: 17px; text-indent: 0in;'></p><p style='margin-top:\
+      \ 0pt; margin-bottom: 0pt; font-family: &quot;Avenir Next W01&quot;, &quot;Avenir\
+      \ Next W00&quot;, &quot;Avenir Next&quot;, Avenir, &quot;Helvetica Neue&quot;,\
+      \ sans-serif; font-size: 17px; text-indent: 0in; margin-left: 0in;'><span style='font-family:\
+      \ Calibri; font-size: 11pt; color: black; vertical-align: baseline;'>Last updated\
+      \ 9/5/2018</span></p>"
+    driver: intake_geopandas.geopandas.GeoJSONSource
+    metadata:
+      catalog_dir: ''
+      dcat:
+        '@type': dcat:Dataset
+        accessLevel: public
+        contactPoint:
+          '@type': vcard:Contact
+          fn: nathan@lahsa
+        description: "<p style='margin-top: 0pt; margin-bottom: 0pt; font-family:\
+          \ &quot;Avenir Next W01&quot;, &quot;Avenir Next W00&quot;, &quot;Avenir\
+          \ Next&quot;, Avenir, &quot;Helvetica Neue&quot;, sans-serif; font-size:\
+          \ 17px; text-indent: 0in; margin-left: 0in;'><span style='font-family: Calibri;\
+          \ font-size: 12pt; color: black; font-weight: bold;'>Data Prepared by Los\
+          \ Angeles Homeless Services Authority</span></p><p style='margin-top: 0pt;\
+          \ margin-bottom: 0pt; font-family: &quot;Avenir Next W01&quot;, &quot;Avenir\
+          \ Next W00&quot;, &quot;Avenir Next&quot;, Avenir, &quot;Helvetica Neue&quot;,\
+          \ sans-serif; font-size: 17px; text-indent: 0in; margin-left: 0in;'><span\
+          \ style='font-family: Calibri; font-size: 12pt; color: black; vertical-align:\
+          \ baseline;'>September 5\_ 2018</span></p><p style='margin-top: 0pt; margin-bottom:\
+          \ 0pt; font-family: &quot;Avenir Next W01&quot;, &quot;Avenir Next W00&quot;,\
+          \ &quot;Avenir Next&quot;, Avenir, &quot;Helvetica Neue&quot;, sans-serif;\
+          \ font-size: 17px; text-indent: 0in; margin-left: 0in;'><span style='font-family:\
+          \ Calibri; font-size: 12pt; color: black; vertical-align: baseline;'><br\
+          \ /></span></p><p style='margin-top: 0pt; margin-bottom: 0pt; margin-left:\
+          \ 0in; font-family: &quot;Avenir Next W01&quot;, &quot;Avenir Next W00&quot;,\
+          \ &quot;Avenir Next&quot;, Avenir, &quot;Helvetica Neue&quot;, sans-serif;\
+          \ font-size: 17px; text-indent: 0in;'></p><p style='margin-top: 0pt; margin-bottom:\
+          \ 0pt; font-family: &quot;Avenir Next W01&quot;, &quot;Avenir Next W00&quot;,\
+          \ &quot;Avenir Next&quot;, Avenir, &quot;Helvetica Neue&quot;, sans-serif;\
+          \ font-size: 17px; text-indent: 0in; margin-left: 0in;'><span style='font-family:\
+          \ Calibri; font-size: 14pt; color: black; font-weight: bold;'>Components\
+          \ of the Homeless</span><span style='font-family: Calibri; font-size: 14pt;\
+          \ color: black; font-weight: bold; vertical-align: baseline;'>\_</span><span\
+          \ style='font-family: Calibri; font-size: 14pt; color: black; font-weight:\
+          \ bold;'>Count</span></p><p style='margin-top: 0pt; margin-bottom: 0pt;\
+          \ margin-left: 0in; font-family: &quot;Avenir Next W01&quot;, &quot;Avenir\
+          \ Next W00&quot;, &quot;Avenir Next&quot;, Avenir, &quot;Helvetica Neue&quot;,\
+          \ sans-serif; font-size: 17px; text-indent: 0in;'></p><p style='margin-top:\
+          \ 0pt; margin-bottom: 0pt; font-family: &quot;Avenir Next W01&quot;, &quot;Avenir\
+          \ Next W00&quot;, &quot;Avenir Next&quot;, Avenir, &quot;Helvetica Neue&quot;,\
+          \ sans-serif; font-size: 17px; text-indent: 0in; margin-left: 0in;'><span\
+          \ style='font-family: Calibri; font-size: 11pt; color: black; font-weight:\
+          \ bold;'>Street Count (all census tracts):</span><span style='font-family:\
+          \ Calibri; font-size: 11pt; color: black;'>\_Captures a point in time estimate\
+          \ of the unsheltered population.</span></p><p style='margin-top: 0pt; margin-bottom:\
+          \ 0pt; margin-left: 0in; font-family: &quot;Avenir Next W01&quot;, &quot;Avenir\
+          \ Next W00&quot;, &quot;Avenir Next&quot;, Avenir, &quot;Helvetica Neue&quot;,\
+          \ sans-serif; font-size: 17px; text-indent: 0in;'></p><p style='margin-top:\
+          \ 0pt; margin-bottom: 0pt; font-family: &quot;Avenir Next W01&quot;, &quot;Avenir\
+          \ Next W00&quot;, &quot;Avenir Next&quot;, Avenir, &quot;Helvetica Neue&quot;,\
+          \ sans-serif; font-size: 17px; text-indent: 0in; margin-left: 0in;'><span\
+          \ style='font-family: Calibri; font-size: 11pt; color: black; font-weight:\
+          \ bold;'>Shelter Count (from Homeless Management Integration System):</span><span\
+          \ style='font-family: Calibri; font-size: 11pt; color: black;'>\_Captures\
+          \ the homeless population in emergency shelters, transitional housing, safe\
+          \ havens and vouchered motels/hotels.</span></p><p style='margin-top: 0pt;\
+          \ margin-bottom: 0pt; margin-left: 0in; font-family: &quot;Avenir Next W01&quot;,\
+          \ &quot;Avenir Next W00&quot;, &quot;Avenir Next&quot;, Avenir, &quot;Helvetica\
+          \ Neue&quot;, sans-serif; font-size: 17px; text-indent: 0in;'></p><p style='margin-top:\
+          \ 0pt; margin-bottom: 0pt; font-family: &quot;Avenir Next W01&quot;, &quot;Avenir\
+          \ Next W00&quot;, &quot;Avenir Next&quot;, Avenir, &quot;Helvetica Neue&quot;,\
+          \ sans-serif; font-size: 17px; text-indent: 0in; margin-left: 0in;'><span\
+          \ style='font-family: Calibri; font-size: 11pt; color: black; font-weight:\
+          \ bold;'>Youth Count (sample census tracts):</span><span style='font-family:\
+          \ Calibri; font-size: 11pt; color: black;'>\_Collaborative process with\
+          \ youth stakeholders to better understand and identify homeless youth.</span></p><p\
+          \ style='margin-top: 0pt; margin-bottom: 0pt; margin-left: 0in; font-family:\
+          \ &quot;Avenir Next W01&quot;, &quot;Avenir Next W00&quot;, &quot;Avenir\
+          \ Next&quot;, Avenir, &quot;Helvetica Neue&quot;, sans-serif; font-size:\
+          \ 17px; text-indent: 0in;'></p><p style='margin-top: 0pt; margin-bottom:\
+          \ 0pt; font-family: &quot;Avenir Next W01&quot;, &quot;Avenir Next W00&quot;,\
+          \ &quot;Avenir Next&quot;, Avenir, &quot;Helvetica Neue&quot;, sans-serif;\
+          \ font-size: 17px; text-indent: 0in; margin-left: 0in;'><span style='font-family:\
+          \ Calibri; font-size: 11pt; color: black; font-weight: bold;'>Demographic\
+          \ Survey (sample census tracts):</span><span style='font-family: Calibri;\
+          \ font-size: 11pt; color: black;'>\_Captures the demographic characteristics\
+          \ of the unsheltered homeless population.</span></p><p style='margin-top:\
+          \ 0pt; margin-bottom: 0pt; font-family: &quot;Avenir Next W01&quot;, &quot;Avenir\
+          \ Next W00&quot;, &quot;Avenir Next&quot;, Avenir, &quot;Helvetica Neue&quot;,\
+          \ sans-serif; font-size: 17px; text-indent: 0in; margin-left: 0in;'><span\
+          \ style='font-family: Calibri; font-size: 11pt; color: black;'><br /></span></p><p\
+          \ style='margin-top: 0pt; margin-bottom: 0pt; margin-left: 0in; font-family:\
+          \ &quot;Avenir Next W01&quot;, &quot;Avenir Next W00&quot;, &quot;Avenir\
+          \ Next&quot;, Avenir, &quot;Helvetica Neue&quot;, sans-serif; font-size:\
+          \ 17px; text-indent: 0in;'></p><p style='margin-top: 0pt; margin-bottom:\
+          \ 0pt; font-family: &quot;Avenir Next W01&quot;, &quot;Avenir Next W00&quot;,\
+          \ &quot;Avenir Next&quot;, Avenir, &quot;Helvetica Neue&quot;, sans-serif;\
+          \ font-size: 17px; text-indent: 0in; margin-left: 0in;'><span style='font-family:\
+          \ Calibri; font-size: 14pt; color: black; font-weight: bold;'>Notes</span></p><p\
+          \ style='margin-top: 0pt; margin-bottom: 0pt; margin-left: 0in; font-family:\
+          \ &quot;Avenir Next W01&quot;, &quot;Avenir Next W00&quot;, &quot;Avenir\
+          \ Next&quot;, Avenir, &quot;Helvetica Neue&quot;, sans-serif; font-size:\
+          \ 17px; text-indent: 0in;'></p><p style='margin-top: 0pt; margin-bottom:\
+          \ 0pt; font-family: &quot;Avenir Next W01&quot;, &quot;Avenir Next W00&quot;,\
+          \ &quot;Avenir Next&quot;, Avenir, &quot;Helvetica Neue&quot;, sans-serif;\
+          \ font-size: 17px; text-indent: 0in; margin-left: 0in;'><span style='font-family:\
+          \ Arial, sans-serif; color: rgb(0, 0, 0); font-size: 14.6667px;'>Street\
+          \ Count data includes homeless persons found outside, including persons\
+          \ found residing in cars, vans, campers/RVs, tents and makeshift shelters.\
+          \ The following conversion factors were used to estimate the number of persons\
+          \ living in cars, vans, campers/RVs, tents and makeshift shelters if enumerators\
+          \ encountered homeless persons living in these environments. Individuals:\
+          \ Cars = 1.54, Vans = 1.62, RV's = 1.76, Tents = 1.52 and Makeshift Shelters\
+          \ = 1.67. Family Members: Cars = 2.96, Vans = 2.43, RV's = 3.45, Tents =\
+          \ 2.75 and Makeshift Shelters = 2.42. Demographic survey interviews conducted\
+          \ with 4,934 homeless persons from December 2017 to March 2018 determined\
+          \ these conversion factors for the average number of homeless persons in\
+          \ cars, vans, campers/RVs, tents and makeshift shelters.</span></p><p style='margin-top:\
+          \ 0pt; margin-bottom: 0pt; font-family: &quot;Avenir Next W01&quot;, &quot;Avenir\
+          \ Next W00&quot;, &quot;Avenir Next&quot;, Avenir, &quot;Helvetica Neue&quot;,\
+          \ sans-serif; font-size: 17px; text-indent: 0in; margin-left: 0in;'><span\
+          \ style='font-family: Calibri; color: black; font-size: 11pt; text-indent:\
+          \ 0in;'>\_</span></p><p style='margin-top: 0pt; margin-bottom: 0pt; font-family:\
+          \ &quot;Avenir Next W01&quot;, &quot;Avenir Next W00&quot;, &quot;Avenir\
+          \ Next&quot;, Avenir, &quot;Helvetica Neue&quot;, sans-serif; font-size:\
+          \ 17px; text-indent: 0in; margin-left: 0in;'><span style='font-family: Calibri;\
+          \ font-size: 11pt; color: black;'>Please visit</span><span style='font-family:\
+          \ Calibri; font-size: 11pt; color: black; vertical-align: baseline;'>\_\
+          https://www.lahsa.org/homeless-count/home to view and download data.</span></p><p\
+          \ style='margin-top: 0pt; margin-bottom: 0pt; margin-left: 0in; font-family:\
+          \ &quot;Avenir Next W01&quot;, &quot;Avenir Next W00&quot;, &quot;Avenir\
+          \ Next&quot;, Avenir, &quot;Helvetica Neue&quot;, sans-serif; font-size:\
+          \ 17px; text-indent: 0in;'></p><p style='margin-top: 0pt; margin-bottom:\
+          \ 0pt; font-family: &quot;Avenir Next W01&quot;, &quot;Avenir Next W00&quot;,\
+          \ &quot;Avenir Next&quot;, Avenir, &quot;Helvetica Neue&quot;, sans-serif;\
+          \ font-size: 17px; text-indent: 0in; margin-left: 0in;'><span style='font-family:\
+          \ Calibri; font-size: 11pt; color: black; vertical-align: baseline;'>Last\
+          \ updated 9/5/2018</span></p>"
+        distribution:
+        - '@type': dcat:Distribution
+          accessURL: http://geohub.lacity.org/datasets/c8e6c2f2b6434c67a33a7b189f53f2b4_0
+          format: Web Page
+          mediaType: text/html
+          title: ArcGIS Hub Dataset
+        - '@type': dcat:Distribution
+          accessURL: https://services5.arcgis.com/7nsPwEMP38bSkCjy/arcgis/rest/services/hc2018_resultz/FeatureServer/0
+          format: Esri REST
+          mediaType: application/json
+          title: Esri Rest API
+        - '@type': dcat:Distribution
+          accessURL: http://geohub.lacity.org/datasets/c8e6c2f2b6434c67a33a7b189f53f2b4_0.geojson
+          format: GeoJSON
+          mediaType: application/vnd.geo+json
+          title: GeoJSON
+        - '@type': dcat:Distribution
+          accessURL: http://geohub.lacity.org/datasets/c8e6c2f2b6434c67a33a7b189f53f2b4_0.csv
+          format: CSV
+          mediaType: text/csv
+          title: CSV
+        - '@type': dcat:Distribution
+          accessURL: http://geohub.lacity.org/datasets/c8e6c2f2b6434c67a33a7b189f53f2b4_0.kml
+          format: KML
+          mediaType: application/vnd.google-earth.kml+xml
+          title: KML
+        - '@type': dcat:Distribution
+          accessURL: http://geohub.lacity.org/datasets/c8e6c2f2b6434c67a33a7b189f53f2b4_0.zip
+          format: ZIP
+          mediaType: application/zip
+          title: Shapefile
+        identifier: http://geohub.lacity.org/datasets/c8e6c2f2b6434c67a33a7b189f53f2b4_0
+        issued: '2018-09-05T15:38:31.000Z'
+        keyword:
+        - hc2018
+        - Homeless Count
+        - lahsa
+        landingPage: http://geohub.lacity.org/datasets/c8e6c2f2b6434c67a33a7b189f53f2b4_0
+        license: http://geohub.lacity.org/datasets/c8e6c2f2b6434c67a33a7b189f53f2b4_0/license.json
+        modified: '2019-09-03T15:33:20.000Z'
+        publisher:
+          source: City of Los Angeles Hub
+        spatial: -118.6708,33.7071,-118.1486,34.3416
+        theme:
+        - geospatial
+        title: Homeless Count by Council District - 2018
+  homeless_2019:
+    args:
+      urlpath: s3://city-of-los-angeles-data-lake/public-health-dashboard/homeless_2019.geojson
+    description: "## Homeless Count Los Angeles County 2019\n\n<p style='margin-top:\
+      \ 0pt; margin-bottom: 0pt; font-family: &quot;Avenir Next W01&quot;, &quot;Avenir\
+      \ Next W00&quot;, &quot;Avenir Next&quot;, Avenir, &quot;Helvetica Neue&quot;,\
+      \ sans-serif; text-indent: 0in; font-size: 17px; margin-left: 0in;'><span style='font-family:\
+      \ Calibri; font-size: 12pt; color: black; font-weight: bold;'>Data Prepared\
+      \ by Los Angeles Homeless Services Authority</span></p><span style='font-family:\
+      \ Calibri; color: black; font-size: 12pt; text-indent: 0in;'>Revised July 29,\
+      \ 2019</span><div style='font-family: inherit;'><br /></div><div style='font-family:\
+      \ inherit;'><b><font size='3' style='font-family: inherit;'>Homeless Count 2019\
+      \ Dashboard Methodology</font></b><br /></div>Total number of people experiencing\
+      \ homelessness is the sum of (1) the sheltered population (the total number\
+      \ of people staying in emergency shelter, transitional housing, or safe haven\
+      \ programs on the night of the point-in-time count) and (2) the unsheltered\
+      \ population (the total number of people counted by volunteers and the estimated\
+      \ number of people sleeping in the dwellings counted by volunteers).  \n\n\n\
+      \n(1) The total number of people experiencing homelessness who slept in an emergency\
+      \ shelter, transitional housing, or safe haven program was reported to LAHSA\
+      \ by each provider and assigned to a census tract. For shelter programs with\
+      \ multiple scattered sites in the LA CoC, an administrative address is used\
+      \ for locating the sheltered population in this dashboard. Shelters that serve\
+      \ persons fleeing domestic or intimate partner violence are excluded due to\
+      \ confidentiality concerns. Persons receiving motel vouchers are excluded in\
+      \ this dashboard because the location of the motel is unknown.  \n\n\n\n(2)\
+      \ The total number of people experiencing homelessness who slept on the street\
+      \ or in a dwelling not meant for human habitation were counted by volunteers\
+      \ on January 22nd, 23rd, or 24th. 3,873 demographic survey interviews were conducted\
+      \ with persons experiencing unsheltered homelessness from December 2018 to March\
+      \ 2019 to describe the population\u2019s demographics and approximate the number\
+      \ of people in each dwelling. The total persons in uninhabitable dwellings was\
+      \ estimated for each type (car, van, camper/RV, tent, or makeshift shelter)\
+      \ and was estimated at the SPA-level for individual and for family households\
+      \ and can be found on our website. Estimates of the people inside these dwellings\
+      \ was rounded to whole numbers for the purposes of this dashboard.\_<div><br\
+      \ /></div><div>\_Please visit our website for further information at\_<a href='www.lahsa.org'\
+      \ target='_blank'>www.lahsa.org</a>.</div>"
+    driver: intake_geopandas.geopandas.GeoJSONSource
+    metadata:
+      catalog_dir: ''
+      dcat:
+        '@type': dcat:Dataset
+        accessLevel: public
+        contactPoint:
+          '@type': vcard:Contact
+          fn: nathan@lahsa
+        description: "<p style='margin-top: 0pt; margin-bottom: 0pt; font-family:\
+          \ &quot;Avenir Next W01&quot;, &quot;Avenir Next W00&quot;, &quot;Avenir\
+          \ Next&quot;, Avenir, &quot;Helvetica Neue&quot;, sans-serif; text-indent:\
+          \ 0in; font-size: 17px; margin-left: 0in;'><span style='font-family: Calibri;\
+          \ font-size: 12pt; color: black; font-weight: bold;'>Data Prepared by Los\
+          \ Angeles Homeless Services Authority</span></p><span style='font-family:\
+          \ Calibri; color: black; font-size: 12pt; text-indent: 0in;'>Revised July\
+          \ 29, 2019</span><div style='font-family: inherit;'><br /></div><div style='font-family:\
+          \ inherit;'><b><font size='3' style='font-family: inherit;'>Homeless Count\
+          \ 2019 Dashboard Methodology</font></b><br /></div>Total number of people\
+          \ experiencing homelessness is the sum of (1) the sheltered population (the\
+          \ total number of people staying in emergency shelter, transitional housing,\
+          \ or safe haven programs on the night of the point-in-time count) and (2)\
+          \ the unsheltered population (the total number of people counted by volunteers\
+          \ and the estimated number of people sleeping in the dwellings counted by\
+          \ volunteers).  \n\n\n\n(1) The total number of people experiencing homelessness\
+          \ who slept in an emergency shelter, transitional housing, or safe haven\
+          \ program was reported to LAHSA by each provider and assigned to a census\
+          \ tract. For shelter programs with multiple scattered sites in the LA CoC,\
+          \ an administrative address is used for locating the sheltered population\
+          \ in this dashboard. Shelters that serve persons fleeing domestic or intimate\
+          \ partner violence are excluded due to confidentiality concerns. Persons\
+          \ receiving motel vouchers are excluded in this dashboard because the location\
+          \ of the motel is unknown.  \n\n\n\n(2) The total number of people experiencing\
+          \ homelessness who slept on the street or in a dwelling not meant for human\
+          \ habitation were counted by volunteers on January 22nd, 23rd, or 24th.\
+          \ 3,873 demographic survey interviews were conducted with persons experiencing\
+          \ unsheltered homelessness from December 2018 to March 2019 to describe\
+          \ the population\u2019s demographics and approximate the number of people\
+          \ in each dwelling. The total persons in uninhabitable dwellings was estimated\
+          \ for each type (car, van, camper/RV, tent, or makeshift shelter) and was\
+          \ estimated at the SPA-level for individual and for family households and\
+          \ can be found on our website. Estimates of the people inside these dwellings\
+          \ was rounded to whole numbers for the purposes of this dashboard.\_<div><br\
+          \ /></div><div>\_Please visit our website for further information at\_<a\
+          \ href='www.lahsa.org' target='_blank'>www.lahsa.org</a>.</div>"
+        distribution:
+        - '@type': dcat:Distribution
+          accessURL: http://geohub.lacity.org/datasets/50227efa5f6d456eb85d5e7e0dc87ade_0
+          format: Web Page
+          mediaType: text/html
+          title: ArcGIS Hub Dataset
+        - '@type': dcat:Distribution
+          accessURL: https://services5.arcgis.com/7nsPwEMP38bSkCjy/arcgis/rest/services/Homeless_Count_Los_Angeles_County_2019/FeatureServer/0
+          format: Esri REST
+          mediaType: application/json
+          title: Esri Rest API
+        - '@type': dcat:Distribution
+          accessURL: http://geohub.lacity.org/datasets/50227efa5f6d456eb85d5e7e0dc87ade_0.geojson
+          format: GeoJSON
+          mediaType: application/vnd.geo+json
+          title: GeoJSON
+        - '@type': dcat:Distribution
+          accessURL: http://geohub.lacity.org/datasets/50227efa5f6d456eb85d5e7e0dc87ade_0.csv
+          format: CSV
+          mediaType: text/csv
+          title: CSV
+        - '@type': dcat:Distribution
+          accessURL: http://geohub.lacity.org/datasets/50227efa5f6d456eb85d5e7e0dc87ade_0.kml
+          format: KML
+          mediaType: application/vnd.google-earth.kml+xml
+          title: KML
+        - '@type': dcat:Distribution
+          accessURL: http://geohub.lacity.org/datasets/50227efa5f6d456eb85d5e7e0dc87ade_0.zip
+          format: ZIP
+          mediaType: application/zip
+          title: Shapefile
+        identifier: http://geohub.lacity.org/datasets/50227efa5f6d456eb85d5e7e0dc87ade_0
+        issued: '2019-07-29T17:04:29.000Z'
+        keyword:
+        - hc2019
+        - lahsa
+        - Homeless Count
+        - homeless
+        landingPage: http://geohub.lacity.org/datasets/50227efa5f6d456eb85d5e7e0dc87ade_0
+        license: http://geohub.lacity.org/datasets/50227efa5f6d456eb85d5e7e0dc87ade_0/license.json
+        modified: '2019-09-03T15:52:01.000Z'
+        publisher:
+          source: City of Los Angeles Hub
+        spatial: -118.9307,32.7923,-117.6441,34.823
+        theme:
+        - geospatial
+        title: Homeless Count Los Angeles County 2019
+  homeless_shelters:
+    args:
+      urlpath: s3://city-of-los-angeles-data-lake/public-health-dashboard/homeless_shelters.geojson
+    description: "## Homeless Shelters and Services\n\n<p style='padding: 0px; color:\
+      \ rgb(0, 0, 0); font-family: verdana, arial, sans-serif; line-height: 20.2222px;\
+      \ background-color: rgb(255, 255, 255);'>Location Management System (LMS) is\
+      \ County of Los Angeles GIS Program to maintain a single, comprehensive geographic\
+      \ database of locations countywide.\_ The scope of this information is broad,\
+      \ including locations of services, points of interest, physical features, to\
+      \ name a few. \_The goal is that maintenance of the information will be done\
+      \ by the jurisdiction (city, department, agency) that provides the service.</p><p\
+      \ style='padding: 0px; color: rgb(0, 0, 0); font-family: verdana, arial, sans-serif;\
+      \ line-height: 20.2222px; background-color: rgb(255, 255, 255);'>A standard\
+      \ set of information about each location will be maintained and accessed by\
+      \ agencies and the public through all of the applications and maps that the\
+      \ County develops.</p>"
+    driver: intake_geopandas.geopandas.GeoJSONSource
+    metadata:
+      catalog_dir: ''
+      dcat:
+        '@type': dcat:Dataset
+        accessLevel: public
+        contactPoint:
+          '@type': vcard:Contact
+          fn: lacounty_isd
+        description: "<p style='padding: 0px; color: rgb(0, 0, 0); font-family: verdana,\
+          \ arial, sans-serif; line-height: 20.2222px; background-color: rgb(255,\
+          \ 255, 255);'>Location Management System (LMS) is County of Los Angeles\
+          \ GIS Program to maintain a single, comprehensive geographic database of\
+          \ locations countywide.\_ The scope of this information is broad, including\
+          \ locations of services, points of interest, physical features, to name\
+          \ a few. \_The goal is that maintenance of the information will be done\
+          \ by the jurisdiction (city, department, agency) that provides the service.</p><p\
+          \ style='padding: 0px; color: rgb(0, 0, 0); font-family: verdana, arial,\
+          \ sans-serif; line-height: 20.2222px; background-color: rgb(255, 255, 255);'>A\
+          \ standard set of information about each location will be maintained and\
+          \ accessed by agencies and the public through all of the applications and\
+          \ maps that the County develops.</p>"
+        distribution:
+        - '@type': dcat:Distribution
+          accessURL: http://geohub.lacity.org/datasets/6f6c4677365b4418bd585db2ef8e201f_158
+          format: Web Page
+          mediaType: text/html
+          title: ArcGIS Hub Dataset
+        - '@type': dcat:Distribution
+          accessURL: https://arcgis.gis.lacounty.gov/arcgis/rest/services/LACounty_Dynamic/LMS_Data_Public_2014/MapServer/158
+          format: Esri REST
+          mediaType: application/json
+          title: Esri Rest API
+        - '@type': dcat:Distribution
+          accessURL: http://geohub.lacity.org/datasets/6f6c4677365b4418bd585db2ef8e201f_158.geojson
+          format: GeoJSON
+          mediaType: application/vnd.geo+json
+          title: GeoJSON
+        - '@type': dcat:Distribution
+          accessURL: http://geohub.lacity.org/datasets/6f6c4677365b4418bd585db2ef8e201f_158.csv
+          format: CSV
+          mediaType: text/csv
+          title: CSV
+        - '@type': dcat:Distribution
+          accessURL: http://geohub.lacity.org/datasets/6f6c4677365b4418bd585db2ef8e201f_158.kml
+          format: KML
+          mediaType: application/vnd.google-earth.kml+xml
+          title: KML
+        - '@type': dcat:Distribution
+          accessURL: http://geohub.lacity.org/datasets/6f6c4677365b4418bd585db2ef8e201f_158.zip
+          format: ZIP
+          mediaType: application/zip
+          title: Shapefile
+        identifier: http://geohub.lacity.org/datasets/6f6c4677365b4418bd585db2ef8e201f_158
+        issued: '2016-03-02T23:30:02.000Z'
+        keyword:
+        - Location Management System
+        - LMS
+        - Points of Interest
+        landingPage: http://geohub.lacity.org/datasets/6f6c4677365b4418bd585db2ef8e201f_158
+        license: http://geohub.lacity.org/datasets/6f6c4677365b4418bd585db2ef8e201f_158/license.json
+        modified: '2018-05-15T14:25:10.000Z'
+        publisher:
+          source: County of Los Angeles
+        spatial: -143.049,23.3761,-75.063,46.7642
+        theme:
+        - geospatial
+        title: Homeless Shelters and Services
+  neighborhood_councils:
+    args:
+      urlpath: s3://city-of-los-angeles-data-lake/public-health-dashboard/neighborhood_councils.geojson
+    description: '## Neighborhood Council Boundaries (2018)
+
+
+      <div>The updated Neighborhood Council Boundaries layer includes all 97 original
+      councils and 2 new neighborhood councils subdivided from Westwood neighborhood
+      council and Historic Cultural neighborhood council.</div><div><br /></div><div><br
+      /></div><div><br /></div><div>Last Updated: 02/16/2019</div><div>Refresh Rate:
+      As Needed</div><div style=''background-color: transparent; color: rgb(34, 34,
+      34); font-family: Arial,Helvetica,sans-serif; font-size: 13.33px; font-size-adjust:
+      none; font-stretch: 100%; font-style: normal; font-variant: normal; font-weight:
+      400; letter-spacing: normal; line-height: 19.99px; orphans: 2; overflow: visible;
+      text-align: left; text-decoration: none; text-indent: 0px; text-transform: none;
+      -webkit-text-stroke-width: 0px; white-space: normal; word-spacing: 0px;''><br
+      /></div>'
+    driver: intake_geopandas.geopandas.GeoJSONSource
+    metadata:
+      catalog_dir: ''
+      dcat:
+        '@type': dcat:Dataset
+        accessLevel: public
+        contactPoint:
+          '@type': vcard:Contact
+          fn: JulienAntelin
+        description: '<div>The updated Neighborhood Council Boundaries layer includes
+          all 97 original councils and 2 new neighborhood councils subdivided from
+          Westwood neighborhood council and Historic Cultural neighborhood council.</div><div><br
+          /></div><div><br /></div><div><br /></div><div>Last Updated: 02/16/2019</div><div>Refresh
+          Rate: As Needed</div><div style=''background-color: transparent; color:
+          rgb(34, 34, 34); font-family: Arial,Helvetica,sans-serif; font-size: 13.33px;
+          font-size-adjust: none; font-stretch: 100%; font-style: normal; font-variant:
+          normal; font-weight: 400; letter-spacing: normal; line-height: 19.99px;
+          orphans: 2; overflow: visible; text-align: left; text-decoration: none;
+          text-indent: 0px; text-transform: none; -webkit-text-stroke-width: 0px;
+          white-space: normal; word-spacing: 0px;''><br /></div>'
+        distribution:
+        - '@type': dcat:Distribution
+          accessURL: http://geohub.lacity.org/datasets/674f80b8edee4bf48551512896a1821d_0
+          format: Web Page
+          mediaType: text/html
+          title: ArcGIS Hub Dataset
+        - '@type': dcat:Distribution
+          accessURL: https://services5.arcgis.com/7nsPwEMP38bSkCjy/arcgis/rest/services/Neighborhood_Council_Boundaries_(2018)/FeatureServer/0
+          format: Esri REST
+          mediaType: application/json
+          title: Esri Rest API
+        - '@type': dcat:Distribution
+          accessURL: http://geohub.lacity.org/datasets/674f80b8edee4bf48551512896a1821d_0.geojson
+          format: GeoJSON
+          mediaType: application/vnd.geo+json
+          title: GeoJSON
+        - '@type': dcat:Distribution
+          accessURL: http://geohub.lacity.org/datasets/674f80b8edee4bf48551512896a1821d_0.csv
+          format: CSV
+          mediaType: text/csv
+          title: CSV
+        - '@type': dcat:Distribution
+          accessURL: http://geohub.lacity.org/datasets/674f80b8edee4bf48551512896a1821d_0.kml
+          format: KML
+          mediaType: application/vnd.google-earth.kml+xml
+          title: KML
+        - '@type': dcat:Distribution
+          accessURL: http://geohub.lacity.org/datasets/674f80b8edee4bf48551512896a1821d_0.zip
+          format: ZIP
+          mediaType: application/zip
+          title: Shapefile
+        identifier: http://geohub.lacity.org/datasets/674f80b8edee4bf48551512896a1821d_0
+        issued: '2019-02-15T18:30:28.000Z'
+        keyword:
+        - neighborhood council
+        - neighborhood councils
+        - 2018 boundaries
+        landingPage: http://geohub.lacity.org/datasets/674f80b8edee4bf48551512896a1821d_0
+        license: http://geohub.lacity.org/datasets/674f80b8edee4bf48551512896a1821d_0/license.json
+        modified: '2019-03-28T18:09:53.000Z'
+        publisher:
+          source: City of Los Angeles Hub
+        spatial: -118.6682,33.7037,-117.6574,34.9142
+        theme:
+        - geospatial
+        title: Neighborhood Council Boundaries (2018)
+
