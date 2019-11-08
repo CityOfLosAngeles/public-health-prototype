@@ -26,6 +26,7 @@ df = pd.DataFrame(raw)
 # Subset for LA County
 df['GEOID'] = df.state + df.county + df.tract
 df = df[['GEOID', 'B01003_001E']]
+df.rename(columns = {'B01003_001E': 'pop'}, inplace = True)
 df = df.sort_values('GEOID', ascending = True)
 
 
