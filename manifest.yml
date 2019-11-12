@@ -1,0 +1,21 @@
+metadata:
+  version: 1
+  bucket_uri: s3://city-of-los-angeles-data-lake/public-health-dashboard/gis/source
+sources:
+  la-open-data:
+    driver: dcat
+    args:
+      url: https://data.lacity.org/data.json
+      items: {}
+  la-geohub:
+    driver: dcat
+    args:
+      url: http://geohub.lacity.org/data.json
+      items:
+        city_boundary: http://geohub.lacity.org/datasets/09f503229d37414a8e67a7b6ceb9ec43_7
+        council_districts: http://geohub.lacity.org/datasets/76104f230e384f38871eb3c4782f903d_13
+        neighborhood_councils: http://geohub.lacity.org/datasets/674f80b8edee4bf48551512896a1821d_0
+        homeless_2017: http://geohub.lacity.org/datasets/607614502e93482fa80e5b9b5b4c3267_0
+        homeless_2018: http://geohub.lacity.org/datasets/c8e6c2f2b6434c67a33a7b189f53f2b4_0
+        homeless_2019: http://geohub.lacity.org/datasets/50227efa5f6d456eb85d5e7e0dc87ade_0
+        homeless_shelters: http://geohub.lacity.org/datasets/6f6c4677365b4418bd585db2ef8e201f_158

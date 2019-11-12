@@ -17,3 +17,11 @@ sources:
     driver: dcat
     args:
       url: http://gisdata-scag.opendata.arcgis.com/data.json
+  cleanstat:
+    driver: postgis
+    description: Appended LASAN CleanStat data from GeoHub. 
+    args:
+      uri: "{{env(POSTGRES_URI)}}"
+      table: '"public-health"."cleanstat"'
+      geopandas_kwargs: 
+          geom_col: 'geometry'
