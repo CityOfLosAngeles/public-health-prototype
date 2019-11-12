@@ -65,47 +65,20 @@ s3.upload_file('./gis/homelessness.geojson', 'city-of-los-angeles-data-lake',
 
 
 # ----------------------------------------------------------------#
-# Clip to City of LA boundary
+# Merge homelessness with clipped census tracts
 # ----------------------------------------------------------------#
-# Find centroid of each tract
-centroids = df.centroid
-centroids = pd.DataFrame(centroids)
-centroids.rename(columns = {0: 'tract_center'}, inplace = True)
+tracts = gpd.read_file('s3://city-of-los-angeles-data-lake/public-health-dashboard/gis/raw/census_tracts.geojson')
 
-# Merge centroids back on with df
-gdf = pd.merge(df, centroids, left_index = True, right_index = True)
-gdf['full_area'] = gdf.geometry.area / sqft_to_sqmi
+final = pd.merge(df, tracts, on = 'GEOID', how = 'inner', validate = 'm:1')
 
+final = final.drop(columns = ['Tract', 'geometry_x'])
+final.rename(columns = {'geometry_y': 'geometry'}, inplace = True)
 
-# Extract the geomery to use to test for intersection
-boundary = city_boundary.geometry.iloc[0]
-
-
-# Test whether centroid is in the city boundary
-gdf = gdf.set_geometry('tract_center')
-gdf['in_city'] = gdf.within(boundary)
-
-
-# Only keep tracts whose centroid is within City of LA
-tracts_la = gdf.loc[gdf.in_city == True]
-
-# Add clipped geometry and area
-tracts_la = tracts_la.set_geometry('geometry')
-tracts_la = tracts_la.reset_index()
-
-
-# Add the geometry for tracts that intersect with boundary (this is all of them, since we already clipped them)
-tracts_la['clipped_geom'] = tracts_la[tracts_la.intersects(boundary)].intersection(boundary)
-tracts_la['clipped_area'] = tracts_la.set_geometry('clipped_geom').area / sqft_to_sqmi
-tracts_la = tracts_la.set_geometry('clipped_geom')
-
-
-# Clean up and export
-drop = ['tract_center', 'in_city', 'geometry']
-tracts_la = tracts_la.drop(columns = drop)
+final = final.reindex(columns=['GEOID', 'SPA', 'SD', 'CD', 'year', 
+                               'totUnshelt', 'totShelt', 'totPeople', 'full_area', 'clipped_area', 'geometry'])
 
 
 # Export to S3
-tracts_la.to_file(driver = 'GeoJSON', filename = './gis/homelessness_la.geojson')
+final.to_file(driver = 'GeoJSON', filename = './gis/homelessness_la.geojson')
 s3.upload_file('./gis/homelessness_la.geojson', 'city-of-los-angeles-data-lake', 
                'public-health-dashboard/gis/raw/homelessness_lacity_2017_2019.geojson')
