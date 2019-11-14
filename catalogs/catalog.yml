@@ -9,6 +9,9 @@ sources:
     driver: dcat
     args:
       url: http://geohub.lacity.org/data.json
+      items:
+        homeless_2019: http://geohub.lacity.org/datasets/50227efa5f6d456eb85d5e7e0dc87ade_0
+        census_tracts: http://geohub.lacity.org/datasets/1cdac8ba72ef4b84a468ac295629a2e0_1
   la_county_open_data:
     driver: dcat
     args:
@@ -17,3 +20,14 @@ sources:
     driver: dcat
     args:
       url: http://gisdata-scag.opendata.arcgis.com/data.json
+  care:
+    driver: csv
+    args:
+      urlpath: care_311.csv
+      csv_kwargs:
+        dtype:
+          CD: Int32
+          NC: Int32
+          TBMPage: Int32
+          TBMRow: Int32
+          ZipCode: Int32
