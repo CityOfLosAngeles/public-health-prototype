@@ -25,3 +25,9 @@ sources:
       table: '"public-health"."cleanstat"'
       geopandas_kwargs: 
           geom_col: 'geometry'
+  care311:
+    driver: postgis
+    description: All CARE/CARE+ 311 requests from Open Data, updated daily. 
+    args:
+      uri: "{{env(POSTGRES_URI)}}"
+      table: '"public-health"."311-cases-homelessness"'
