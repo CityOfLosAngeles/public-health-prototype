@@ -1,0 +1,18 @@
+version: '3'
+
+services:
+  lab:
+    build: ./
+    image: public-health-prototype
+    container_name: public-health-prototype
+    volumes:
+     - ./:/home/jovyan
+    ports:
+      - "8888:8888"
+    environment:
+      - JUPYTER_ENABLE_LAB=1
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION}
+      - POSTGRES_URI=${POSTGRES_URI}
+    command: start-notebook.sh --NotebookApp.notebook_dir=/home/jovyan --LabApp.token='' --allow-root
