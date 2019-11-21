@@ -1,5 +1,7 @@
 # Import homelessness counts for 2017-2019 by census tract
 # Assemble and clip to City of LA
+# Reshape from long to wide
+# Add new columns to visualize: unsheltered density, percent homeless per 1000 residents
 
 import numpy as np
 import pandas as pd
@@ -70,16 +72,60 @@ s3.upload_file('./gis/homelessness.geojson', 'city-of-los-angeles-data-lake',
 # ----------------------------------------------------------------#
 tracts = gpd.read_file('s3://city-of-los-angeles-data-lake/public-health-dashboard/gis/raw/census_tracts.geojson')
 
-final = pd.merge(df, tracts, on = 'GEOID', how = 'inner', validate = 'm:1')
+pop = pd.read_parquet(f'{bucket_name}data/raw/pop_by_tract2017.parquet') 
 
-final = final.drop(columns = ['Tract', 'geometry_x'])
-final.rename(columns = {'geometry_y': 'geometry'}, inplace = True)
+# Merge tracts with their 2017 pop
+tracts2 = pd.merge(tracts, pop, on = 'GEOID')
 
-final = final.reindex(columns=['GEOID', 'SPA', 'SD', 'CD', 'year', 
-                               'totUnshelt', 'totShelt', 'totPeople', 'full_area', 'clipped_area', 'geometry'])
+# Merge homelessness counts with tract information
+df2 = pd.merge(df, tracts2, on = 'GEOID', how = 'inner', validate = 'm:1')
+
+
+# Only keep tracts that are in City of LA
+df2 = df2[df2.CD != 0]
+
+df2 = df2.drop(columns = ['Tract', 'geometry_x'])
+df2.rename(columns = {'geometry_y': 'geometry', 'totPeople': 'tot_homeless',
+                      'totUnshelt': 'unsheltered', 'totShelt': 'sheltered'}, inplace = True)
+
+df2 = df2.reindex(columns = ['GEOID', 'SPA', 'SD', 'CD', 'year', 'pop', 
+                             'unsheltered', 'sheltered', 'tot_homeless', 'full_area', 'clipped_area', 'geometry'])
+
+
+# ----------------------------------------------------------------#
+# Reshape data from long to wide
+# ----------------------------------------------------------------#
+tract_characteristics = df2[['GEOID', 'SPA', 'SD', 'CD', 'pop', 'full_area', 'clipped_area', 'geometry']].drop_duplicates()
+unshelt = df2[['GEOID', 'year', 'unsheltered']]
+
+unshelt_wide = unshelt.pivot(index = 'GEOID', columns = 'year', values = 'unsheltered').reset_index()
+unshelt_wide.rename(columns = {2017: 'unsheltered2017', 2018: 'unsheltered2018', 
+                      2019: 'unsheltered2019'}, inplace = True)
+
+# Add change (absolute count differences between years)
+unshelt_wide['change_1718'] = unshelt_wide.unsheltered2018 - unshelt_wide.unsheltered2017
+unshelt_wide['change_1819'] = unshelt_wide.unsheltered2019 - unshelt_wide.unsheltered2018
+
+
+# Merge tract characteristics back in and convert into gdf
+df3 = pd.merge(tract_characteristics, unshelt_wide, on = 'GEOID', how = 'left', validate = 'm:1')
+df3 = gpd.GeoDataFrame(df3)
+df3.crs = {'init':'epsg:2229'}
+
+
+# ----------------------------------------------------------------#
+# Add new columns
+# ----------------------------------------------------------------#
+# Unsheltered density (unsheltered per sq mi); percent unsheltered per 1000 in tract (unsheltered / pop * 1000)
+for y in range(2017, 2020):
+    unshelt_col = f'unsheltered{y}'
+    density_col = f'unshelt_density{y}'
+    pct_col = f'pct_unshelt{y}'
+    df3[density_col] = df3[unshelt_col] / df3.clipped_area
+    df3[pct_col] = df3[unshelt_col] / df3['pop'] * 1000
 
 
 # Export to S3
-final.to_file(driver = 'GeoJSON', filename = './gis/homelessness_la.geojson')
+df3.to_file(driver = 'GeoJSON', filename = './gis/homelessness_la.geojson')
 s3.upload_file('./gis/homelessness_la.geojson', 'city-of-los-angeles-data-lake', 
                'public-health-dashboard/gis/raw/homelessness_lacity_2017_2019.geojson')

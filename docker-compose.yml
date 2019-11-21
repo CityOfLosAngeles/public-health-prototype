@@ -3,8 +3,8 @@ version: '3'
 services:
   lab:
     build: ./
-    image: public-health-prototype
-    container_name: public-health-prototype
+    image: public_health_prototype
+    container_name: public_health_prototype
     volumes:
      - ./:/home/jovyan
     ports:
