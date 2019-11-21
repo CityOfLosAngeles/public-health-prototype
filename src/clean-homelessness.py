@@ -9,6 +9,7 @@ import boto3
 
 catalog = intake.open_catalog('./catalogs/*.yml')
 s3 = boto3.client('s3')
+bucket_name = 's3://city-of-los-angeles-data-lake/public-health-dashboard/'
 
 
 # ----------------------------------------------------------------#

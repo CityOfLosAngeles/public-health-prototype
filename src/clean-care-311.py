@@ -27,13 +27,13 @@ df['year'] = df['createddate'].dt.year
 # Define a function that will aggregate Request Type
 def request_type(row):
     
-    homeless = 0
+    encampment = 0
     bulky = 0
     illegal = 0
     other = 0
     
     if row.requesttype == 'Homeless Encampment':
-        homeless = 1
+        encampment = 1
     elif (row.requesttype == 'Bulky Items'):
         bulky = 1
     elif 'Illegal Dumping' in row.requesttype:
@@ -44,7 +44,7 @@ def request_type(row):
           (row.requesttype == 'Dead Animal Removal')):
         other = 1
     
-    return pd.Series([homeless, bulky, illegal, other], index=['homeless', 'bulky', 'illegal', 'other'])
+    return pd.Series([encampment, bulky, illegal, other], index=['encampment', 'bulky', 'illegal', 'other'])
 
 requests = df.apply(request_type, axis = 1)
 df = pd.concat([df, requests], axis = 1)
