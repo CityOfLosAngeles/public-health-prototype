@@ -57,8 +57,7 @@ df = df[df.geom.notna()]
 #-----------------------------------------------------------#
 tracts = gpd.read_file(f'{bucket_name}gis/raw/census_tracts.geojson').to_crs({'init':'epsg:4326'})
 
-
-m1 = gpd.sjoin(df, tracts, how = 'inner', op = 'intersects')
+m1 = gpd.sjoin(tracts, df, how = 'left', op = 'intersects')
 
 pivot1 = m1.pivot_table(index = ['GEOID', 'year'], 
                values = ['encampment', 'bulky', 'illegal', 'other'], aggfunc = 'sum').reset_index().sort_values(['GEOID', 'year'])
@@ -66,7 +65,7 @@ pivot1 = m1.pivot_table(index = ['GEOID', 'year'],
 
 # Pivot wouldn't work with a geometry column. 
 # Merge geometry column for tracts back in
-pivot1 = pd.merge(pivot1, tracts, on = 'GEOID', validate = 'm:1')
+pivot1 = pd.merge(pivot1, tracts, how = 'left', on = 'GEOID', validate = 'm:1')
 
 pivot1 = gpd.GeoDataFrame(pivot1)
 pivot1.crs = {'init':'epsg:4326'}

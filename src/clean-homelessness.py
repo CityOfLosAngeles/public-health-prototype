@@ -56,7 +56,7 @@ df = df.drop(columns = ['Tract'])
 df.rename(columns = {'totPeople': 'tot_homeless', 'totUnshelt': 'unsheltered', 
                     'totShelt': 'sheltered'}, inplace = True)
 
-df = df.reindex(columns = ['GEOID', 'SPA', 'SD', 'CD', 'year', 'pop', 
+df = df.reindex(columns = ['GEOID', 'SPA', 'SD', 'CD', 'year', 
                              'unsheltered', 'sheltered', 'tot_homeless'])
 
 df = df.sort_values(['GEOID', 'year'])
