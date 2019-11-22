@@ -9,7 +9,6 @@ import boto3
 
 catalog = intake.open_catalog('./catalogs/*.yml')
 bucket_name = 's3://city-of-los-angeles-data-lake/public-health-dashboard/'
-
 s3 = boto3.client('s3')
 
 df = catalog.care311.read()
@@ -62,7 +61,8 @@ tracts = gpd.read_file(f'{bucket_name}gis/raw/census_tracts.geojson').to_crs({'i
 m1 = gpd.sjoin(df, tracts, how = 'inner', op = 'intersects')
 
 pivot1 = m1.pivot_table(index = ['GEOID', 'year'], 
-               values = ['homeless', 'bulky', 'illegal', 'other'], aggfunc = 'sum').reset_index().sort_values(['GEOID', 'year'])
+               values = ['encampment', 'bulky', 'illegal', 'other'], aggfunc = 'sum').reset_index().sort_values(['GEOID', 'year'])
+
 
 # Pivot wouldn't work with a geometry column. 
 # Merge geometry column for tracts back in
