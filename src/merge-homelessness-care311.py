@@ -43,6 +43,15 @@ col_order = ['GEOID', 'SPA', 'SD', 'CD', 'year',
 m2 = m2.reindex(columns = col_order)
 
 
+# Only keep if there is a CD attached
+m2 = m2[m2.CD.notna()]
+
+
+# Set column types
+for col in ['SPA', 'SD', 'CD', 'year', 'bulky', 'encampment', 'illegal', 'other', 'pop']:
+    m2[col] = m2[col].astype(int)
+
+
 # Export to S3
 # Use WGS84 so folium and ipyleaflet maps can display
 m2.to_crs({'init':'epsg:4326'}).to_file(driver = 'GeoJSON', filename = './gis/homelessness_care_tracts.geojson')
