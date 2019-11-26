@@ -53,7 +53,7 @@ pop = pop.append(data)
 #----------------------------------------------------------------#
 # Import census tracts and clip to City of LA
 #----------------------------------------------------------------#
-tract = gpd.read_file('s3://city-of-los-angeles-data-lake/public-health-dashboard/gis/source/tl_2019_06_tract/').to_crs({'init':'epsg:2229'})
+tract = gpd.read_file('s3://city-of-los-angeles-data-lake/public-health-dashboard/gis/raw/tl_2019_06_tract/').to_crs({'init':'epsg:2229'})
 city_boundary = catalog.city_boundary.read().to_crs({'init':'epsg:2229'})
 
 # Number of square feet in one square mile
@@ -102,8 +102,10 @@ tracts_la = tracts_la.set_geometry('clipped_geom')
 keep = ['GEOID', 'clipped_geom', 'full_area', 'clipped_area']
 tracts_la = tracts_la[keep]
 
+tracts_with_pop = pd.merge(tracts_la, df, how = 'left', on = 'GEOID', validate = '1:1')
+
 
 # Write to S3
-tracts_la.to_file(driver = 'GeoJSON', filename = './gis/census_tracts.geojson')
+tracts_with_pop.to_file(driver = 'GeoJSON', filename = './gis/census_tracts.geojson')
 s3.upload_file('./gis/census_tracts.geojson', 'city-of-los-angeles-data-lake', 
                'public-health-dashboard/gis/raw/census_tracts.geojson')

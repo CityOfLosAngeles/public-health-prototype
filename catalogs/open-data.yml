@@ -4,7 +4,7 @@ metadata:
 sources:
   city_boundary:
     args:
-      urlpath: s3://city-of-los-angeles-data-lake/public-health-dashboard/gis/source/city_boundary.geojson
+      urlpath: s3://city-of-los-angeles-data-lake/public-health-dashboard/gis/raw/city_boundary.geojson
     description: "## City Boundary\n\nCity Boundary\_"
     driver: intake_geopandas.geopandas.GeoJSONSource
     metadata:
@@ -78,7 +78,7 @@ sources:
         title: City Boundary
   council_districts:
     args:
-      urlpath: s3://city-of-los-angeles-data-lake/public-health-dashboard/gis/source/council_districts.geojson
+      urlpath: s3://city-of-los-angeles-data-lake/public-health-dashboard/gis/raw/council_districts.geojson
     description: "## LA City Council Districts (Adopted 2012)\n\nCouncil Districts\_"
     driver: intake_geopandas.geopandas.GeoJSONSource
     metadata:
@@ -154,7 +154,7 @@ sources:
         title: LA City Council Districts (Adopted 2012)
   homeless_2017:
     args:
-      urlpath: s3://city-of-los-angeles-data-lake/public-health-dashboard/gis/source/homeless_2017.geojson
+      urlpath: s3://city-of-los-angeles-data-lake/public-health-dashboard/gis/raw/homeless_2017.geojson
     description: "## Homeless Count by Council District - 2017\n\n<p style='language:en-US;margin-top:0pt;margin-bottom:0pt;margin-left:0in;\n\
       text-indent:0in'><span style='font-size:12.0pt;font-family:Calibri;mso-ascii-font-family:\n\
       Calibri;mso-fareast-font-family:+mn-ea;mso-bidi-font-family:+mn-cs;mso-ascii-theme-font:\n\
@@ -484,7 +484,7 @@ sources:
         title: Homeless Count by Council District - 2017
   homeless_2018:
     args:
-      urlpath: s3://city-of-los-angeles-data-lake/public-health-dashboard/gis/source/homeless_2018.geojson
+      urlpath: s3://city-of-los-angeles-data-lake/public-health-dashboard/gis/raw/homeless_2018.geojson
     description: "## Homeless Count by Council District - 2018\n\n<p style='margin-top:\
       \ 0pt; margin-bottom: 0pt; font-family: &quot;Avenir Next W01&quot;, &quot;Avenir\
       \ Next W00&quot;, &quot;Avenir Next&quot;, Avenir, &quot;Helvetica Neue&quot;,\
@@ -776,7 +776,7 @@ sources:
         title: Homeless Count by Council District - 2018
   homeless_2019:
     args:
-      urlpath: s3://city-of-los-angeles-data-lake/public-health-dashboard/gis/source/homeless_2019.geojson
+      urlpath: s3://city-of-los-angeles-data-lake/public-health-dashboard/gis/raw/homeless_2019.geojson
     description: "## Homeless Count Los Angeles County 2019\n\n<p style='margin-top:\
       \ 0pt; margin-bottom: 0pt; font-family: &quot;Avenir Next W01&quot;, &quot;Avenir\
       \ Next W00&quot;, &quot;Avenir Next&quot;, Avenir, &quot;Helvetica Neue&quot;,\
@@ -906,7 +906,7 @@ sources:
         title: Homeless Count Los Angeles County 2019
   homeless_shelters:
     args:
-      urlpath: s3://city-of-los-angeles-data-lake/public-health-dashboard/gis/source/homeless_shelters.geojson
+      urlpath: s3://city-of-los-angeles-data-lake/public-health-dashboard/gis/raw/homeless_shelters.geojson
     description: "## Homeless Shelters and Services\n\n<p style='padding: 0px; color:\
       \ rgb(0, 0, 0); font-family: verdana, arial, sans-serif; line-height: 20.2222px;\
       \ background-color: rgb(255, 255, 255);'>Location Management System (LMS) is\
@@ -990,7 +990,7 @@ sources:
         title: Homeless Shelters and Services
   neighborhood_councils:
     args:
-      urlpath: s3://city-of-los-angeles-data-lake/public-health-dashboard/gis/source/neighborhood_councils.geojson
+      urlpath: s3://city-of-los-angeles-data-lake/public-health-dashboard/gis/raw/neighborhood_councils.geojson
     description: '## Neighborhood Council Boundaries (2018)
 
 

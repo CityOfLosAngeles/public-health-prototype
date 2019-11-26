@@ -5,15 +5,11 @@ import numpy as np
 import pandas as pd
 import geopandas as gpd
 import intake
-import boto3
 
 catalog = intake.open_catalog('./catalogs/*.yml')
-s3 = boto3.client('s3')
+bucket_name = 's3://city-of-los-angeles-data-lake/public-health-dashboard/'
 
 
-# ----------------------------------------------------------------#
-# Import homelessness data and append
-# ----------------------------------------------------------------#
 y2017 = catalog.homeless_2017.read().to_crs({'init':'epsg:2229'})
 y2018 = catalog.homeless_2018.read().to_crs({'init':'epsg:2229'})
 y2019 = catalog.homeless_2019.read().to_crs({'init':'epsg:2229'})
@@ -35,7 +31,7 @@ for key, value in raw_dfs.items():
     new_df = value.copy()
     new_df['year'] = int(yr) 
     # Rename columns
-    keep = ['Tract', 'SPA', 'SD', 'CD', 'totUnshelt', 'totShelt', 'totPeople', 'geometry', 'year']
+    keep = ['Tract', 'SPA', 'SD', 'CD', 'totUnshelt', 'totShelt', 'totPeople', 'year']
     if key == '2017':
         new_df.rename(columns = {'totSheltPe': 'totShelt'}, inplace = True)
     elif key == '2018':
@@ -52,33 +48,19 @@ for key, value in raw_dfs.items():
 # Make GEOID    
 df['GEOID'] = '06037' + df.Tract.astype(str)   
     
-df = df.to_crs({'init':'epsg:2229'}) 
 
+# Only keep tracts that are in City of LA
+df = df[df.CD != 0]
 
-# Sort
+df = df.drop(columns = ['Tract'])
+df.rename(columns = {'totPeople': 'tot_homeless', 'totUnshelt': 'unsheltered', 
+                    'totShelt': 'sheltered'}, inplace = True)
+
+df = df.reindex(columns = ['GEOID', 'SPA', 'SD', 'CD', 'year', 
+                             'unsheltered', 'sheltered', 'tot_homeless'])
+
 df = df.sort_values(['GEOID', 'year'])
 
-# Export to S3
-df.to_file(driver = 'GeoJSON', filename = './gis/homelessness.geojson')
-s3.upload_file('./gis/homelessness.geojson', 'city-of-los-angeles-data-lake', 
-               'public-health-dashboard/gis/raw/homelessness_2017_2019.geojson')
-
-
-# ----------------------------------------------------------------#
-# Merge homelessness with clipped census tracts
-# ----------------------------------------------------------------#
-tracts = gpd.read_file('s3://city-of-los-angeles-data-lake/public-health-dashboard/gis/raw/census_tracts.geojson')
-
-final = pd.merge(df, tracts, on = 'GEOID', how = 'inner', validate = 'm:1')
-
-final = final.drop(columns = ['Tract', 'geometry_x'])
-final.rename(columns = {'geometry_y': 'geometry'}, inplace = True)
-
-final = final.reindex(columns=['GEOID', 'SPA', 'SD', 'CD', 'year', 
-                               'totUnshelt', 'totShelt', 'totPeople', 'full_area', 'clipped_area', 'geometry'])
-
 
 # Export to S3
-final.to_file(driver = 'GeoJSON', filename = './gis/homelessness_la.geojson')
-s3.upload_file('./gis/homelessness_la.geojson', 'city-of-los-angeles-data-lake', 
-               'public-health-dashboard/gis/raw/homelessness_lacity_2017_2019.geojson')
+df.to_parquet(f'{bucket_name}gis/intermediate/homelessness_2017_2019.parquet')
