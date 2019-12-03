@@ -2,6 +2,9 @@
 library(shiny)
 library(shinydashboard)
 library(leaflet)
+library(tidyverse)
+
+source("load_data.R")
 
 r_colors <- rgb(t(col2rgb(colors()) / 255))
 names(r_colors) <- colors()
@@ -21,18 +24,16 @@ ui <- dashboardPage(
     # Boxes need to be put in a row (or column)
     fluidPage(
       # create date picker
-      dateRangeInput('date', 'Date Range', start = NULL, end = NULL, min = NULL,
+      dateRangeInput('dates', 'Date Range',
+                     start = Sys.Date() - 2,
+                     end = Sys.Date(),
+                     min = NULL,
                      max = NULL, format = "yyyy-mm-dd", startview = "month",
                      weekstart = 0, language = "en", separator = " to ", width = NULL,
                      autoclose = TRUE)
     ),
     fluidRow(
-      box(plotOutput("plot1", height = 250)),
-      
-      box(
-        title = "Controls",
-        sliderInput("slider", "Number of observations:", 1, 100, 50)
-      )
+      box(tableOutput("requestTable"))
     ),
     fluidRow(leafletOutput("mymap"))
   )
@@ -51,14 +52,17 @@ server <- function(input, output, session) {
       addMarkers(data = points())
   })  
   
-  set.seed(122)
-  histdata <- rnorm(500)
-  
-  output$plot1 <- renderPlot({
-    data <- histdata[seq_len(input$slider)]
-    hist(data)
-  })
-  
+  # source plot 
+  service_start <- reactive({parse_date(input$dates[1])})
+  service_end <- reactive({parse_date(input$dates[2])})
+
+  subsetCases <- reactive({cases %>% filter(closeddate > service_start() & 
+                                            closeddate < service_end())} >%> head())
+
+    #    %>% renderPlot(ggplot(aes(createdbyuserorganization)) +
+    #                   geom_bar() +
+    #                   labs(title ="Source of Closed Tickets in Selected Date Range"))
+  output$requestTable <- renderTable(subsetCases())
   div(
     output$dateText  <- renderText({
       paste("input$date is", as.character(input$date))
