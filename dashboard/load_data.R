@@ -2,8 +2,10 @@ library(dplyr)
 library(DBI)
 library(sys)
 library(stringr)
+library(tidyverse)
 
-conn_string = Sys.getenv('POSTGRES_URI')
+conn_string <- Sys.getenv('POSTGRES_URI')
+
 
 split <- conn_string %>% str_split(":") 
 
@@ -25,3 +27,6 @@ con <- dbConnect(RPostgres::Postgres(),
 
 cases <- tbl(con, dbplyr::in_schema('"public-health"','"311-cases-homelessness"')) %>% collect()
 
+cases$closeddate <- as_date(cases$closeddate) 
+
+cases <- cases %>% drop_na('closeddate')

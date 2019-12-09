@@ -3,6 +3,7 @@ library(shiny)
 library(shinydashboard)
 library(leaflet)
 library(tidyverse)
+library(lubridate)
 
 source("load_data.R")
 
@@ -51,14 +52,19 @@ server <- function(input, output, session) {
       ) %>%
       addMarkers(data = points())
   })  
-  
+
   # source plot 
-  service_start <- reactive({parse_date(input$dates[1])})
-  service_end <- reactive({parse_date(input$dates[2])})
+  service_start <- reactive({parse_date(input$dates[1],
+    locale = locale(tz = "US/Pacific"))}) 
+  service_end <- reactive({parse_date(input$dates[2],
+    locale = locale(tz = "US/Pacific"))})
+  service_period <- reactive({service_start() %--% service_end()}) 
 
-  subsetCases <- reactive({cases %>% filter(closeddate > service_start() & 
-                                            closeddate < service_end())} >%> head())
-
+    subsetCases <- reactive({cases %>% 
+                           filter(closeddate %within% service_period()) %>%
+                           head(5)})
+    #reactive({cases %>% filter(closeddate > service_start())})
+  
     #    %>% renderPlot(ggplot(aes(createdbyuserorganization)) +
     #                   geom_bar() +
     #                   labs(title ="Source of Closed Tickets in Selected Date Range"))
@@ -69,5 +75,6 @@ server <- function(input, output, session) {
     })
   )
 }
+
 
 shinyApp(ui, server)
