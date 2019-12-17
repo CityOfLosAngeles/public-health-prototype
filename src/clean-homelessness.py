@@ -7,7 +7,7 @@ import geopandas as gpd
 import intake
 
 catalog = intake.open_catalog('./catalogs/*.yml')
-bucket_name = 's3://city-of-los-angeles-data-lake/public-health-dashboard/'
+bucket_name = 's3://public-health-dashboard/'
 
 
 y2017 = catalog.homeless_2017.read().to_crs({'init':'epsg:2229'})

@@ -1,6 +1,6 @@
 metadata:
   version: 1
-  bucket_uri: s3://city-of-los-angeles-data-lake/public-health-dashboard/gis/raw
+  bucket_uri: s3://public-health-dashboard/gis/raw
 sources:
   la-open-data:
     driver: dcat
