@@ -4,7 +4,7 @@ metadata:
 sources:
   city_boundary:
     args:
-      urlpath: s3://city-of-los-angeles-data-lake/public-health-dashboard/gis/raw/city_boundary.geojson
+      urlpath: s3://public-health-dashboard/gis/raw/city_boundary.geojson
     description: "## City Boundary\n\nCity Boundary\_"
     driver: intake_geopandas.geopandas.GeoJSONSource
     metadata:
@@ -28,12 +28,12 @@ sources:
           mediaType: application/json
           title: Esri Rest API
         - '@type': dcat:Distribution
-          accessURL: http://geohub.lacity.org/datasets/09f503229d37414a8e67a7b6ceb9ec43_7.geojson
+          accessURL: http://geohub.lacity.org/datasets/09f503229d37414a8e67a7b6ceb9ec43_7.geojson?outSR={"latestWkid":3857,"wkid":102100}
           format: GeoJSON
           mediaType: application/vnd.geo+json
           title: GeoJSON
         - '@type': dcat:Distribution
-          accessURL: http://geohub.lacity.org/datasets/09f503229d37414a8e67a7b6ceb9ec43_7.csv
+          accessURL: http://geohub.lacity.org/datasets/09f503229d37414a8e67a7b6ceb9ec43_7.csv?outSR={"latestWkid":3857,"wkid":102100}
           format: CSV
           mediaType: text/csv
           title: CSV
@@ -43,12 +43,12 @@ sources:
           mediaType: application/vnd.ogc.wfs_xml
           title: OGC WFS
         - '@type': dcat:Distribution
-          accessURL: http://geohub.lacity.org/datasets/09f503229d37414a8e67a7b6ceb9ec43_7.kml
+          accessURL: http://geohub.lacity.org/datasets/09f503229d37414a8e67a7b6ceb9ec43_7.kml?outSR={"latestWkid":3857,"wkid":102100}
           format: KML
           mediaType: application/vnd.google-earth.kml+xml
           title: KML
         - '@type': dcat:Distribution
-          accessURL: http://geohub.lacity.org/datasets/09f503229d37414a8e67a7b6ceb9ec43_7.zip
+          accessURL: http://geohub.lacity.org/datasets/09f503229d37414a8e67a7b6ceb9ec43_7.zip?outSR={"latestWkid":3857,"wkid":102100}
           format: ZIP
           mediaType: application/zip
           title: Shapefile
@@ -78,7 +78,7 @@ sources:
         title: City Boundary
   council_districts:
     args:
-      urlpath: s3://city-of-los-angeles-data-lake/public-health-dashboard/gis/raw/council_districts.geojson
+      urlpath: s3://public-health-dashboard/gis/raw/council_districts.geojson
     description: "## LA City Council Districts (Adopted 2012)\n\nCouncil Districts\_"
     driver: intake_geopandas.geopandas.GeoJSONSource
     metadata:
@@ -102,12 +102,12 @@ sources:
           mediaType: application/json
           title: Esri Rest API
         - '@type': dcat:Distribution
-          accessURL: http://geohub.lacity.org/datasets/76104f230e384f38871eb3c4782f903d_13.geojson
+          accessURL: http://geohub.lacity.org/datasets/76104f230e384f38871eb3c4782f903d_13.geojson?outSR={"latestWkid":3857,"wkid":102100}
           format: GeoJSON
           mediaType: application/vnd.geo+json
           title: GeoJSON
         - '@type': dcat:Distribution
-          accessURL: http://geohub.lacity.org/datasets/76104f230e384f38871eb3c4782f903d_13.csv
+          accessURL: http://geohub.lacity.org/datasets/76104f230e384f38871eb3c4782f903d_13.csv?outSR={"latestWkid":3857,"wkid":102100}
           format: CSV
           mediaType: text/csv
           title: CSV
@@ -117,12 +117,12 @@ sources:
           mediaType: application/vnd.ogc.wfs_xml
           title: OGC WFS
         - '@type': dcat:Distribution
-          accessURL: http://geohub.lacity.org/datasets/76104f230e384f38871eb3c4782f903d_13.kml
+          accessURL: http://geohub.lacity.org/datasets/76104f230e384f38871eb3c4782f903d_13.kml?outSR={"latestWkid":3857,"wkid":102100}
           format: KML
           mediaType: application/vnd.google-earth.kml+xml
           title: KML
         - '@type': dcat:Distribution
-          accessURL: http://geohub.lacity.org/datasets/76104f230e384f38871eb3c4782f903d_13.zip
+          accessURL: http://geohub.lacity.org/datasets/76104f230e384f38871eb3c4782f903d_13.zip?outSR={"latestWkid":3857,"wkid":102100}
           format: ZIP
           mediaType: application/zip
           title: Shapefile
@@ -154,7 +154,7 @@ sources:
         title: LA City Council Districts (Adopted 2012)
   homeless_2017:
     args:
-      urlpath: s3://city-of-los-angeles-data-lake/public-health-dashboard/gis/raw/homeless_2017.geojson
+      urlpath: s3://public-health-dashboard/gis/raw/homeless_2017.geojson
     description: "## Homeless Count by Council District - 2017\n\n<p style='language:en-US;margin-top:0pt;margin-bottom:0pt;margin-left:0in;\n\
       text-indent:0in'><span style='font-size:12.0pt;font-family:Calibri;mso-ascii-font-family:\n\
       Calibri;mso-fareast-font-family:+mn-ea;mso-bidi-font-family:+mn-cs;mso-ascii-theme-font:\n\
@@ -448,22 +448,22 @@ sources:
           mediaType: application/json
           title: Esri Rest API
         - '@type': dcat:Distribution
-          accessURL: http://geohub.lacity.org/datasets/607614502e93482fa80e5b9b5b4c3267_0.geojson
+          accessURL: http://geohub.lacity.org/datasets/607614502e93482fa80e5b9b5b4c3267_0.geojson?outSR={"latestWkid":3857,"wkid":102100}
           format: GeoJSON
           mediaType: application/vnd.geo+json
           title: GeoJSON
         - '@type': dcat:Distribution
-          accessURL: http://geohub.lacity.org/datasets/607614502e93482fa80e5b9b5b4c3267_0.csv
+          accessURL: http://geohub.lacity.org/datasets/607614502e93482fa80e5b9b5b4c3267_0.csv?outSR={"latestWkid":3857,"wkid":102100}
           format: CSV
           mediaType: text/csv
           title: CSV
         - '@type': dcat:Distribution
-          accessURL: http://geohub.lacity.org/datasets/607614502e93482fa80e5b9b5b4c3267_0.kml
+          accessURL: http://geohub.lacity.org/datasets/607614502e93482fa80e5b9b5b4c3267_0.kml?outSR={"latestWkid":3857,"wkid":102100}
           format: KML
           mediaType: application/vnd.google-earth.kml+xml
           title: KML
         - '@type': dcat:Distribution
-          accessURL: http://geohub.lacity.org/datasets/607614502e93482fa80e5b9b5b4c3267_0.zip
+          accessURL: http://geohub.lacity.org/datasets/607614502e93482fa80e5b9b5b4c3267_0.zip?outSR={"latestWkid":3857,"wkid":102100}
           format: ZIP
           mediaType: application/zip
           title: Shapefile
@@ -484,7 +484,7 @@ sources:
         title: Homeless Count by Council District - 2017
   homeless_2018:
     args:
-      urlpath: s3://city-of-los-angeles-data-lake/public-health-dashboard/gis/raw/homeless_2018.geojson
+      urlpath: s3://public-health-dashboard/gis/raw/homeless_2018.geojson
     description: "## Homeless Count by Council District - 2018\n\n<p style='margin-top:\
       \ 0pt; margin-bottom: 0pt; font-family: &quot;Avenir Next W01&quot;, &quot;Avenir\
       \ Next W00&quot;, &quot;Avenir Next&quot;, Avenir, &quot;Helvetica Neue&quot;,\
@@ -740,22 +740,22 @@ sources:
           mediaType: application/json
           title: Esri Rest API
         - '@type': dcat:Distribution
-          accessURL: http://geohub.lacity.org/datasets/c8e6c2f2b6434c67a33a7b189f53f2b4_0.geojson
+          accessURL: http://geohub.lacity.org/datasets/c8e6c2f2b6434c67a33a7b189f53f2b4_0.geojson?outSR={"latestWkid":6421,"wkid":103000}
           format: GeoJSON
           mediaType: application/vnd.geo+json
           title: GeoJSON
         - '@type': dcat:Distribution
-          accessURL: http://geohub.lacity.org/datasets/c8e6c2f2b6434c67a33a7b189f53f2b4_0.csv
+          accessURL: http://geohub.lacity.org/datasets/c8e6c2f2b6434c67a33a7b189f53f2b4_0.csv?outSR={"latestWkid":6421,"wkid":103000}
           format: CSV
           mediaType: text/csv
           title: CSV
         - '@type': dcat:Distribution
-          accessURL: http://geohub.lacity.org/datasets/c8e6c2f2b6434c67a33a7b189f53f2b4_0.kml
+          accessURL: http://geohub.lacity.org/datasets/c8e6c2f2b6434c67a33a7b189f53f2b4_0.kml?outSR={"latestWkid":6421,"wkid":103000}
           format: KML
           mediaType: application/vnd.google-earth.kml+xml
           title: KML
         - '@type': dcat:Distribution
-          accessURL: http://geohub.lacity.org/datasets/c8e6c2f2b6434c67a33a7b189f53f2b4_0.zip
+          accessURL: http://geohub.lacity.org/datasets/c8e6c2f2b6434c67a33a7b189f53f2b4_0.zip?outSR={"latestWkid":6421,"wkid":103000}
           format: ZIP
           mediaType: application/zip
           title: Shapefile
@@ -776,7 +776,7 @@ sources:
         title: Homeless Count by Council District - 2018
   homeless_2019:
     args:
-      urlpath: s3://city-of-los-angeles-data-lake/public-health-dashboard/gis/raw/homeless_2019.geojson
+      urlpath: s3://public-health-dashboard/gis/raw/homeless_2019.geojson
     description: "## Homeless Count Los Angeles County 2019\n\n<p style='margin-top:\
       \ 0pt; margin-bottom: 0pt; font-family: &quot;Avenir Next W01&quot;, &quot;Avenir\
       \ Next W00&quot;, &quot;Avenir Next&quot;, Avenir, &quot;Helvetica Neue&quot;,\
@@ -869,22 +869,22 @@ sources:
           mediaType: application/json
           title: Esri Rest API
         - '@type': dcat:Distribution
-          accessURL: http://geohub.lacity.org/datasets/50227efa5f6d456eb85d5e7e0dc87ade_0.geojson
+          accessURL: http://geohub.lacity.org/datasets/50227efa5f6d456eb85d5e7e0dc87ade_0.geojson?outSR={"latestWkid":2229,"wkid":102645}
           format: GeoJSON
           mediaType: application/vnd.geo+json
           title: GeoJSON
         - '@type': dcat:Distribution
-          accessURL: http://geohub.lacity.org/datasets/50227efa5f6d456eb85d5e7e0dc87ade_0.csv
+          accessURL: http://geohub.lacity.org/datasets/50227efa5f6d456eb85d5e7e0dc87ade_0.csv?outSR={"latestWkid":2229,"wkid":102645}
           format: CSV
           mediaType: text/csv
           title: CSV
         - '@type': dcat:Distribution
-          accessURL: http://geohub.lacity.org/datasets/50227efa5f6d456eb85d5e7e0dc87ade_0.kml
+          accessURL: http://geohub.lacity.org/datasets/50227efa5f6d456eb85d5e7e0dc87ade_0.kml?outSR={"latestWkid":2229,"wkid":102645}
           format: KML
           mediaType: application/vnd.google-earth.kml+xml
           title: KML
         - '@type': dcat:Distribution
-          accessURL: http://geohub.lacity.org/datasets/50227efa5f6d456eb85d5e7e0dc87ade_0.zip
+          accessURL: http://geohub.lacity.org/datasets/50227efa5f6d456eb85d5e7e0dc87ade_0.zip?outSR={"latestWkid":2229,"wkid":102645}
           format: ZIP
           mediaType: application/zip
           title: Shapefile
@@ -906,7 +906,7 @@ sources:
         title: Homeless Count Los Angeles County 2019
   homeless_shelters:
     args:
-      urlpath: s3://city-of-los-angeles-data-lake/public-health-dashboard/gis/raw/homeless_shelters.geojson
+      urlpath: s3://public-health-dashboard/gis/raw/homeless_shelters.geojson
     description: "## Homeless Shelters and Services\n\n<p style='padding: 0px; color:\
       \ rgb(0, 0, 0); font-family: verdana, arial, sans-serif; line-height: 20.2222px;\
       \ background-color: rgb(255, 255, 255);'>Location Management System (LMS) is\
@@ -954,22 +954,22 @@ sources:
           mediaType: application/json
           title: Esri Rest API
         - '@type': dcat:Distribution
-          accessURL: http://geohub.lacity.org/datasets/6f6c4677365b4418bd585db2ef8e201f_158.geojson
+          accessURL: http://geohub.lacity.org/datasets/6f6c4677365b4418bd585db2ef8e201f_158.geojson?outSR={"latestWkid":3857,"wkid":102100}
           format: GeoJSON
           mediaType: application/vnd.geo+json
           title: GeoJSON
         - '@type': dcat:Distribution
-          accessURL: http://geohub.lacity.org/datasets/6f6c4677365b4418bd585db2ef8e201f_158.csv
+          accessURL: http://geohub.lacity.org/datasets/6f6c4677365b4418bd585db2ef8e201f_158.csv?outSR={"latestWkid":3857,"wkid":102100}
           format: CSV
           mediaType: text/csv
           title: CSV
         - '@type': dcat:Distribution
-          accessURL: http://geohub.lacity.org/datasets/6f6c4677365b4418bd585db2ef8e201f_158.kml
+          accessURL: http://geohub.lacity.org/datasets/6f6c4677365b4418bd585db2ef8e201f_158.kml?outSR={"latestWkid":3857,"wkid":102100}
           format: KML
           mediaType: application/vnd.google-earth.kml+xml
           title: KML
         - '@type': dcat:Distribution
-          accessURL: http://geohub.lacity.org/datasets/6f6c4677365b4418bd585db2ef8e201f_158.zip
+          accessURL: http://geohub.lacity.org/datasets/6f6c4677365b4418bd585db2ef8e201f_158.zip?outSR={"latestWkid":3857,"wkid":102100}
           format: ZIP
           mediaType: application/zip
           title: Shapefile
@@ -990,7 +990,7 @@ sources:
         title: Homeless Shelters and Services
   neighborhood_councils:
     args:
-      urlpath: s3://city-of-los-angeles-data-lake/public-health-dashboard/gis/raw/neighborhood_councils.geojson
+      urlpath: s3://public-health-dashboard/gis/raw/neighborhood_councils.geojson
     description: '## Neighborhood Council Boundaries (2018)
 
 
@@ -1037,22 +1037,22 @@ sources:
           mediaType: application/json
           title: Esri Rest API
         - '@type': dcat:Distribution
-          accessURL: http://geohub.lacity.org/datasets/674f80b8edee4bf48551512896a1821d_0.geojson
+          accessURL: http://geohub.lacity.org/datasets/674f80b8edee4bf48551512896a1821d_0.geojson?outSR={"latestWkid":3857,"wkid":102100}
           format: GeoJSON
           mediaType: application/vnd.geo+json
           title: GeoJSON
         - '@type': dcat:Distribution
-          accessURL: http://geohub.lacity.org/datasets/674f80b8edee4bf48551512896a1821d_0.csv
+          accessURL: http://geohub.lacity.org/datasets/674f80b8edee4bf48551512896a1821d_0.csv?outSR={"latestWkid":3857,"wkid":102100}
           format: CSV
           mediaType: text/csv
           title: CSV
         - '@type': dcat:Distribution
-          accessURL: http://geohub.lacity.org/datasets/674f80b8edee4bf48551512896a1821d_0.kml
+          accessURL: http://geohub.lacity.org/datasets/674f80b8edee4bf48551512896a1821d_0.kml?outSR={"latestWkid":3857,"wkid":102100}
           format: KML
           mediaType: application/vnd.google-earth.kml+xml
           title: KML
         - '@type': dcat:Distribution
-          accessURL: http://geohub.lacity.org/datasets/674f80b8edee4bf48551512896a1821d_0.zip
+          accessURL: http://geohub.lacity.org/datasets/674f80b8edee4bf48551512896a1821d_0.zip?outSR={"latestWkid":3857,"wkid":102100}
           format: ZIP
           mediaType: application/zip
           title: Shapefile

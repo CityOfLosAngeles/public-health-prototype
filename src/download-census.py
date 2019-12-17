@@ -33,7 +33,7 @@ df.rename(columns = {'B01003_001E': 'pop'}, inplace = True)
 df = df.sort_values('GEOID', ascending = True)
 
 
-df.to_parquet('s3://city-of-los-angeles-data-lake/public-health-dashboard/data/raw/pop_by_tract2017.parquet')
+df.to_parquet('s3://public-health-dashboard/data/raw/pop_by_tract2017.parquet')
 
 """
 # The syntax from censusdata is more similar to the R packages
@@ -53,7 +53,7 @@ pop = pop.append(data)
 #----------------------------------------------------------------#
 # Import census tracts and clip to City of LA
 #----------------------------------------------------------------#
-tract = gpd.read_file('s3://city-of-los-angeles-data-lake/public-health-dashboard/gis/raw/tl_2019_06_tract/').to_crs({'init':'epsg:2229'})
+tract = gpd.read_file('s3://public-health-dashboard/gis/raw/tl_2019_06_tract/').to_crs({'init':'epsg:2229'})
 city_boundary = catalog.city_boundary.read().to_crs({'init':'epsg:2229'})
 
 # Number of square feet in one square mile
@@ -107,5 +107,5 @@ tracts_with_pop = pd.merge(tracts_la, df, how = 'left', on = 'GEOID', validate =
 
 # Write to S3
 tracts_with_pop.to_file(driver = 'GeoJSON', filename = './gis/census_tracts.geojson')
-s3.upload_file('./gis/census_tracts.geojson', 'city-of-los-angeles-data-lake', 
-               'public-health-dashboard/gis/raw/census_tracts.geojson')
+s3.upload_file('./gis/census_tracts.geojson', 'public-health-dashboard', 
+               'gis/raw/census_tracts.geojson')

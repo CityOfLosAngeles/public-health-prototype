@@ -8,7 +8,7 @@ from shapely.geometry import Point
 import boto3
 
 catalog = intake.open_catalog('./catalogs/*.yml')
-bucket_name = 's3://city-of-los-angeles-data-lake/public-health-dashboard/'
+bucket_name = 's3://public-health-dashboard/'
 s3 = boto3.client('s3')
 
 df = catalog.care311.read()
@@ -74,5 +74,5 @@ pivot1.crs = {'init':'epsg:4326'}
 # Export to S3
 pivot1.to_crs({'init':'epsg:2229'}).to_file(driver = 'GeoJSON', filename = './gis/care311_tracts.geojson')
 
-s3.upload_file('./gis/care311_tracts.geojson', 'city-of-los-angeles-data-lake', 
-               'public-health-dashboard/gis/intermediate/care311_tracts.geojson')
+s3.upload_file('./gis/care311_tracts.geojson', 'public-health-dashboard', 
+               'gis/intermediate/care311_tracts.geojson')

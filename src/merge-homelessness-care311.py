@@ -8,7 +8,7 @@ import boto3
 
 catalog = intake.open_catalog('./catalogs/*.yml')
 s3 = boto3.client('s3')
-bucket_name = 's3://city-of-los-angeles-data-lake/public-health-dashboard/'
+bucket_name = 's3://public-health-dashboard/'
 
 
 homeless = pd.read_parquet(f'{bucket_name}gis/intermediate/homelessness_2017_2019.parquet')
@@ -56,5 +56,5 @@ for col in ['SPA', 'SD', 'CD', 'year', 'bulky', 'encampment', 'illegal', 'other'
 # Use WGS84 so folium and ipyleaflet maps can display
 m2.to_crs({'init':'epsg:4326'}).to_file(driver = 'GeoJSON', filename = './gis/homelessness_care_tracts.geojson')
 
-s3.upload_file('./gis/homelessness_care_tracts.geojson', 'city-of-los-angeles-data-lake', 
-               'public-health-dashboard/gis/intermediate/homelessness_care_tracts.geojson')
+s3.upload_file('./gis/homelessness_care_tracts.geojson', 'public-health-dashboard', 
+               'gis/intermediate/homelessness_care_tracts.geojson')
