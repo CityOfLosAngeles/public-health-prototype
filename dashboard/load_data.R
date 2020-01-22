@@ -6,7 +6,6 @@ library(tidyverse)
 
 conn_string <- Sys.getenv('POSTGRES_URI')
 
-
 split <- conn_string %>% str_split(":") 
 
 username <- split[[1]][2] %>% str_remove('//')
@@ -73,8 +72,8 @@ load_data <- function() {
                   'service_request_number' = 'srnumber',
                   'street_name' = 'streetname',
                   'updated_date' = 'updateddate'
-                  )
-  data$closed_date <- data$closed_date %>% as_datetime()
-  data$created_date <- data$created_date %>% as_datetime()
+                   )
+  # data$closed_date <- data$closed_date %>% as_datetime()
+  # data$created_date <- data$created_date %>% as_datetime()
   return(data)
 }
