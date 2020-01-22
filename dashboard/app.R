@@ -4,7 +4,6 @@ library(shinydashboard)
 library(tidyverse)
 library(stringr)
 library(lubridate)
-library(plotly)
 library(leaflet)
 
 source("load_data.R")
@@ -20,6 +19,8 @@ source("value_counts.R")
 # Read data -------------------------------------------------------------------- 
 data <- load_data()
 
+# Prep Lists / etc -------------------------------------------------------------
+nc_names <- data$neighborhood_council_name %>% unique()
 # ui --------------------------------------------------------------------------- 
 header <- dashboardHeader(
   title = tags$a(href = "",
@@ -29,21 +30,16 @@ header <- dashboardHeader(
 
 sidebar <- dashboardSidebar(
   sidebarMenu(
-    menuItem("Requests", tabName = "requests", icon = icon("cloud-download")),
-    menuItem("Maps", tabName = "maps", icon = icon("map-o")),
-    menuItem("Services", tabName = "services", icon = icon("truck"))
+    menuItem("Requests", tabName = "requests", icon = icon("cloud-download"))
   )
 )
 
 body <- dashboardBody(
-  #useShinyjs(),
-  #extendShinyjs(text = scroll),
-  tags$body(id = "body"),
-  tabItems(
-
-
-
-  ) # end tabItems
+  fluidRow(
+    # Input: Selector for variable to plot against mpg ----
+    selectInput("neighborhood-council", "Neighborhood Council:",
+                nc_names)
+  )
 ) # body
 
 ui <- dashboardPage(header, sidebar, body)
