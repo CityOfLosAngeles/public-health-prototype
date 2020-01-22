@@ -36,9 +36,27 @@ sidebar <- dashboardSidebar(
 
 body <- dashboardBody(
   fluidRow(
-    # Input: Selector for variable to plot against mpg ----
-    selectInput("neighborhood-council", "Neighborhood Council:",
+    # Input: Selector for variable for Neighborhood Council ----
+    selectInput("neighborhoodCouncil", "Neighborhood Council:",
                 nc_names),
+    # Input: Selector for Month
+    selectInput('month', "Select a Month",
+                c('January' = 1, 
+                  'Febuary' = 2,
+                  'March' = 3,
+                  'April' = 4,
+                  'May' = 5,
+                  'June' = 6,
+                  'July' = 7,
+                  'August' = 8,
+                  'September' = 9,
+                  'October' = 10,
+                  'November' = 11,
+                  'December' = 12
+                )
+    ),
+    selectInput('year', "Select a Year", 
+                c(seq(2014,2020))),
     # rendering of the table
     dataTableOutput('table')
   )
@@ -49,8 +67,11 @@ ui <- dashboardPage(header, sidebar, body)
 # server ----------------------------------------------------------------------- 
 server <- function(input, output) { 
   # make the data 
-  
-  output$table <- renderDataTable(data %>% head(5))
+  subsetData <- reactive({ data %>% 
+                            filter(neighborhood_council_name == input$neighborhoodCouncil
+                          })
+  output$table <- renderDataTable(subset_data)
+  )
 } # end server
 
 
