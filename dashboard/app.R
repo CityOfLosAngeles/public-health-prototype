@@ -38,7 +38,9 @@ body <- dashboardBody(
   fluidRow(
     # Input: Selector for variable to plot against mpg ----
     selectInput("neighborhood-council", "Neighborhood Council:",
-                nc_names)
+                nc_names),
+    # rendering of the table
+    dataTableOutput('table')
   )
 ) # body
 
@@ -46,9 +48,9 @@ ui <- dashboardPage(header, sidebar, body)
 
 # server ----------------------------------------------------------------------- 
 server <- function(input, output) { 
+  # make the data 
   
-
-  
+  output$table <- renderDataTable(data %>% head(5))
 } # end server
 
 
