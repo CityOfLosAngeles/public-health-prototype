@@ -56,7 +56,15 @@ body <- dashboardBody(
                 )
     ),
     selectInput('year', "Select a Year", 
-                c(seq(2014,2020))),
+                c(seq(2015,2020))),
+    
+    # Box with over time chart 
+    box(
+      title = "Closed SR over Time", status = "primary", solidHeader = TRUE,
+      collapsible = TRUE,
+      plotOutput("overTimeCount", height = 250)
+    ),
+    
     # rendering of the table
     dataTableOutput('table')
   )
@@ -73,6 +81,11 @@ server <- function(input, output) {
       filter(closed_date %>% month == input$month)
   })
   output$table <- renderDataTable(subsetData())
+  
+  data %>%
+    mutate(month = format(closed_date, "%m"), year = format(closed_date, "%Y")) %>%
+    group_by(year, month)  %>%
+    count()
 } # end server
 
 
