@@ -67,11 +67,12 @@ ui <- dashboardPage(header, sidebar, body)
 # server ----------------------------------------------------------------------- 
 server <- function(input, output) { 
   # make the data 
-  subsetData <- reactive({ data %>% 
-                            filter(neighborhood_council_name == input$neighborhoodCouncil
-                          })
-  output$table <- renderDataTable(subset_data)
-  )
+  subsetData <- reactive({data %>% 
+      filter(neighborhood_council_name == input$neighborhoodCouncil) %>% 
+      filter(closed_date %>% year == input$year) %>% 
+      filter(closed_date %>% month == input$month)
+  })
+  output$table <- renderDataTable(subsetData())
 } # end server
 
 
