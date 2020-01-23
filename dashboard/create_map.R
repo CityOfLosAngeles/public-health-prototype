@@ -27,6 +27,7 @@ prepare_map_data <- function(map_data) {
     sf::st_drop_geometry(service_request_data),
     by="Name"
   )
+  neighborhood_service_requests[c("n")][is.na(neighborhood_service_requests[c("n")])] <- 0
   return(sf::st_zm(neighborhood_service_requests))
 }
 

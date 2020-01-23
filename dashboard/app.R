@@ -101,6 +101,7 @@ server <- function(input, output) {
 
   observe({
     if (nrow(timeSubset()) == 0) {
+      leafletProxy("map") %>% clearControls() %>% clearShapes()
       return()
     }
     map_data = prepare_map_data(timeSubset())
