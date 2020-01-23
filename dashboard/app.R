@@ -21,7 +21,7 @@ source("value_counts.R")
 data <- load_data()
 
 # Get map
-map <- create_map(data)
+map <- create_base_map()
 
 # Prep Lists / etc -------------------------------------------------------------
 nc_names <- data$neighborhood_council_name %>% unique()
@@ -83,18 +83,30 @@ ui <- dashboardPage(header, sidebar, body)
 # server ----------------------------------------------------------------------- 
 server <- function(input, output) { 
   # make the data 
-  subsetData <- reactive({data %>% 
-      filter(neighborhood_council_name == input$neighborhoodCouncil) %>% 
+  timeSubset <- reactive({
+      data %>% 
       filter(closed_date %>% year == input$year) %>% 
       filter(closed_date %>% month == input$month)
   })
-  output$table <- renderDataTable(subsetData())
-  
+  ncSubset <- reactive({
+      timeSubset() %>% 
+      filter(neighborhood_council_name == input$neighborhoodCouncil)
+  })
+  output$table <- renderDataTable(ncSubset())
+
   data %>%
     mutate(month = format(closed_date, "%m"), year = format(closed_date, "%Y")) %>%
     group_by(year, month)  %>%
     count()
 
+  observe({
+    if (nrow(timeSubset()) == 0) {
+      return()
+    }
+    map_data = prepare_map_data(timeSubset())
+    leafletProxy("map", data=map_data) %>%
+      draw_map_data(map_data)
+  })
   output$map <- renderLeaflet(map)
 } # end server
 
