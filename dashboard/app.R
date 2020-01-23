@@ -6,6 +6,7 @@ library(stringr)
 library(lubridate)
 library(leaflet)
 
+source("create_map.R")
 source("load_data.R")
 source("value_counts.R")
 
@@ -20,7 +21,7 @@ source("value_counts.R")
 data <- load_data()
 
 # Get map
-#map <- create_map(data)
+map <- create_map(data)
 
 # Prep Lists / etc -------------------------------------------------------------
 nc_names <- data$neighborhood_council_name %>% unique()
@@ -94,12 +95,7 @@ server <- function(input, output) {
     group_by(year, month)  %>%
     count()
 
-  output$map <- renderLeaflet({
-    leaflet() %>%
-      addProviderTiles(providers$Stamen.TonerLite,
-                       options = providerTileOptions(noWrap = TRUE)
-      )
-  })
+  output$map <- renderLeaflet(map)
 } # end server
 
 
