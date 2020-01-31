@@ -10,12 +10,6 @@ source("create_map.R")
 source("load_data.R")
 source("value_counts.R")
 
-# JS function ------------------------------------------------------------------ 
-#scroll <- "
-#shinyjs.scroll = function() { 
-#$('body').animate({ scrollTop: 0 }, 'slow'); } "
-
-
 
 # Read data -------------------------------------------------------------------- 
 data <- load_data()
@@ -58,10 +52,12 @@ body <- dashboardBody(
                     'October' = 10,
                     'November' = 11,
                     'December' = 12
-                  )
+                  ), 
+                  selected = 1
       ),
       selectInput('year', "Select a Year",
-                  c(seq(2015,2020))),
+                  c(seq(2015,2020)),
+                  selected = 2020),
 
       # Box with over time chart
       box(
