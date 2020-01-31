@@ -1,73 +1,112 @@
-## app.R ##
 library(shiny)
 library(shinydashboard)
-library(leaflet)
+#library(shinyjs)
 library(tidyverse)
+library(stringr)
+library(lubridate)
+library(leaflet)
 
+source("create_map.R")
 source("load_data.R")
+source("value_counts.R")
 
-r_colors <- rgb(t(col2rgb(colors()) / 255))
-names(r_colors) <- colors()
 
-ui <- dashboardPage(
-  skin='black',
-  dashboardHeader(
-    title = div(
-            tags$a(href = "",
-                  tags$img(src = "seal_of_los_angeles.png", height = "45", width = "40",
-                          style = "display: block; padding-top: 5px;")),
-            h1("Public Health Metrics"))
-  
-  ),
-  dashboardSidebar(),
-  dashboardBody(
-    # Boxes need to be put in a row (or column)
-    fluidPage(
-      # create date picker
-      dateRangeInput('dates', 'Date Range',
-                     start = Sys.Date() - 2,
-                     end = Sys.Date(),
-                     min = NULL,
-                     max = NULL, format = "yyyy-mm-dd", startview = "month",
-                     weekstart = 0, language = "en", separator = " to ", width = NULL,
-                     autoclose = TRUE)
-    ),
-    fluidRow(
-      box(tableOutput("requestTable"))
-    ),
-    fluidRow(leafletOutput("mymap"))
+# Read data -------------------------------------------------------------------- 
+data <- load_data()
+
+# Get map
+map <- create_base_map()
+
+# Prep Lists / etc -------------------------------------------------------------
+nc_names <- data$neighborhood_council_name %>% unique()
+# ui --------------------------------------------------------------------------- 
+header <- dashboardHeader(
+  title = tags$a(href = "",
+                 tags$img(src = "seal_of_los_angeles.png", height = "45", width = "40",
+                          style = "display: block; padding-top: 5px;"))
+)
+
+sidebar <- dashboardSidebar(
+  sidebarMenu(
+    menuItem("Requests", tabName = "requests", icon = icon("cloud-download"))
   )
 )
 
-server <- function(input, output, session) { 
-  points <- eventReactive(input$recalc, {
-    cbind(rnorm(40) * 2 + 13, rnorm(40) + 48)
-  }, ignoreNULL = FALSE)
-  
-  output$mymap <- renderLeaflet({
-    leaflet() %>%
-      addProviderTiles(providers$Stamen.TonerLite,
-                       options = providerTileOptions(noWrap = TRUE)
-      ) %>%
-      addMarkers(data = points())
-  })  
-  
-  # source plot 
-  service_start <- reactive({parse_date(input$dates[1])})
-  service_end <- reactive({parse_date(input$dates[2])})
+body <- dashboardBody(
+  fluidRow(
+    column(6,
+      # Input: Selector for variable for Neighborhood Council ----
+      selectInput("neighborhoodCouncil", "Neighborhood Council:",
+                  nc_names),
+      # Input: Selector for Month
+      selectInput('month', "Select a Month",
+                  c('January' = 1, 
+                    'Febuary' = 2,
+                    'March' = 3,
+                    'April' = 4,
+                    'May' = 5,
+                    'June' = 6,
+                    'July' = 7,
+                    'August' = 8,
+                    'September' = 9,
+                    'October' = 10,
+                    'November' = 11,
+                    'December' = 12
+                  ), 
+                  selected = 1
+      ),
+      selectInput('year', "Select a Year",
+                  c(seq(2015,2020)),
+                  selected = 2020),
 
-  subsetCases <- reactive({cases %>% filter(closeddate > service_start() & 
-                                            closeddate < service_end())} >%> head())
-
-    #    %>% renderPlot(ggplot(aes(createdbyuserorganization)) +
-    #                   geom_bar() +
-    #                   labs(title ="Source of Closed Tickets in Selected Date Range"))
-  output$requestTable <- renderTable(subsetCases())
-  div(
-    output$dateText  <- renderText({
-      paste("input$date is", as.character(input$date))
-    })
+      # Box with over time chart
+      box(
+        title = "Closed SR over Time", status = "primary", solidHeader = TRUE,
+        collapsible = TRUE,
+        plotOutput("overTimeCount", height = 250)
+      )
+    ),
+    column(6, leafletOutput("map"))
+  ),
+  fluidRow(
+    # rendering of the table
+    dataTableOutput('table')
   )
-}
+) # body
 
+ui <- dashboardPage(header, sidebar, body)
+
+# server ----------------------------------------------------------------------- 
+server <- function(input, output) { 
+  # make the data 
+  timeSubset <- reactive({
+      data %>% 
+      filter(closed_date %>% year == input$year) %>% 
+      filter(closed_date %>% month == input$month)
+  })
+  ncSubset <- reactive({
+      timeSubset() %>% 
+      filter(neighborhood_council_name == input$neighborhoodCouncil)
+  })
+  output$table <- renderDataTable(ncSubset())
+
+  data %>%
+    mutate(month = format(closed_date, "%m"), year = format(closed_date, "%Y")) %>%
+    group_by(year, month)  %>%
+    count()
+
+  observe({
+    if (nrow(timeSubset()) == 0) {
+      leafletProxy("map") %>% clearControls() %>% clearShapes()
+      return()
+    }
+    map_data = prepare_map_data(timeSubset())
+    leafletProxy("map", data=map_data) %>%
+      draw_map_data(map_data)
+  })
+  output$map <- renderLeaflet(map)
+} # end server
+
+
+# run app ---------------------------------------------------------------------- 
 shinyApp(ui, server)
