@@ -62,8 +62,13 @@ body <- dashboardBody(
       # Box with over time chart
       box(
         title = "Closed SR over Time", status = "primary", solidHeader = TRUE,
-        collapsible = TRUE,
+        collapsible = TRUE, width = 6,
         plotOutput("overTimeCount", height = 250)
+      ),
+      box(
+        title = "Average Solve Time", status = "primary", solidHeader = TRUE,
+        collapsible = TRUE, width = 6,
+        plotOutput("solveTimeCount", height = 250)
       )
     ),
     column(6, leafletOutput("map"))
@@ -90,10 +95,35 @@ server <- function(input, output) {
   })
   output$table <- renderDataTable(ncSubset())
 
-  data %>%
+  output$overTimeCount <- renderPlot({data %>%
+    filter(neighborhood_council_name == input$neighborhoodCouncil) %>% 
+    drop_na(closed_date) %>% 
     mutate(month = format(closed_date, "%m"), year = format(closed_date, "%Y")) %>%
     group_by(year, month)  %>%
-    count()
+    count() %>% 
+    mutate(yearmon = paste(year, month)) %>% 
+    ggplot(aes(x = yearmon, y = n )) + 
+    geom_line(aes(group=1)) +
+    ggtitle(sprintf("Service Requests Closed by Month in %s", input$neighborhoodCouncil)) + 
+    xlab("Time") + 
+    ylab("Number of Service Requests Closed")
+    })
+  
+  output$solveTimeCount <- renderPlot({data %>%
+      filter(neighborhood_council_name == input$neighborhoodCouncil) %>% 
+      drop_na(closed_date, created_date) %>%
+      mutate(solve_time_days = round(created_date %--% closed_date / ddays(1), 2)) %>%
+      mutate(month = format(closed_date, "%m"), year = format(closed_date, "%Y")) %>%
+      group_by(year, month)  %>%
+      summarize(average_solve_time = mean(solve_time_days)) %>% 
+      mutate(yearmon = paste(year, month)) %>% 
+      ggplot(aes(x = yearmon, y = average_solve_time )) + 
+      geom_line(aes(group=1)) +
+      ggtitle(sprintf("Average Days Until Service Requests are Closed in %s", input$neighborhoodCouncil)) + 
+      xlab("Month") + 
+      ylab("Average Number of Days")
+  })
+    
 
   observe({
     if (nrow(timeSubset()) == 0) {
