@@ -12,3 +12,12 @@ geopandas
 intake
 intake-parquet
 pyarrow
+r-catools 
+r-leaflet 
+r-rgdal 
+r-rpostgres 
+r-rjdbc 
+r-rmysql 
+r-shinydashboard 
+r-tidytext 
+r-units 
