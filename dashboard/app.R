@@ -5,6 +5,7 @@ library(tidyverse)
 library(stringr)
 library(lubridate)
 library(leaflet)
+library(scales)
 
 source("create_map.R")
 source("load_data.R")
@@ -124,31 +125,32 @@ server <- function(input, output) {
 
   output$overTimeCount <- renderPlot({data %>%
     filter(neighborhood_council_name == input$neighborhoodCouncil) %>% 
-    drop_na(closed_date) %>% 
-    mutate(month = format(closed_date, "%m"), year = format(closed_date, "%Y")) %>%
-    group_by(year, month)  %>%
-    count() %>% 
-    mutate(yearmon = paste(year, month)) %>% 
-    ggplot(aes(x = yearmon, y = n )) + 
-    geom_line(aes(group=1)) +
+    mutate(month = as.Date(cut(
+      (filter(data, neighborhood_council_name == input$neighborhoodCouncil))$closed_date, breaks = 'month'))) %>%
+    group_by(month) %>%
+    count() %>%
+    ggplot(aes (x = month, y = n )) +
+    geom_line(aes(group=1)) + 
     ggtitle(sprintf("Service Requests Closed by Month in %s", input$neighborhoodCouncil)) + 
-    xlab("Time") + 
-    ylab("Number of Service Requests Closed")
+    xlab("Month") + 
+    ylab("Number of Service Requests Closed") +
+    scale_x_date(labels = date_format("%b, %Y"))
     })
   
   output$solveTimeCount <- renderPlot({data %>%
       filter(neighborhood_council_name == input$neighborhoodCouncil) %>% 
       drop_na(closed_date, created_date) %>%
       mutate(solve_time_days = round(created_date %--% closed_date / ddays(1), 2)) %>%
-      mutate(month = format(closed_date, "%m"), year = format(closed_date, "%Y")) %>%
-      group_by(year, month)  %>%
+      mutate(month = as.Date(cut(
+        (filter(data, neighborhood_council_name == input$neighborhoodCouncil))$closed_date, breaks = 'month'))) %>%
+      group_by(month)  %>%
       summarize(average_solve_time = mean(solve_time_days)) %>% 
-      mutate(yearmon = paste(year, month)) %>% 
-      ggplot(aes(x = yearmon, y = average_solve_time )) + 
+      ggplot(aes(x = month, y = average_solve_time )) + 
       geom_line(aes(group=1)) +
       ggtitle(sprintf("Average Days Until Service Requests are Closed in %s", input$neighborhoodCouncil)) + 
       xlab("Month") + 
-      ylab("Average Number of Days")
+      ylab("Average Number of Days") +
+      scale_x_date(labels = date_format("%b, %Y"))
   })
     
 
