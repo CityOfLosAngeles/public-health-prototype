@@ -5,6 +5,7 @@ library(tidyverse)
 library(stringr)
 library(lubridate)
 library(leaflet)
+library(scales)
 
 source("create_map.R")
 source("load_data.R")
@@ -28,50 +29,82 @@ header <- dashboardHeader(
 
 sidebar <- dashboardSidebar(
   sidebarMenu(
-    menuItem("Requests", tabName = "requests", icon = icon("cloud-download"))
+    menuItem("Requests", tabName = "requests", icon = icon("cloud-download")),
+    menuItem("Counts", tabName = "counts", icon = icon("ballot"))
   )
 )
 
 body <- dashboardBody(
-  fluidRow(
-    column(6,
-      # Input: Selector for variable for Neighborhood Council ----
-      selectInput("neighborhoodCouncil", "Neighborhood Council:",
-                  nc_names),
-      # Input: Selector for Month
-      selectInput('month', "Select a Month",
-                  c('January' = 1, 
-                    'Febuary' = 2,
-                    'March' = 3,
-                    'April' = 4,
-                    'May' = 5,
-                    'June' = 6,
-                    'July' = 7,
-                    'August' = 8,
-                    'September' = 9,
-                    'October' = 10,
-                    'November' = 11,
-                    'December' = 12
-                  ), 
-                  selected = 1
+  tabItems(
+    tabItem(
+      tabName = "requests",
+      fluidRow(
+        column(6,
+          # Input: Selector for variable for Neighborhood Council ----
+          selectInput("neighborhoodCouncil", "Neighborhood Council:",
+                      nc_names),
+          # Input: Selector for Month
+          selectInput('month', "Select a Month",
+                      c('January' = 1, 
+                        'Febuary' = 2,
+                        'March' = 3,
+                        'April' = 4,
+                        'May' = 5,
+                        'June' = 6,
+                        'July' = 7,
+                        'August' = 8,
+                        'September' = 9,
+                        'October' = 10,
+                        'November' = 11,
+                        'December' = 12
+                      ), 
+                      selected = 1
+          ),
+          selectInput('year', "Select a Year",
+                      c(seq(2015,2020)),
+                      selected = 2020),
+    
+          # Box with over time chart
+          box(
+            title = "Closed SR over Time", status = "primary", solidHeader = TRUE,
+            collapsible = TRUE, width = 6,
+            plotOutput("overTimeCount", height = 250)
+          ),
+          box(
+            title = "Average Solve Time", status = "primary", solidHeader = TRUE,
+            collapsible = TRUE, width = 6,
+            plotOutput("solveTimeCount", height = 250)
+          )
+        ),
+        column(6, leafletOutput("map"))
       ),
-      selectInput('year', "Select a Year",
-                  c(seq(2015,2020)),
-                  selected = 2020),
-
-      # Box with over time chart
-      box(
-        title = "Closed SR over Time", status = "primary", solidHeader = TRUE,
-        collapsible = TRUE,
-        plotOutput("overTimeCount", height = 250)
+      fluidRow(
+        # rendering of the table
+        dataTableOutput('table')
       )
-    ),
-    column(6, leafletOutput("map"))
-  ),
-  fluidRow(
-    # rendering of the table
-    dataTableOutput('table')
-  )
+    ), # end requests tab
+    tabItem(
+      tabName = 'counts',
+      titlePanel(
+        "Public Health Dashboard - 1/1/2020 to present"
+      ),
+      fluidRow(
+        infoBox("311", rnorm(1,100,16), icon = icon("credit-card")),
+        infoBox("Clean Stat - Bulky ", rnorm(1,100,16), icon = icon("trash-alt"), color='yellow'),
+        infoBox("311 Average Solve Time ", 10 * 2, icon = icon("warehouse"), color='red')
+      ),
+      fluidRow(
+        infoBox("CleanStat - (unsure)", 10 * 2, icon = icon("credit-card"), color='green'),
+        infoBox("Rats", rnorm(1,100,16), icon = icon("bug"), color = 'maroon'),
+        infoBox("RAP - Encampments", 10 * 2, icon = icon("credit-card"), color='yellow')
+      ),
+      fluidRow(
+        infoBox("County Diease ", 10 * 2, icon = icon("credit-card"), color = 'purple'),
+        infoBox("County ?", 10 * 2, icon = icon("credit-card"), color = 'green'),
+        infoBox("Fire - Question ?", 10 * 2, icon = icon("credit-card"), color = 'navy')
+      )
+    ) # end counts tab.
+  ) # end tabItems 
 ) # body
 
 ui <- dashboardPage(header, sidebar, body)
@@ -90,10 +123,36 @@ server <- function(input, output) {
   })
   output$table <- renderDataTable(ncSubset())
 
-  data %>%
-    mutate(month = format(closed_date, "%m"), year = format(closed_date, "%Y")) %>%
-    group_by(year, month)  %>%
-    count()
+  output$overTimeCount <- renderPlot({data %>%
+    filter(neighborhood_council_name == input$neighborhoodCouncil) %>% 
+    mutate(month = as.Date(cut(
+      (filter(data, neighborhood_council_name == input$neighborhoodCouncil))$closed_date, breaks = 'month'))) %>%
+    group_by(month) %>%
+    count() %>%
+    ggplot(aes (x = month, y = n )) +
+    geom_line(aes(group=1)) + 
+    ggtitle(sprintf("Service Requests Closed by Month in %s", input$neighborhoodCouncil)) + 
+    xlab("Month") + 
+    ylab("Number of Service Requests Closed") +
+    scale_x_date(labels = date_format("%b, %Y"))
+    })
+  
+  output$solveTimeCount <- renderPlot({data %>%
+      filter(neighborhood_council_name == input$neighborhoodCouncil) %>% 
+      drop_na(closed_date, created_date) %>%
+      mutate(solve_time_days = round(created_date %--% closed_date / ddays(1), 2)) %>%
+      mutate(month = as.Date(cut(
+        (filter(data, neighborhood_council_name == input$neighborhoodCouncil))$closed_date, breaks = 'month'))) %>%
+      group_by(month)  %>%
+      summarize(average_solve_time = mean(solve_time_days)) %>% 
+      ggplot(aes(x = month, y = average_solve_time )) + 
+      geom_line(aes(group=1)) +
+      ggtitle(sprintf("Average Days Until Service Requests are Closed in %s", input$neighborhoodCouncil)) + 
+      xlab("Month") + 
+      ylab("Average Number of Days") +
+      scale_x_date(labels = date_format("%b, %Y"))
+  })
+    
 
   observe({
     if (nrow(timeSubset()) == 0) {
