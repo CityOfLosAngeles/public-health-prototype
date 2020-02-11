@@ -31,3 +31,13 @@ sources:
     args:
       uri: "{{env(POSTGRES_URI)}}"
       table: '"public-health"."311-cases-homelessness"'
+  rec_parks_data_encampments:
+    driver: csv
+    description: All RAP requests for encampment data 
+    args:
+      urlpath: s3://public-health-dashboard/raphrsrstats.csv
+  census_tracts_with_pop: 
+    driver: geojson
+    description: census tracts with population
+    args:
+      urlpath: s3://cais-data/gis/raw/census_tracts_withpop.geojson
