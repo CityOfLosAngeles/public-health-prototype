@@ -77,6 +77,6 @@ load_data <- function() {
   # data$created_date <- data$created_date %>% as_datetime()
   
   # only load 2016 to present.  
-  data <- data %>% filter(closed_date > '2016-01-01') 
+  data <- data %>% filter(created_date > '2016-01-01') 
   return(data)
 }

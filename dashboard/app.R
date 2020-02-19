@@ -1,6 +1,5 @@
 library(shiny)
 library(shinydashboard)
-#library(shinyjs)
 library(tidyverse)
 library(stringr)
 library(lubridate)
@@ -22,22 +21,32 @@ map <- create_base_map()
 nc_names <- data$neighborhood_council_name %>% unique()
 # ui --------------------------------------------------------------------------- 
 header <- dashboardHeader(
-  title = tags$a(href = "",
-                 tags$img(src = "seal_of_los_angeles.png", height = "45", width = "40",
-                          style = "display: block; padding-top: 5px;"))
+  title = tags$span(
+    tags$img(
+      src = "seal_of_los_angeles.png",
+      height = "45",
+      width = "40",
+      style = "display: block; padding-top: 5px;"
+    ),
+    tags$p(
+      "City of Los Angeles Public Health Dashboard"
+    ),
+    style="display: flex;"
+  ),
+  titleWidth = 480
 )
 
 sidebar <- dashboardSidebar(
   sidebarMenu(
-    menuItem("Requests", tabName = "requests", icon = icon("cloud-download")),
-    menuItem("Counts", tabName = "counts", icon = icon("ballot"))
+    menuItem("Summary", tabName = "summary", icon = icon("list-alt")),
+    menuItem("Service Request Map", tabName = "map", icon = icon("map"))
   )
 )
 
 body <- dashboardBody(
   tabItems(
     tabItem(
-      tabName = "requests",
+      tabName = "map",
       fluidRow(
         column(6,
           # Input: Selector for variable for Neighborhood Council ----
@@ -84,24 +93,19 @@ body <- dashboardBody(
       )
     ), # end requests tab
     tabItem(
-      tabName = 'counts',
+      tabName = 'summary',
       titlePanel(
         "Public Health Dashboard - 1/1/2020 to present"
       ),
       fluidRow(
-        infoBox("311", rnorm(1,100,16), icon = icon("credit-card")),
-        infoBox("Clean Stat - Bulky ", rnorm(1,100,16), icon = icon("trash-alt"), color='yellow'),
-        infoBox("311 Average Solve Time ", 10 * 2, icon = icon("warehouse"), color='red')
+        infoBoxOutput("code55opened"),
+        infoBoxOutput("code55closed"),
+        infoBoxOutput("code55time")
       ),
       fluidRow(
-        infoBox("CleanStat - (unsure)", 10 * 2, icon = icon("credit-card"), color='green'),
-        infoBox("Rats", rnorm(1,100,16), icon = icon("bug"), color = 'maroon'),
-        infoBox("RAP - Encampments", 10 * 2, icon = icon("credit-card"), color='yellow')
-      ),
-      fluidRow(
-        infoBox("County Diease ", 10 * 2, icon = icon("credit-card"), color = 'purple'),
-        infoBox("County ?", 10 * 2, icon = icon("credit-card"), color = 'green'),
-        infoBox("Fire - Question ?", 10 * 2, icon = icon("credit-card"), color = 'navy')
+        infoBoxOutput("code75opened"),
+        infoBoxOutput("code75closed"),
+        infoBoxOutput("code75time")
       )
     ) # end counts tab.
   ) # end tabItems 
@@ -154,12 +158,66 @@ server <- function(input, output) {
   })
     
 
+  output$code55opened <- renderInfoBox({
+    infoBox(
+      "Code 55 Opened",
+      data %>%
+        filter(created_date > "2020-01-01") %>%
+        filter(reason_code == "55") %>%
+        count() %>%
+        prettyNum(big.mark=","),
+      icon = icon("campfire"),
+      color = "yellow"
+    )
+  })
+  
+  output$code55closed <- renderInfoBox({
+    infoBox(
+      "Code 55 Closed",
+      data %>%
+        filter(closed_date > "2020-01-01") %>%
+        filter(reason_code == "55") %>%
+        count() %>%
+        prettyNum(big.mark=","),
+      icon = icon("trailer"),
+      color = "yellow"
+    )
+  })
+ 
+  
+  output$code75opened <- renderInfoBox({
+    infoBox(
+      "Code 75 Opened",
+      data %>%
+        filter(created_date > "2020-01-01") %>%
+        filter(reason_code == "75") %>%
+        count() %>%
+        prettyNum(big.mark=","),
+      icon = icon("caravan"),
+      color = "yellow"
+    )
+  })
+  
+  output$code75closed <- renderInfoBox({
+    infoBox(
+      "Code 75 Closed",
+      data %>%
+        filter(closed_date > "2020-01-01") %>%
+        filter(reason_code == "75") %>%
+        count() %>%
+        prettyNum(big.mark=","),
+      icon = icon("trash-alt"),
+      color = "yellow"
+    )
+  })
+  
+  
   observe({
     if (nrow(timeSubset()) == 0) {
       leafletProxy("map") %>% clearControls() %>% clearShapes()
       return()
     }
-    map_data = prepare_map_data(timeSubset())
+    map_data <- prepare_map_data(timeSubset())
     leafletProxy("map", data=map_data) %>%
       draw_map_data(map_data)
   })
