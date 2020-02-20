@@ -80,3 +80,10 @@ load_data <- function() {
   data <- data %>% filter(created_date > '2016-01-01') 
   return(data)
 }
+
+summarize_cleanstat <- function() {
+  cleanstat <- tbl(con, dbplyr::in_schema('"public-health"','"cleanstat"')) %>%
+    filter(Year ==  "2018") %>%
+    filter(Quarter == "Q3") %>%
+    collect()
+}

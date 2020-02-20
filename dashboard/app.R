@@ -14,6 +14,9 @@ source("value_counts.R")
 # Read data -------------------------------------------------------------------- 
 data <- load_data()
 
+# Read cleanstat data
+cleanstat_data <- summarize_cleanstat()
+
 # Get map
 map <- create_base_map()
 
@@ -95,7 +98,7 @@ body <- dashboardBody(
     tabItem(
       tabName = 'summary',
       titlePanel(
-        "Public Health Dashboard - 1/1/2020 to present"
+        "Summary Statistics - 1/1/2020 to present"
       ),
       fluidRow(
         infoBoxOutput("code55opened"),
@@ -106,6 +109,17 @@ body <- dashboardBody(
         infoBoxOutput("code75opened"),
         infoBoxOutput("code75closed"),
         infoBoxOutput("code75time")
+      ),
+      fluidRow(
+        infoBoxOutput("rapopened"),
+        infoBoxOutput("rapclosed"),
+        infoBoxOutput("raptime")
+      ),
+      fluidRow(
+        infoBoxOutput("cleanstatbulky"),
+        infoBoxOutput("cleanstatweeds"),
+        infoBoxOutput("cleanstatlitter"),
+        infoBoxOutput("cleanstatillegaldumping")
       )
     ) # end counts tab.
   ) # end tabItems 
@@ -166,7 +180,7 @@ server <- function(input, output) {
         filter(reason_code == "55") %>%
         count() %>%
         prettyNum(big.mark=","),
-      icon = icon("campfire"),
+      icon = icon("trash-alt"),
       color = "yellow"
     )
   })
@@ -179,11 +193,19 @@ server <- function(input, output) {
         filter(reason_code == "55") %>%
         count() %>%
         prettyNum(big.mark=","),
-      icon = icon("trailer"),
+      icon = icon("trash-alt"),
       color = "yellow"
     )
   })
- 
+  
+  output$code55time <- renderInfoBox({
+    infoBox(
+      "Code 55 Average Solve Time",
+      "TBD",
+      icon = icon("trash-alt"),
+      color = "yellow"
+    )
+  })
   
   output$code75opened <- renderInfoBox({
     infoBox(
@@ -193,8 +215,8 @@ server <- function(input, output) {
         filter(reason_code == "75") %>%
         count() %>%
         prettyNum(big.mark=","),
-      icon = icon("caravan"),
-      color = "yellow"
+      icon = icon("briefcase-medical"),
+      color = "green"
     )
   })
   
@@ -206,12 +228,94 @@ server <- function(input, output) {
         filter(reason_code == "75") %>%
         count() %>%
         prettyNum(big.mark=","),
-      icon = icon("trash-alt"),
-      color = "yellow"
+      icon = icon("briefcase-medical"),
+      color = "green"
     )
   })
   
+  output$code75time <- renderInfoBox({
+    infoBox(
+      "Code 75 Average Solve Time",
+      "TBD",
+      icon = icon("briefcase-medical"),
+      color = "green"
+    )
+  })
   
+  output$rapopened <- renderInfoBox({
+    infoBox(
+      "Rec and Park Cases Opened",
+      "TBD",
+      icon = icon("fire"),
+      color = "blue"
+    )
+  })
+  
+  output$rapclosed <- renderInfoBox({
+    infoBox(
+      "Rec and Park Cases Closed",
+      "TBD",
+      icon = icon("fire"),
+      color = "blue"
+    )
+  })
+  
+  output$raptime <- renderInfoBox({
+    infoBox(
+      "Rec and Park Cases Solve Time",
+      "TBD",
+      icon = icon("fire"),
+      color = "blue"
+    )
+  })
+  
+  output$cleanstatweeds <- renderInfoBox({
+    infoBox(
+      "CleanStat Streets with Weeds",
+      cleanstat_data %>%
+        filter(WeedScore > 1) %>%
+        count() %>%
+        prettyNum(big.mark=","),
+      icon = icon("seedling"),
+      color = "purple"
+    )
+  })
+  
+  output$cleanstatbulky <- renderInfoBox({
+    infoBox(
+      "Cleanstat Streets with Bulky Items",
+      cleanstat_data %>%
+        filter(BulkyScore > 1) %>%
+        count() %>%
+        prettyNum(big.mark=","),
+      icon = icon("trash-alt"),
+      color = "purple"
+    )
+  })
+  
+  output$cleanstatlitter <- renderInfoBox({
+    infoBox(
+      "CleanStat Streets with Litter",
+      cleanstat_data %>%
+        filter(LLScore > 1) %>%
+        count() %>%
+        prettyNum(big.mark=","),
+      icon = icon("newspaper"),
+      color = "purple"
+    )
+  })
+  
+  output$cleanstatillegaldumping <- renderInfoBox({
+    infoBox(
+      "CleanStat Streets with Illegal Dumping",
+      cleanstat_data %>%
+        filter(IDScore > 1) %>%
+        count() %>%
+        prettyNum(big.mark=","),
+      icon = icon("couch"),
+      color = "purple"
+    )
+  })
   observe({
     if (nrow(timeSubset()) == 0) {
       leafletProxy("map") %>% clearControls() %>% clearShapes()

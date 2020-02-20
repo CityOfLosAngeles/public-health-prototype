@@ -50,3 +50,15 @@ sources:
         uri: "{{env(POSTGRES_URI)}}"
         sql_kwargs:
           schema: "public-health"
+  rec_and_park:
+    driver: csv
+    description: rec and park service requests
+    args:
+      urlpath: s3://public-health-dashboard/ServiceRequestData.csv
+      csv_kwargs:
+        dtype:
+          CleanupAuthorizationStatus: str
+        parse_dates:
+          - DateCreated
+          - DateRequestClosed
+          - DateRequestCompleted
