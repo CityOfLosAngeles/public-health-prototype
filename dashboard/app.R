@@ -207,7 +207,8 @@ server <- function(input, output) {
         filter(closed_date > "2020-01-01") %>%
         mutate(solve_time_days = round(created_date %--% closed_date / ddays(1), 2)) %>%
         summarize(average_solve_time = mean(solve_time_days)) %>%
-        prettyNum(digits=0, big.mark=","),
+        prettyNum(digits=0, big.mark=",") %>%
+        paste("Days"),
       icon = icon("trash-alt"),
       color = "yellow"
     )
@@ -248,7 +249,8 @@ server <- function(input, output) {
         filter(closed_date > "2020-01-01") %>%
         mutate(solve_time_days = round(created_date %--% closed_date / ddays(1), 2)) %>%
         summarize(average_solve_time = mean(solve_time_days)) %>%
-        prettyNum(digits=0, big.mark=","),
+        prettyNum(digits=0, big.mark=",") %>%
+        paste("Days"),
       icon = icon("briefcase-medical"),
       color = "green"
     )
