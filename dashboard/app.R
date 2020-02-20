@@ -174,7 +174,7 @@ server <- function(input, output) {
 
   output$code55opened <- renderInfoBox({
     infoBox(
-      "Code 55 Opened",
+      "Sanitation Code 55 Opened",
       data %>%
         filter(created_date > "2020-01-01") %>%
         filter(reason_code == "55") %>%
@@ -187,7 +187,7 @@ server <- function(input, output) {
   
   output$code55closed <- renderInfoBox({
     infoBox(
-      "Code 55 Closed",
+      "Sanitation Code 55 Closed",
       data %>%
         filter(closed_date > "2020-01-01") %>%
         filter(reason_code == "55") %>%
@@ -200,8 +200,14 @@ server <- function(input, output) {
   
   output$code55time <- renderInfoBox({
     infoBox(
-      "Code 55 Average Solve Time",
-      "TBD",
+      "Sanitation Code 55 Average Solve Time",
+      data %>%
+        filter(reason_code == "55") %>%
+        drop_na(closed_date, created_date) %>%
+        filter(closed_date > "2020-01-01") %>%
+        mutate(solve_time_days = round(created_date %--% closed_date / ddays(1), 2)) %>%
+        summarize(average_solve_time = mean(solve_time_days)) %>%
+        prettyNum(digits=0, big.mark=","),
       icon = icon("trash-alt"),
       color = "yellow"
     )
@@ -209,7 +215,7 @@ server <- function(input, output) {
   
   output$code75opened <- renderInfoBox({
     infoBox(
-      "Code 75 Opened",
+      "Sanitation Code 75 Opened",
       data %>%
         filter(created_date > "2020-01-01") %>%
         filter(reason_code == "75") %>%
@@ -222,7 +228,7 @@ server <- function(input, output) {
   
   output$code75closed <- renderInfoBox({
     infoBox(
-      "Code 75 Closed",
+      "Sanitation Code 75 Closed",
       data %>%
         filter(closed_date > "2020-01-01") %>%
         filter(reason_code == "75") %>%
@@ -235,8 +241,14 @@ server <- function(input, output) {
   
   output$code75time <- renderInfoBox({
     infoBox(
-      "Code 75 Average Solve Time",
-      "TBD",
+      "Sanitation Code 75 Average Solve Time",
+      data %>%
+        filter(reason_code == "75") %>%
+        drop_na(closed_date, created_date) %>%
+        filter(closed_date > "2020-01-01") %>%
+        mutate(solve_time_days = round(created_date %--% closed_date / ddays(1), 2)) %>%
+        summarize(average_solve_time = mean(solve_time_days)) %>%
+        prettyNum(digits=0, big.mark=","),
       icon = icon("briefcase-medical"),
       color = "green"
     )
