@@ -1,0 +1,27 @@
+.info-box-icon .cola-custom-icon {
+    width: 100%;
+    height: 100%;
+    background-size: 80%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: white;
+}
+
+.info-box-icon .cola-custom-icon.care {
+    background-image: url("care.png");
+    background-color: #0049b7;
+}
+
+.info-box-icon .cola-custom-icon.care-plus {
+    background-image: url("care-plus.png");
+    background-color: #0049b7;
+    background-size: 100%;
+}
+
+.info-box-icon .cola-custom-icon.lasan {
+    background-image: url("lasan.jpg");
+}
+
+.info-box-icon .cola-custom-icon.larap {
+    background-image: url("larap.png");
+}

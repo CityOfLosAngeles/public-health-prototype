@@ -47,6 +47,9 @@ sidebar <- dashboardSidebar(
 )
 
 body <- dashboardBody(
+  tags$head(
+    tags$link(rel = "stylesheet", type = "text/css", href = "custom.css")
+  ),
   tabItems(
     tabItem(
       tabName = "map",
@@ -180,8 +183,7 @@ server <- function(input, output) {
         filter(reason_code == "55") %>%
         count() %>%
         prettyNum(big.mark=","),
-      icon = icon("trash-alt"),
-      color = "yellow"
+      icon = icon("", class="cola-custom-icon care-plus")
     )
   })
   
@@ -193,8 +195,7 @@ server <- function(input, output) {
         filter(reason_code == "55") %>%
         count() %>%
         prettyNum(big.mark=","),
-      icon = icon("trash-alt"),
-      color = "yellow"
+      icon = icon("", class="cola-custom-icon care-plus")
     )
   })
   
@@ -209,8 +210,7 @@ server <- function(input, output) {
         summarize(average_solve_time = mean(solve_time_days)) %>%
         prettyNum(digits=0, big.mark=",") %>%
         paste("Days"),
-      icon = icon("trash-alt"),
-      color = "yellow"
+      icon = icon("", class="cola-custom-icon care-plus")
     )
   })
   
@@ -222,8 +222,7 @@ server <- function(input, output) {
         filter(reason_code == "75") %>%
         count() %>%
         prettyNum(big.mark=","),
-      icon = icon("briefcase-medical"),
-      color = "green"
+      icon = icon("", class="cola-custom-icon care")
     )
   })
   
@@ -235,8 +234,7 @@ server <- function(input, output) {
         filter(reason_code == "75") %>%
         count() %>%
         prettyNum(big.mark=","),
-      icon = icon("briefcase-medical"),
-      color = "green"
+      icon = icon("", class="cola-custom-icon care")
     )
   })
   
@@ -251,8 +249,7 @@ server <- function(input, output) {
         summarize(average_solve_time = mean(solve_time_days)) %>%
         prettyNum(digits=0, big.mark=",") %>%
         paste("Days"),
-      icon = icon("briefcase-medical"),
-      color = "green"
+      icon = icon("", class="cola-custom-icon care")
     )
   })
   
@@ -260,8 +257,7 @@ server <- function(input, output) {
     infoBox(
       "Rec and Park Cases Opened",
       "TBD",
-      icon = icon("fire"),
-      color = "blue"
+      icon = icon("", class="cola-custom-icon larap")
     )
   })
   
@@ -269,8 +265,7 @@ server <- function(input, output) {
     infoBox(
       "Rec and Park Cases Closed",
       "TBD",
-      icon = icon("fire"),
-      color = "blue"
+      icon = icon("", class="cola-custom-icon larap")
     )
   })
   
@@ -278,8 +273,7 @@ server <- function(input, output) {
     infoBox(
       "Rec and Park Cases Solve Time",
       "TBD",
-      icon = icon("fire"),
-      color = "blue"
+      icon = icon("", class="cola-custom-icon larap")
     )
   })
   
@@ -290,8 +284,7 @@ server <- function(input, output) {
         filter(WeedScore > 1) %>%
         count() %>%
         prettyNum(big.mark=","),
-      icon = icon("seedling"),
-      color = "purple"
+      icon = icon("", class="cola-custom-icon lasan")
     )
   })
   
@@ -302,8 +295,7 @@ server <- function(input, output) {
         filter(BulkyScore > 1) %>%
         count() %>%
         prettyNum(big.mark=","),
-      icon = icon("trash-alt"),
-      color = "purple"
+      icon = icon("", class="cola-custom-icon lasan")
     )
   })
   
@@ -314,8 +306,7 @@ server <- function(input, output) {
         filter(LLScore > 1) %>%
         count() %>%
         prettyNum(big.mark=","),
-      icon = icon("newspaper"),
-      color = "purple"
+      icon = icon("", class="cola-custom-icon lasan")
     )
   })
   
@@ -326,8 +317,7 @@ server <- function(input, output) {
         filter(IDScore > 1) %>%
         count() %>%
         prettyNum(big.mark=","),
-      icon = icon("couch"),
-      color = "purple"
+      icon = icon("", class="cola-custom-icon lasan")
     )
   })
   observe({
