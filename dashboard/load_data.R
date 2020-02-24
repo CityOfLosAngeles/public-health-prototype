@@ -23,6 +23,22 @@ con <- dbConnect(RPostgres::Postgres(),
                  user = username,
                  password = password)
 
+neighborhood_councils <- sf::st_read(
+  "https://opendata.arcgis.com/datasets/674f80b8edee4bf48551512896a1821d_0.geojson"
+)
+
+council_districts <- sf::st_read(
+  "https://opendata.arcgis.com/datasets/76104f230e384f38871eb3c4782f903d_13.geojson"
+)
+
+lapd_divisions <- sf::st_read(
+  "https://opendata.arcgis.com/datasets/031d488e158144d0b3aecaa9c888b7b3_0.geojson"
+)
+
+latimes_neighborhoods <- sf::st_read(
+  "https://s3-us-west-2.amazonaws.com/boundaries.latimes.com/archive/1.0/boundary/torrance-la-county-neighborhood-current.geojson"
+)
+
 load_data <- function() {
   data <- tbl(con, dbplyr::in_schema('"public-health"','"311-cases-homelessness"')) %>% collect()
   
@@ -77,7 +93,7 @@ load_data <- function() {
   # data$created_date <- data$created_date %>% as_datetime()
   
   # only load 2016 to present.  
-  data <- data %>% filter(created_date > '2016-01-01') 
+  data <- data %>% filter(created_date > '2016-01-01')
   return(data)
 }
 

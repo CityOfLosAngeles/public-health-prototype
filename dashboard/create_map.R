@@ -1,21 +1,7 @@
 library(lubridate)
 library(leaflet)
 
-neighborhood_councils <- sf::st_read(
-  "https://opendata.arcgis.com/datasets/674f80b8edee4bf48551512896a1821d_0.geojson"
-)
 
-council_districts <- sf::st_read(
-  "https://opendata.arcgis.com/datasets/76104f230e384f38871eb3c4782f903d_13.geojson"
-)
-
-lapd_divisions <- sf::st_read(
-  "https://opendata.arcgis.com/datasets/031d488e158144d0b3aecaa9c888b7b3_0.geojson"
-)
-
-latimes_neighborhoods <- sf::st_read(
-  "https://s3-us-west-2.amazonaws.com/boundaries.latimes.com/archive/1.0/boundary/torrance-la-county-neighborhood-current.geojson"
-)
 
 create_base_map <- function() {
   map <- leaflet(
@@ -44,6 +30,9 @@ prepare_map_data <- function(map_data, aggregation_level, join_key) {
 }
 
 draw_map_data <- function(map, aggregate_service_requests, key) {
+  print("DFDFDFDFDF")
+  print(aggregate_service_requests)
+  print(aggregate_service_requests$n)
   pal <- colorNumeric("magma", NULL)
 
   labels <- sprintf(
