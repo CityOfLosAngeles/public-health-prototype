@@ -30,9 +30,6 @@ prepare_map_data <- function(map_data, aggregation_level, join_key) {
 }
 
 draw_map_data <- function(map, aggregate_service_requests, key) {
-  print("DFDFDFDFDF")
-  print(aggregate_service_requests)
-  print(aggregate_service_requests$n)
   pal <- colorNumeric("magma", NULL)
 
   labels <- sprintf(
