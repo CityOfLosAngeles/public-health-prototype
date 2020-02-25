@@ -13,6 +13,9 @@ source("value_counts.R")
 
 # Read data -------------------------------------------------------------------- 
 data <- load_data()
+geo_data <- data %>%
+  drop_na("longitude", "latitude") %>%
+  sf::st_as_sf(coords=c("longitude", "latitude"), crs=4326)
 
 # Read cleanstat data
 cleanstat_data <- summarize_cleanstat()
@@ -145,7 +148,8 @@ body <- dashboardBody(
 ui <- dashboardPage(header, sidebar, body)
 
 # server ----------------------------------------------------------------------- 
-server <- function(input, output) { 
+server <- function(input, output) {
+
   geogType <- reactive({input$geog_type})
   
   output$geog_name <- renderUI({
@@ -157,13 +161,6 @@ server <- function(input, output) {
       return(selectInput("lapd_selector", "LAPD District:", lapd_division_names))
     }
   })             
-
-  # make the data 
-  timeSubset <- reactive({
-    data %>% 
-      filter(closed_date %>% year == input$year) %>% 
-      filter(closed_date %>% month == input$month)
-  })
   geogKey <- reactive({
     if(geogType() == "cd") {
       return("NAME")
@@ -192,24 +189,42 @@ server <- function(input, output) {
     }
     return(NULL)
   })
+
+  # make the data 
+  timeSubset <- reactive({
+    data %>% 
+      filter(closed_date %>% year == input$year) %>% 
+      filter(closed_date %>% month == input$month)
+  })
+  geogJoined <- reactive({
+    req(geogSelection())
+    geo_data %>%
+      sf::st_join(geogDataset(), join=sf::st_within, left=TRUE)
+  })
+  geogSubset <- reactive({
+    geogJoined() %>%
+      filter(.data[[geogKey()]] == geogSelection()) # R Nonstandard Evaluation is wild...
+  })
   geogTimeSubset <- reactive({
     req(input$year, input$month)
-
+    
     geogSubset() %>%
       filter(closed_date %>% year == input$year) %>% 
       filter(closed_date %>% month == input$month)
   })
-  
-  geogSubset <- reactive({
-    req(geogSelection())
 
-    data %>%
-      drop_na("longitude", "latitude") %>%
-      sf::st_as_sf(coords=c("longitude", "latitude"), crs=4326) %>%
-      sf::st_join(geogDataset(), join=sf::st_within, left=TRUE) %>%
-      filter(.data[[geogKey()]] == geogSelection()) # R Nonstandard Evaluation is wild...
+  observe({
+    if (nrow(timeSubset()) == 0) {
+      leafletProxy("map") %>% clearControls() %>% clearShapes()
+      return()
+    }
+    
+    map_data <- prepare_map_data(geogJoined(), geogDataset(), geogKey())
+    leafletProxy("map", data=map_data) %>%
+      draw_map_data(map_data, geogKey())
   })
-  
+  output$map <- renderLeaflet(map)
+
   output$table <- renderDataTable(geogTimeSubset())
 
   output$overTimeCount <- renderPlot({
@@ -388,17 +403,7 @@ server <- function(input, output) {
       icon = icon("", class="cola-custom-icon lasan")
     )
   })
-  observe({
-    if (nrow(timeSubset()) == 0) {
-      leafletProxy("map") %>% clearControls() %>% clearShapes()
-      return()
-    }
 
-    map_data <- prepare_map_data(timeSubset(), geogDataset(), geogKey())
-    leafletProxy("map", data=map_data) %>%
-      draw_map_data(map_data, geogKey())
-  })
-  output$map <- renderLeaflet(map)
 } # end server
 
 

@@ -15,9 +15,6 @@ create_base_map <- function() {
 
 prepare_map_data <- function(map_data, aggregation_level, join_key) {
   service_request_data <- map_data %>%
-    drop_na("longitude", "latitude") %>%
-    sf::st_as_sf(coords=c("longitude", "latitude"), crs=4326) %>%
-    sf::st_join(aggregation_level, join=sf::st_within, left=TRUE) %>%
     group_by_(join_key) %>%
     tally()
   aggregate_service_requests <- left_join(
