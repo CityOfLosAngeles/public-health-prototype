@@ -31,3 +31,34 @@ sources:
     args:
       uri: "{{env(POSTGRES_URI)}}"
       table: '"public-health"."311-cases-homelessness"'
+  code55s:
+    driver: sql
+    description: All Code 55s from LA Sanitation
+    args:
+      uri: "{{env(POSTGRES_URI)}}"
+      sql_expr: '"public-health"."code55s"'
+  code75s:
+    driver: sql
+    description: All Code 75s from LA Sanitation
+    args:
+      uri: "{{env(POSTGRES_URI)}}"
+      sql_expr: '"public-health"."code75s"'
+  datalake:
+    driver: sql_cat
+    description: Public Health schema
+    args:
+        uri: "{{env(POSTGRES_URI)}}"
+        sql_kwargs:
+          schema: "public-health"
+  rec_and_park:
+    driver: csv
+    description: rec and park service requests
+    args:
+      urlpath: s3://public-health-dashboard/ServiceRequestData.csv
+      csv_kwargs:
+        dtype:
+          CleanupAuthorizationStatus: str
+        parse_dates:
+          - DateCreated
+          - DateRequestClosed
+          - DateRequestCompleted

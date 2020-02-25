@@ -1,9 +1,7 @@
 library(lubridate)
 library(leaflet)
 
-neighborhood_councils <- sf::st_read(
-  "https://opendata.arcgis.com/datasets/674f80b8edee4bf48551512896a1821d_0.geojson"
-)
+
 
 create_base_map <- function() {
   map <- leaflet(
@@ -15,30 +13,26 @@ create_base_map <- function() {
   return(map)
 }
 
-prepare_map_data <- function(map_data) {
+prepare_map_data <- function(map_data, aggregation_level, join_key) {
   service_request_data <- map_data %>%
-    drop_na("longitude", "latitude") %>%
-    sf::st_as_sf(coords=c("longitude", "latitude"), crs=4326) %>%
-    sf::st_join(neighborhood_councils, join=sf::st_within, left=TRUE) %>%
-    group_by(Name) %>%
+    group_by_(join_key) %>%
     tally()
-  neighborhood_service_requests <- left_join(
-    neighborhood_councils,
+  aggregate_service_requests <- left_join(
+    aggregation_level,
     sf::st_drop_geometry(service_request_data),
-    by="Name"
+    by=join_key
   )
-  neighborhood_service_requests[c("n")][is.na(neighborhood_service_requests[c("n")])] <- 0
-  return(sf::st_zm(neighborhood_service_requests))
+  aggregate_service_requests[c("n")][is.na(aggregate_service_requests[c("n")])] <- 0
+  return(sf::st_zm(aggregate_service_requests))
 }
 
-draw_map_data <- function(map, neighborhood_service_requests) {
+draw_map_data <- function(map, aggregate_service_requests, key) {
   pal <- colorNumeric("magma", NULL)
 
   labels <- sprintf(
     "<strong>%s</strong><br/>Service Requests: %g",
-    neighborhood_service_requests$Name, neighborhood_service_requests$n
+    aggregate_service_requests[[key]], aggregate_service_requests$n
   ) %>% lapply(htmltools::HTML)
-
   map <- map %>%
     clearShapes() %>%
     clearControls() %>%
