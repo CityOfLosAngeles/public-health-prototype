@@ -197,11 +197,12 @@ server <- function(input, output) {
       filter(closed_date %>% month == input$month)
   })
   geogJoined <- reactive({
-    req(geogSelection())
+    req(geogDataset())
     geo_data %>%
       sf::st_join(geogDataset(), join=sf::st_within, left=TRUE)
   })
   geogSubset <- reactive({
+    req(geogSelection())
     geogJoined() %>%
       filter(.data[[geogKey()]] == geogSelection()) # R Nonstandard Evaluation is wild...
   })
