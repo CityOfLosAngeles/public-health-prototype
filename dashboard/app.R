@@ -149,120 +149,11 @@ ui <- dashboardPage(header, sidebar, body)
 
 # server ----------------------------------------------------------------------- 
 server <- function(input, output) {
-
-  geogType <- reactive({input$geog_type})
   
-  output$geog_name <- renderUI({
-    if (geogType() == "cd") {
-      return(selectInput("cd_selector", "Council District Member:", council_district_names))
-    } else if (geogType() == "nc") {
-      return(selectInput("nc_selector", "Neighborhood Council:", neighborhood_council_names))
-    } else if (geogType() == "lapd") {
-      return(selectInput("lapd_selector", "LAPD District:", lapd_division_names))
-    }
-  })             
-  geogKey <- reactive({
-    if(geogType() == "cd") {
-      return("NAME")
-    } else if (geogType() == "nc") {
-      return("Name")
-    } else if (geogType() == "lapd") {
-      return("APREC")
-    }
-  })
-  geogDataset <- reactive({
-    if(geogType() == "cd") {
-      return(council_districts)
-    } else if (geogType() == "nc") {
-      return(neighborhood_councils)
-    } else if (geogType() == "lapd") {
-      return(lapd_divisions)
-    }
-  })
-  geogSelection <- reactive({
-    if(geogType() == "cd") {
-      return(input$cd_selector)
-    } else if (geogType() == "nc") {
-      return(input$nc_selector)
-    } else if (geogType() == "lapd") {
-      return(input$lapd_selector)
-    }
-    return(NULL)
-  })
-
-  # make the data 
-  timeSubset <- reactive({
-    data %>% 
-      filter(closed_date %>% year == input$year) %>% 
-      filter(closed_date %>% month == input$month)
-  })
-  geogJoined <- reactive({
-    req(geogDataset())
-    geo_data %>%
-      sf::st_join(geogDataset(), join=sf::st_within, left=TRUE)
-  })
-  geogSubset <- reactive({
-    req(geogSelection())
-    geogJoined() %>%
-      filter(.data[[geogKey()]] == geogSelection()) # R Nonstandard Evaluation is wild...
-  })
-  geogTimeSubset <- reactive({
-    req(input$year, input$month)
-    geogSubset() %>%
-      filter(closed_date %>% year == input$year) %>% 
-      filter(closed_date %>% month == input$month)
-  })
-
-  output$map <- renderLeaflet(map)
-  observe({
-    subs <- geogJoined() %>%
-      filter(closed_date %>% year == input$year) %>% 
-      filter(closed_date %>% month == input$month)
-    
-    if (nrow(subs) == 0) {
-      leafletProxy("map") %>% clearControls() %>% clearShapes()
-      return()
-    }
-    
-    map_data <- prepare_map_data(subs, geogDataset(), geogKey())
-    leafletProxy("map", data=map_data) %>%
-      draw_map_data(map_data, geogKey())
-  })
-
-
-  output$table <- renderDataTable(geogTimeSubset())
-
-  output$overTimeCount <- renderPlot({
-    geogSubset() %>%
-      drop_na(closed_date, created_date) %>%
-      mutate(month = as.Date(cut(closed_date, breaks='month'))) %>%
-      group_by(month) %>%
-      count() %>%
-      ggplot(aes (x = month, y = n )) +
-      geom_line(aes(group=1)) + 
-      ggtitle(sprintf("Service Requests Closed by Month in %s", geogSelection())) + 
-      xlab("Month") + 
-      ylab("Number of Service Requests Closed") +
-      scale_x_date(labels = date_format("%b, %Y"))
-  })
+  #######################################
+  ##      SUMMARY STATISTICS           ##
+  #######################################
   
-  output$solveTimeCount <- renderPlot({
-
-    geogSubset() %>%
-      drop_na(closed_date, created_date) %>%
-      mutate(solve_time_days = round(created_date %--% closed_date / ddays(1), 2)) %>%
-      mutate(month = as.Date(cut(closed_date, breaks='month'))) %>%
-      group_by(month) %>%
-      summarize(average_solve_time = mean(solve_time_days)) %>%
-      ggplot(aes(x = month, y = average_solve_time )) + 
-      geom_line(aes(group=1)) +
-      ggtitle(sprintf("Average Days Until Service Requests are Closed in %s", geogSelection())) + 
-      xlab("Month") + 
-      ylab("Average Number of Days") +
-      scale_x_date(labels = date_format("%b, %Y"))
-  })
-    
-
   output$code55opened <- renderInfoBox({
     infoBox(
       "CARE+ Cases Opened",
@@ -408,7 +299,121 @@ server <- function(input, output) {
       icon = icon("", class="cola-custom-icon lasan")
     )
   })
+  
+  ########################################
+  ##       SERVICE REQUESTS MAP         ##
+  ########################################
+  geogType <- reactive({input$geog_type})
+  
+  output$geog_name <- renderUI({
+    if (geogType() == "cd") {
+      return(selectInput("cd_selector", "Council District Member:", council_district_names))
+    } else if (geogType() == "nc") {
+      return(selectInput("nc_selector", "Neighborhood Council:", neighborhood_council_names))
+    } else if (geogType() == "lapd") {
+      return(selectInput("lapd_selector", "LAPD District:", lapd_division_names))
+    }
+  })             
+  geogKey <- reactive({
+    if(geogType() == "cd") {
+      return("NAME")
+    } else if (geogType() == "nc") {
+      return("Name")
+    } else if (geogType() == "lapd") {
+      return("APREC")
+    }
+  })
+  geogDataset <- reactive({
+    if(geogType() == "cd") {
+      return(council_districts)
+    } else if (geogType() == "nc") {
+      return(neighborhood_councils)
+    } else if (geogType() == "lapd") {
+      return(lapd_divisions)
+    }
+  })
+  geogSelection <- reactive({
+    if(geogType() == "cd") {
+      return(input$cd_selector)
+    } else if (geogType() == "nc") {
+      return(input$nc_selector)
+    } else if (geogType() == "lapd") {
+      return(input$lapd_selector)
+    }
+    return(NULL)
+  })
 
+  # make the data 
+  timeSubset <- reactive({
+    data %>% 
+      filter(closed_date %>% year == input$year) %>% 
+      filter(closed_date %>% month == input$month)
+  })
+  geogJoined <- reactive({
+    req(geogDataset())
+    geo_data %>%
+      sf::st_join(geogDataset(), join=sf::st_within, left=TRUE)
+  })
+  geogSubset <- reactive({
+    req(geogSelection())
+    geogJoined() %>%
+      filter(.data[[geogKey()]] == geogSelection()) # R Nonstandard Evaluation is wild...
+  })
+  geogTimeSubset <- reactive({
+    req(input$year, input$month)
+    geogSubset() %>%
+      filter(closed_date %>% year == input$year) %>% 
+      filter(closed_date %>% month == input$month)
+  })
+
+  output$map <- renderLeaflet(map)
+  observe({
+    subs <- geogJoined() %>%
+      filter(closed_date %>% year == input$year) %>% 
+      filter(closed_date %>% month == input$month)
+    
+    if (nrow(subs) == 0) {
+      leafletProxy("map") %>% clearControls() %>% clearShapes()
+      return()
+    }
+    
+    map_data <- prepare_map_data(subs, geogDataset(), geogKey())
+    leafletProxy("map", data=map_data) %>%
+      draw_map_data(map_data, geogKey())
+  })
+
+
+  output$table <- renderDataTable(geogTimeSubset())
+
+  output$overTimeCount <- renderPlot({
+    geogSubset() %>%
+      drop_na(closed_date, created_date) %>%
+      mutate(month = as.Date(cut(closed_date, breaks='month'))) %>%
+      group_by(month) %>%
+      count() %>%
+      ggplot(aes (x = month, y = n )) +
+      geom_line(aes(group=1)) + 
+      ggtitle(sprintf("Service Requests Closed by Month in %s", geogSelection())) + 
+      xlab("Month") + 
+      ylab("Number of Service Requests Closed") +
+      scale_x_date(labels = date_format("%b, %Y"))
+  })
+  
+  output$solveTimeCount <- renderPlot({
+
+    geogSubset() %>%
+      drop_na(closed_date, created_date) %>%
+      mutate(solve_time_days = round(created_date %--% closed_date / ddays(1), 2)) %>%
+      mutate(month = as.Date(cut(closed_date, breaks='month'))) %>%
+      group_by(month) %>%
+      summarize(average_solve_time = mean(solve_time_days)) %>%
+      ggplot(aes(x = month, y = average_solve_time )) + 
+      geom_line(aes(group=1)) +
+      ggtitle(sprintf("Average Days Until Service Requests are Closed in %s", geogSelection())) + 
+      xlab("Month") + 
+      ylab("Average Number of Days") +
+      scale_x_date(labels = date_format("%b, %Y"))
+  })
 } # end server
 
 
