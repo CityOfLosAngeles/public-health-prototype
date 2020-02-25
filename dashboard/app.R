@@ -366,8 +366,16 @@ server <- function(input, output) {
       filter(closed_date %>% month == input$month)
   })
 
-  output$map <- renderLeaflet(map)
+  hack <- reactiveVal()
+  output$map <- renderLeaflet({
+    hack('hack')
+    return(map)
+  })
   observe({
+    # I consider the need for this req a bug:
+    # https://github.com/rstudio/leaflet/issues/590
+    req(hack())
+
     subs <- geogJoined() %>%
       filter(closed_date %>% year == input$year) %>% 
       filter(closed_date %>% month == input$month)
@@ -382,8 +390,6 @@ server <- function(input, output) {
       draw_map_data(map_data, geogKey())
   })
 
-
-  output$table <- renderDataTable(geogTimeSubset())
 
   output$overTimeCount <- renderPlot({
     geogSubset() %>%
@@ -400,7 +406,6 @@ server <- function(input, output) {
   })
   
   output$solveTimeCount <- renderPlot({
-
     geogSubset() %>%
       drop_na(closed_date, created_date) %>%
       mutate(solve_time_days = round(created_date %--% closed_date / ddays(1), 2)) %>%
@@ -414,6 +419,9 @@ server <- function(input, output) {
       ylab("Average Number of Days") +
       scale_x_date(labels = date_format("%b, %Y"))
   })
+
+  output$table <- renderDataTable(geogTimeSubset())
+
 } # end server
 
 

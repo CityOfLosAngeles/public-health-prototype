@@ -33,7 +33,6 @@ draw_map_data <- function(map, aggregate_service_requests, key) {
     "<strong>%s</strong><br/>Service Requests: %g",
     aggregate_service_requests[[key]], aggregate_service_requests$n
   ) %>% lapply(htmltools::HTML)
-
   map <- map %>%
     clearShapes() %>%
     clearControls() %>%
