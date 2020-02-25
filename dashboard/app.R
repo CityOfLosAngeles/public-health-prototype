@@ -208,23 +208,27 @@ server <- function(input, output) {
   })
   geogTimeSubset <- reactive({
     req(input$year, input$month)
-    
     geogSubset() %>%
       filter(closed_date %>% year == input$year) %>% 
       filter(closed_date %>% month == input$month)
   })
 
+  output$map <- renderLeaflet(map)
   observe({
-    if (nrow(timeSubset()) == 0) {
+    subs <- geogJoined() %>%
+      filter(closed_date %>% year == input$year) %>% 
+      filter(closed_date %>% month == input$month)
+    
+    if (nrow(subs) == 0) {
       leafletProxy("map") %>% clearControls() %>% clearShapes()
       return()
     }
     
-    map_data <- prepare_map_data(geogJoined(), geogDataset(), geogKey())
+    map_data <- prepare_map_data(subs, geogDataset(), geogKey())
     leafletProxy("map", data=map_data) %>%
       draw_map_data(map_data, geogKey())
   })
-  output$map <- renderLeaflet(map)
+
 
   output$table <- renderDataTable(geogTimeSubset())
 
