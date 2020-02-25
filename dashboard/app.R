@@ -59,7 +59,7 @@ body <- dashboardBody(
     tabItem(
       tabName = "map",
       fluidRow(
-        column(6,
+        column(3,
           # Input for what geography to aggregate by.
           selectInput("geog_type", "Geographic Division:",
                       c(
@@ -89,21 +89,23 @@ body <- dashboardBody(
           ),
           selectInput('year', "Select a Year",
                       c(seq(2015,2020)),
-                      selected = 2020),
-    
-          # Box with over time chart
-          box(
-            title = "Closed SR over Time", status = "primary", solidHeader = TRUE,
-            collapsible = TRUE, width = 6,
-            plotOutput("overTimeCount", height = 250)
-          ),
-          box(
-            title = "Average Solve Time", status = "primary", solidHeader = TRUE,
-            collapsible = TRUE, width = 6,
-            plotOutput("solveTimeCount", height = 250)
-          )
+                      selected = 2020)
+
         ),
-        column(6, leafletOutput("map"))
+        column(9, leafletOutput("map"))
+      ),
+      fluidRow(
+        # Box with over time chart
+        box(
+          title = "Closed Service Requests over Time", status = "primary", solidHeader = TRUE,
+          collapsible = TRUE, width = 6,
+          plotOutput("overTimeCount", height = 250)
+        ),
+        box(
+          title = "Average Solve Time", status = "primary", solidHeader = TRUE,
+          collapsible = TRUE, width = 6,
+          plotOutput("solveTimeCount", height = 250)
+        )
       ),
       fluidRow(
         # rendering of the table
