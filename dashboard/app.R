@@ -159,8 +159,8 @@ server <- function(input, output) {
   # make the data 
   timeSubset <- reactive({
     data %>% 
-    filter(closed_date %>% year == input$year) %>% 
-    filter(closed_date %>% month == input$month)
+      filter(closed_date %>% year == input$year) %>% 
+      filter(closed_date %>% month == input$month)
   })
   geogKey <- reactive({
     if(geogType() == "cd") {
@@ -189,40 +189,48 @@ server <- function(input, output) {
       return(input$lapd_selector)
     }
   })
-  geogSubset <- reactive({
+  geogTimeSubset <- reactive({
     timeSubset() %>%
       drop_na("longitude", "latitude") %>%
       sf::st_as_sf(coords=c("longitude", "latitude"), crs=4326) %>%
       sf::st_join(geogDataset(), join=sf::st_within, left=TRUE) %>%
       filter(.data[[geogKey()]] == geogSelection()) # R Nonstandard Evaluation is wild...
   })
-  output$table <- renderDataTable(geogSubset())
-
-  output$overTimeCount <- renderPlot({data %>%
-    filter(neighborhood_council_name == input$geog_name) %>% 
-    mutate(month = as.Date(cut(
-      (filter(data, neighborhood_council_name == input$geog_name))$closed_date, breaks = 'month'))) %>%
-    group_by(month) %>%
-    count() %>%
-    ggplot(aes (x = month, y = n )) +
-    geom_line(aes(group=1)) + 
-    ggtitle(sprintf("Service Requests Closed by Month in %s", input$geog_name)) + 
-    xlab("Month") + 
-    ylab("Number of Service Requests Closed") +
-    scale_x_date(labels = date_format("%b, %Y"))
+  
+  geogSubset <- reactive({
+    data %>%
+      drop_na("longitude", "latitude") %>%
+      sf::st_as_sf(coords=c("longitude", "latitude"), crs=4326) %>%
+      sf::st_join(geogDataset(), join=sf::st_within, left=TRUE) %>%
+      filter(.data[[geogKey()]] == geogSelection()) # R Nonstandard Evaluation is wild...
   })
   
-  output$solveTimeCount <- renderPlot({data %>%
-      filter(neighborhood_council_name == geogSelection()) %>% 
+  output$table <- renderDataTable(geogTimeSubset())
+
+  output$overTimeCount <- renderPlot({
+    geogSubset() %>%
+      drop_na(closed_date, created_date) %>%
+      mutate(month = as.Date(cut(closed_date, breaks='month'))) %>%
+      group_by(month) %>%
+      count() %>%
+      ggplot(aes (x = month, y = n )) +
+      geom_line(aes(group=1)) + 
+      ggtitle(sprintf("Service Requests Closed by Month in %s", geogSelection())) + 
+      xlab("Month") + 
+      ylab("Number of Service Requests Closed") +
+      scale_x_date(labels = date_format("%b, %Y"))
+  })
+  
+  output$solveTimeCount <- renderPlot({
+    geogSubset() %>%
       drop_na(closed_date, created_date) %>%
       mutate(solve_time_days = round(created_date %--% closed_date / ddays(1), 2)) %>%
-      mutate(month = as.Date(cut(
-        (filter(data, neighborhood_council_name == input$geog_name))$closed_date, breaks = 'month'))) %>%
-      group_by(month)  %>%
-      summarize(average_solve_time = mean(solve_time_days)) %>% 
+      mutate(month = as.Date(cut(closed_date, breaks='month'))) %>%
+      group_by(month) %>%
+      summarize(average_solve_time = mean(solve_time_days)) %>%
       ggplot(aes(x = month, y = average_solve_time )) + 
       geom_line(aes(group=1)) +
-      ggtitle(sprintf("Average Days Until Service Requests are Closed in %s", input$geog_name)) + 
+      ggtitle(sprintf("Average Days Until Service Requests are Closed in %s", geogSelection())) + 
       xlab("Month") + 
       ylab("Average Number of Days") +
       scale_x_date(labels = date_format("%b, %Y"))

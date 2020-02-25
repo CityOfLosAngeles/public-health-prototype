@@ -36,7 +36,7 @@ lapd_divisions <- sf::st_read(
 )
 
 latimes_neighborhoods <- sf::st_read(
-  "https://s3-us-west-2.amazonaws.com/boundaries.latimes.com/archive/1.0/boundary/torrance-la-county-neighborhood-current.geojson"
+  "http://boundaries.latimes.com/1.0/boundary-set/la-county-neighborhoods-current/?format=geojson"
 )
 
 load_data <- function() {
