@@ -61,7 +61,7 @@ body <- dashboardBody(
       fluidRow(
         column(6,
           # Input for what geography to aggregate by.
-          selectInput("geog_type", "Geographic boundary:",
+          selectInput("geog_type", "Geographic Division:",
                       c(
                         "Neighborhood Council"="nc",
                         "LAPD Division" = "lapd",
@@ -162,27 +162,39 @@ server <- function(input, output) {
     filter(closed_date %>% year == input$year) %>% 
     filter(closed_date %>% month == input$month)
   })
-  geogSubset <- reactive({
-    if (geogType() == "cd") {
-      subs <-timeSubset() %>%
-        drop_na("longitude", "latitude") %>%
-        sf::st_as_sf(coords=c("longitude", "latitude"), crs=4326) %>%
-        sf::st_join(council_districts, join=sf::st_within, left=TRUE) %>%
-        filter(NAME == input$cd_selector)
-      return(subs)
+  geogKey <- reactive({
+    if(geogType() == "cd") {
+      return("NAME")
     } else if (geogType() == "nc") {
-      subs <-timeSubset() %>%
-        drop_na("longitude", "latitude") %>%
-        sf::st_as_sf(coords=c("longitude", "latitude"), crs=4326) %>%
-        sf::st_join(neighborhood_councils, join=sf::st_within, left=TRUE) %>%
-        filter(Name==input$nc_selector)
+      return("Name")
     } else if (geogType() == "lapd") {
-      subs <-timeSubset() %>%
-        drop_na("longitude", "latitude") %>%
-        sf::st_as_sf(coords=c("longitude", "latitude"), crs=4326) %>%
-        sf::st_join(lapd_divisions, join=sf::st_within, left=TRUE) %>%
-        filter(APREC==input$lapd_selector)
+      return("APREC")
     }
+  })
+  geogDataset <- reactive({
+    if(geogType() == "cd") {
+      return(council_districts)
+    } else if (geogType() == "nc") {
+      return(neighborhood_councils)
+    } else if (geogType() == "lapd") {
+      return(lapd_divisions)
+    }
+  })
+  geogSelection <- reactive({
+    if(geogType() == "cd") {
+      return(input$cd_selector)
+    } else if (geogType() == "nc") {
+      return(input$nc_selector)
+    } else if (geogType() == "lapd") {
+      return(input$lapd_selector)
+    }
+  })
+  geogSubset <- reactive({
+    timeSubset() %>%
+      drop_na("longitude", "latitude") %>%
+      sf::st_as_sf(coords=c("longitude", "latitude"), crs=4326) %>%
+      sf::st_join(geogDataset(), join=sf::st_within, left=TRUE) %>%
+      filter(.data[[geogKey()]] == geogSelection()) # R Nonstandard Evaluation is wild...
   })
   output$table <- renderDataTable(geogSubset())
 
@@ -198,10 +210,10 @@ server <- function(input, output) {
     xlab("Month") + 
     ylab("Number of Service Requests Closed") +
     scale_x_date(labels = date_format("%b, %Y"))
-    })
+  })
   
   output$solveTimeCount <- renderPlot({data %>%
-      filter(neighborhood_council_name == input$geog_name) %>% 
+      filter(neighborhood_council_name == geogSelection()) %>% 
       drop_na(closed_date, created_date) %>%
       mutate(solve_time_days = round(created_date %--% closed_date / ddays(1), 2)) %>%
       mutate(month = as.Date(cut(
@@ -367,20 +379,10 @@ server <- function(input, output) {
       leafletProxy("map") %>% clearControls() %>% clearShapes()
       return()
     }
-    if (geogType() == "cd") {
-      map_data <- prepare_map_data(timeSubset(), council_districts, "NAME")
-      leafletProxy("map", data=map_data) %>%
-        draw_map_data(map_data, "NAME")
-    } else if(geogType() == "nc") {
-      map_data <- prepare_map_data(timeSubset(), neighborhood_councils, "Name")
-      leafletProxy("map", data=map_data) %>%
-        draw_map_data(map_data, "Name")
-    } else if(geogType() == "lapd") {
-      map_data <- prepare_map_data(timeSubset(), lapd_divisions, "APREC")
-      leafletProxy("map", data=map_data) %>%
-        draw_map_data(map_data, "APREC")
-    }
 
+    map_data <- prepare_map_data(timeSubset(), geogDataset(), geogKey())
+    leafletProxy("map", data=map_data) %>%
+      draw_map_data(map_data, geogKey())
   })
   output$map <- renderLeaflet(map)
 } # end server
