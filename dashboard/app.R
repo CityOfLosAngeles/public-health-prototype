@@ -188,16 +188,19 @@ server <- function(input, output) {
     } else if (geogType() == "lapd") {
       return(input$lapd_selector)
     }
+    return(NULL)
   })
   geogTimeSubset <- reactive({
-    timeSubset() %>%
-      drop_na("longitude", "latitude") %>%
-      sf::st_as_sf(coords=c("longitude", "latitude"), crs=4326) %>%
-      sf::st_join(geogDataset(), join=sf::st_within, left=TRUE) %>%
-      filter(.data[[geogKey()]] == geogSelection()) # R Nonstandard Evaluation is wild...
+    req(input$year, input$month)
+
+    geogSubset() %>%
+      filter(closed_date %>% year == input$year) %>% 
+      filter(closed_date %>% month == input$month)
   })
   
   geogSubset <- reactive({
+    req(geogSelection())
+
     data %>%
       drop_na("longitude", "latitude") %>%
       sf::st_as_sf(coords=c("longitude", "latitude"), crs=4326) %>%
@@ -222,6 +225,7 @@ server <- function(input, output) {
   })
   
   output$solveTimeCount <- renderPlot({
+
     geogSubset() %>%
       drop_na(closed_date, created_date) %>%
       mutate(solve_time_days = round(created_date %--% closed_date / ddays(1), 2)) %>%
@@ -239,7 +243,7 @@ server <- function(input, output) {
 
   output$code55opened <- renderInfoBox({
     infoBox(
-      "Sanitation Code 55 Opened",
+      "CARE+ Cases Opened",
       data %>%
         filter(created_date > "2020-01-01") %>%
         filter(reason_code == "55") %>%
@@ -251,7 +255,7 @@ server <- function(input, output) {
   
   output$code55closed <- renderInfoBox({
     infoBox(
-      "Sanitation Code 55 Closed",
+      "CARE+ Cases Closed",
       data %>%
         filter(closed_date > "2020-01-01") %>%
         filter(reason_code == "55") %>%
@@ -263,7 +267,7 @@ server <- function(input, output) {
   
   output$code55time <- renderInfoBox({
     infoBox(
-      "Sanitation Code 55 Average Solve Time",
+      "CARE+ Cases Average Solve Time",
       data %>%
         filter(reason_code == "55") %>%
         drop_na(closed_date, created_date) %>%
@@ -278,7 +282,7 @@ server <- function(input, output) {
   
   output$code75opened <- renderInfoBox({
     infoBox(
-      "Sanitation Code 75 Opened",
+      "CARE Cases Opened",
       data %>%
         filter(created_date > "2020-01-01") %>%
         filter(reason_code == "75") %>%
@@ -290,7 +294,7 @@ server <- function(input, output) {
   
   output$code75closed <- renderInfoBox({
     infoBox(
-      "Sanitation Code 75 Closed",
+      "CARE Cases Closed",
       data %>%
         filter(closed_date > "2020-01-01") %>%
         filter(reason_code == "75") %>%
@@ -302,7 +306,7 @@ server <- function(input, output) {
   
   output$code75time <- renderInfoBox({
     infoBox(
-      "Sanitation Code 75 Average Solve Time",
+      "CARE Cases Average Solve Time",
       data %>%
         filter(reason_code == "75") %>%
         drop_na(closed_date, created_date) %>%
