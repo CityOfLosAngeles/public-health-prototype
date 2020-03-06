@@ -24,7 +24,7 @@ con <- dbConnect(RPostgres::Postgres(),
                  password = password)
 
 neighborhood_councils <- sf::st_read(
-  "https://opendata.arcgis.com/datasets/674f80b8edee4bf48551512896a1821d_0.geojson"
+  "../data/neighborhood_council_boundaries.geojson"
 )
 
 council_districts <- sf::st_read(

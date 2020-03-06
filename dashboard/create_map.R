@@ -15,7 +15,7 @@ create_base_map <- function() {
 
 prepare_map_data <- function(map_data, aggregation_level, join_key) {
   service_request_data <- map_data %>%
-    group_by_(join_key) %>%
+    group_by(.data[[join_key]]) %>%
     tally()
   aggregate_service_requests <- left_join(
     aggregation_level,
