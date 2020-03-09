@@ -6,6 +6,7 @@ library(lubridate)
 library(leaflet)
 library(scales)
 
+
 source("create_map.R")
 source("load_data.R")
 source("value_counts.R")
@@ -140,6 +141,12 @@ body <- dashboardBody(
         infoBoxOutput("cleanstatweeds"),
         infoBoxOutput("cleanstatlitter"),
         infoBoxOutput("cleanstatillegaldumping")
+      ),
+      fluidRow(
+        infoBoxOutput("coronavirusCasesCA"),
+        infoBoxOutput("coronavirusCasesLAC"),
+        infoBoxOutput("coronavirusDeathsCA"),
+        infoBoxOutput("coronavirusDeathsLAC")
       )
     ) # end counts tab.
   ) # end tabItems 
@@ -300,6 +307,38 @@ server <- function(input, output) {
     )
   })
   
+  ## CORONAVIRUS OUTPUT
+  output$coronavirusCasesCA <- renderInfoBox({
+    infoBox(
+      "Coronavirus Cases in CA",
+      sf::st_filter(coronavirus_cases, state_boundary) %>%
+        length()
+    )
+  })
+  
+  output$coronavirusCasesLAC <- renderInfoBox({
+    infoBox(
+      "Coronavirus Cases in LA County",
+      sf::st_filter(coronavirus_cases, county_boundary) %>%
+        length()
+    )
+  })
+  
+  output$coronavirusDeathsCA <- renderInfoBox({
+    infoBox(
+      "Coronavirus Deaths in CA",
+      sf::st_filter(coronavirus_deaths, state_boundary) %>%
+        length()
+    )
+  })
+  
+  output$coronavirusDeathsLAC <- renderInfoBox({
+    infoBox(
+      "Coronavirus Deaths in LA County",
+      sf::st_filter(coronavirus_deaths, county_boundary) %>%
+        length()
+    )
+  })
   ########################################
   ##       SERVICE REQUESTS MAP         ##
   ########################################
