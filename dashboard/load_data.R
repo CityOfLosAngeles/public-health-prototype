@@ -3,6 +3,7 @@ library(DBI)
 library(sys)
 library(stringr)
 library(tidyverse)
+library(sf)
 
 conn_string <- Sys.getenv('POSTGRES_URI')
 
@@ -38,6 +39,21 @@ lapd_divisions <- sf::st_read(
 latimes_neighborhoods <- sf::st_read(
   "http://boundaries.latimes.com/1.0/boundary-set/la-county-neighborhoods-current/?format=geojson"
 )
+
+# CORONAVIRUS 
+
+coronavirus_deaths <- read_csv(
+  "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Deaths.csv"
+)
+coronavirus_cases <- read_csv(
+  "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Confirmed.csv"
+)
+
+county_boundary <- sf::st_read('../data/la_county.geojson')
+
+state_boundary <- sf::st_read('../data/state-boundary.geojson')
+
+  
 
 load_data <- function() {
   data <- tbl(con, dbplyr::in_schema('"public-health"','"311-cases-homelessness"')) %>% collect()
