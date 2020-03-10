@@ -311,32 +311,28 @@ server <- function(input, output) {
   output$coronavirusCasesCA <- renderInfoBox({
     infoBox(
       "Coronavirus Cases in CA",
-      sf::st_filter(coronavirus_cases, state_boundary) %>%
-        length()
+      "NOT DONE"
     )
   })
   
   output$coronavirusCasesLAC <- renderInfoBox({
     infoBox(
       "Coronavirus Cases in LA County",
-      sf::st_filter(coronavirus_cases, county_boundary) %>%
-        length()
+      coronavirus_cases %>% filter(`Province/State` == "Los Angeles, CA") %>% select(ends_with("20")) %>% select(tail(names(.), 1))
     )
   })
   
   output$coronavirusDeathsCA <- renderInfoBox({
     infoBox(
       "Coronavirus Deaths in CA",
-      sf::st_filter(coronavirus_deaths, state_boundary) %>%
-        length()
+      "NOT DONE"
     )
   })
   
   output$coronavirusDeathsLAC <- renderInfoBox({
     infoBox(
       "Coronavirus Deaths in LA County",
-      sf::st_filter(coronavirus_deaths, county_boundary) %>%
-        length()
+      coronavirus_deaths %>% filter(`Province/State` == "Los Angeles, CA") %>% select(ends_with("20")) %>% select(tail(names(.), 1))
     )
   })
   ########################################
