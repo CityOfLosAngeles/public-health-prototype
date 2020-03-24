@@ -32,11 +32,11 @@ ogrmerge.py \
     grabngo.kmz
 
 # Handwashing station layer
-ogr2ogr \
+LIBKML_NAME_FIELD="Descriptio" \
+    ogr2ogr \
      -f "LIBKML" \
     -append \
     -nln "Handwashing Stations" \
-    -dsco NameField="Descriptio" \
     $OUTFILE \
     handwashing.geojson
 
@@ -50,7 +50,8 @@ ogrmerge.py \
     tier1.geojson \
     tier2.geojson
 
-ogr2ogr \
+LIBKML_NAME_FIELD="Location" \
+    ogr2ogr \
     -f "LIBKML" \
     -append \
     -nln "Emergency Shelters" \
