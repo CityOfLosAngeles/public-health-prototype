@@ -27,7 +27,7 @@ echo "Assembling layers into $OUTFILE"
 # Food center layer
 ogrmerge.py \
     -single \
-    -nln "Grab & Go Food Centers" \
+    -nln "LAUSD Grab & Go Food Centers" \
     -o $OUTFILE \
     grabngo.kmz
 
