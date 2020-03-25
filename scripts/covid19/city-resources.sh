@@ -31,24 +31,53 @@ rm -f $OUTFILE
 
 echo "Assembling layers into $OUTFILE"
 
-# Food center layer
+##################################
+# LAUSD Grab and Go Food Centers #
+##################################
+
+# Merge the sublayers into one
+rm -f grabngo-merged.kmz
 ogrmerge.py \
     -f "LIBKML" \
     -single \
     -nln "LAUSD Grab & Go Food Centers" \
-    -o $OUTFILE \
+    -o grabngo-merged.kml \
     grabngo.kmz
 
-# Handwashing station layer
+# Convert to GeoJSON for the sole purpose of dropping
+# existing styles on the features.
+rm -f grabngo.geojson
+ogr2ogr \
+    -f "GeoJSON" \
+    grabngo.geojson \
+    grabngo-merged.kml
+
+# Add to the output layer with our own styling.
+ogr2ogr \
+    -f "LIBKML" \
+    -sql "SELECT *, '@icon-1703-0288D1' as OGR_STYLE from \"LAUSD Grab & Go Food Centers\"" \
+    $OUTFILE \
+    grabngo.geojson
+
+#############################
+# Handwashing station layer #
+#############################
+
+# Add to the output layer, including our own styling.
 LIBKML_NAME_FIELD="Descriptio" \
     ogr2ogr \
      -f "LIBKML" \
     -append \
+    -sql "SELECT *, '@icon-1703-0288D1' as OGR_STYLE from handwashing" \
     -nln "Handwashing Stations" \
     $OUTFILE \
     handwashing.geojson
 
-# Emergency shelters layer
+############################
+# Emergency shelters layer #
+############################
+
+# Merge the tier 1 and tier 2 shelters.
 rm -f shelters.geojson
 ogrmerge.py \
      -f "GeoJSON" \
@@ -58,19 +87,31 @@ ogrmerge.py \
     tier1.geojson \
     tier2.geojson
 
+# Add to our output layer, including styling
 LIBKML_NAME_FIELD="Location" \
     ogr2ogr \
     -f "LIBKML" \
     -append \
+    -sql "SELECT *, '@icon-1703-0288D1' as OGR_STYLE from \"Emergency Shelters\"" \
     -nln "Emergency Shelters" \
     $OUTFILE \
     shelters.geojson
 
-# Senior nutrition centers layer
+##################################
+# Senior nutrition centers layer #
+##################################
+
+# Add to out output layer, including styling.
 LIBKML_NAME_FIELD="NAME" \
     ogr2ogr \
      -f "LIBKML" \
     -append \
+    -sql "SELECT *, '@icon-1703-0288D1' as OGR_STYLE from seniors" \
     -nln "Senior Nutrition Dining Sites" \
     $OUTFILE \
     seniors.json
+
+##################
+# Postprocessing #
+##################
+python splice_style.py
