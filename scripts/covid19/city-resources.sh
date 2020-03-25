@@ -8,6 +8,10 @@ TIER_1_SHELTERS_URL="https://services1.arcgis.com/X1hcdGx5Fxqn4d0j/ArcGIS/rest/s
 
 TIER_2_SHELTERS_URL="https://services1.arcgis.com/X1hcdGx5Fxqn4d0j/ArcGIS/rest/services/COVID_19_Shelters_Tier2/FeatureServer/0/query?where=1%3D1&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&resultType=none&distance=0.0&units=esriSRUnit_Meter&returnGeodetic=false&outFields=*&returnGeometry=true&featureEncoding=esriDefault&multipatchOption=xyFootprint&maxAllowableOffset=&geometryPrecision=&outSR=&datumTransformation=&applyVCSProjection=false&returnIdsOnly=false&returnUniqueIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&returnQueryGeometry=false&returnDistinctValues=false&cacheHint=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&having=&resultOffset=&resultRecordCount=&returnZ=false&returnM=false&returnExceededLimitFeatures=true&quantizationParameters=&sqlFormat=none&f=pgeojson&token="
 
+# Use ESRI JSON output format to better get field types. Otherwise some strings
+# are incorrectly interpreted as times.
+SENIOR_NUTRITION_URL="https://services5.arcgis.com/7nsPwEMP38bSkCjy/arcgis/rest/services/Senior_Nutrition_Dining_Sites_COVID19_20200325/FeatureServer/0/query?where=1%3D1&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&resultType=none&distance=0.0&units=esriSRUnit_Meter&returnGeodetic=false&outFields=*&returnGeometry=true&featureEncoding=esriDefault&multipatchOption=xyFootprint&maxAllowableOffset=&geometryPrecision=&outSR=&datumTransformation=&applyVCSProjection=false&returnIdsOnly=false&returnUniqueIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&returnQueryGeometry=false&returnDistinctValues=false&cacheHint=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&having=&resultOffset=&resultRecordCount=&returnZ=false&returnM=false&returnExceededLimitFeatures=true&quantizationParameters=&sqlFormat=none&f=json&token="
+
 rm -f grabngo.kmz
 curl -J -L $GRAB_AND_GO_URL -o grabngo.kmz
 
@@ -20,12 +24,16 @@ curl -J -L $TIER_1_SHELTERS_URL -o tier1.geojson
 rm -f tier2.geojson
 curl -J -L $TIER_2_SHELTERS_URL -o tier2.geojson
 
+rm -f seniors.json
+curl -J -L $SENIOR_NUTRITION_URL -o seniors.json
+
 rm -f $OUTFILE
 
 echo "Assembling layers into $OUTFILE"
 
 # Food center layer
 ogrmerge.py \
+    -f "LIBKML" \
     -single \
     -nln "LAUSD Grab & Go Food Centers" \
     -o $OUTFILE \
@@ -55,6 +63,14 @@ LIBKML_NAME_FIELD="Location" \
     -f "LIBKML" \
     -append \
     -nln "Emergency Shelters" \
-    -dsco NameField="Location" \
     $OUTFILE \
     shelters.geojson
+
+# Senior nutrition centers layer
+LIBKML_NAME_FIELD="NAME" \
+    ogr2ogr \
+     -f "LIBKML" \
+    -append \
+    -nln "Senior Nutrition Dining Sites" \
+    $OUTFILE \
+    seniors.json
