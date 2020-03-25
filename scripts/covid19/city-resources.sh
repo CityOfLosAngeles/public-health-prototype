@@ -47,20 +47,25 @@ ogrmerge.py \
     -nln "LAUSD Grab & Go Food Centers" \
     -o grabngo-merged.kmz \
     grabngo.kmz
+rm grabngo.kmz
 
 # Convert to GeoJSON for the sole purpose of dropping
 # existing styles on the features.
 rm -f grabngo.geojson
 ogr2ogr \
     -f "GeoJSON" \
+    -fieldTypeToString DateTime \
     grabngo.geojson \
-    grabngo-merged.kml
+    grabngo-merged.kmz
+rm grabngo-merged.kmz
+
 # Add to the output layer with our own styling.
 ogr2ogr \
     -f "LIBKML" \
     -sql "SELECT *, '@icon-1682-9C27B0' as OGR_STYLE from \"LAUSD Grab & Go Food Centers\"" \
     $OUTFILE \
     grabngo.geojson
+rm grabngo.geojson
 
 #############################
 # Handwashing station layer #
@@ -77,6 +82,7 @@ LIBKML_NAME_FIELD="Descriptio" \
     -nln "Handwashing Stations" \
     $OUTFILE \
     handwashing.geojson
+rm handwashing.geojson
 
 ############################
 # Emergency shelters layer #
@@ -93,6 +99,7 @@ ogrmerge.py \
     -o shelters.geojson \
     tier1.geojson \
     tier2.geojson
+rm tier1.geojson tier2.geojson
 
 # Add to our output layer, including styling
 LIBKML_NAME_FIELD="Location" \
@@ -103,6 +110,7 @@ LIBKML_NAME_FIELD="Location" \
     -nln "Emergency Shelters" \
     $OUTFILE \
     shelters.geojson
+rm shelters.geojson
 
 ##################################
 # Senior nutrition centers layer #
@@ -121,6 +129,7 @@ LIBKML_NAME_FIELD="NAME" \
     -nln "Senior Nutrition Dining Sites" \
     $OUTFILE \
     seniors.json
+rm seniors.json
 
 ##################
 # Postprocessing #
