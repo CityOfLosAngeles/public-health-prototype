@@ -114,6 +114,8 @@ echo "Writing Senior Nutrition Layer"
 LIBKML_NAME_FIELD="NAME" \
     ogr2ogr \
      -f "LIBKML" \
+    -s_srs "EPSG:3857" \
+    -t_srs "EPSG:4326" \
     -append \
     -sql "SELECT *, '@icon-1703-0288D1' as OGR_STYLE from seniors" \
     -nln "Senior Nutrition Dining Sites" \
@@ -123,4 +125,5 @@ LIBKML_NAME_FIELD="NAME" \
 ##################
 # Postprocessing #
 ##################
+echo "Adding styling information"
 python splice_style.py
