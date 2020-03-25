@@ -58,7 +58,7 @@ ogr2ogr \
 # Add to the output layer with our own styling.
 ogr2ogr \
     -f "LIBKML" \
-    -sql "SELECT *, '@icon-1703-0288D1' as OGR_STYLE from \"LAUSD Grab & Go Food Centers\"" \
+    -sql "SELECT *, '@icon-1682-9C27B0' as OGR_STYLE from \"LAUSD Grab & Go Food Centers\"" \
     $OUTFILE \
     grabngo.geojson
 
@@ -73,7 +73,7 @@ LIBKML_NAME_FIELD="Descriptio" \
     ogr2ogr \
      -f "LIBKML" \
     -append \
-    -sql "SELECT *, '@icon-1703-0288D1' as OGR_STYLE from handwashing" \
+    -sql "SELECT *, '@icon-1703-01579B' as OGR_STYLE from handwashing" \
     -nln "Handwashing Stations" \
     $OUTFILE \
     handwashing.geojson
@@ -99,7 +99,7 @@ LIBKML_NAME_FIELD="Location" \
     ogr2ogr \
     -f "LIBKML" \
     -append \
-    -sql "SELECT *, '@icon-1703-0288D1' as OGR_STYLE from \"Emergency Shelters\"" \
+    -sql "SELECT *, '@icon-1602-A52714' as OGR_STYLE from \"Emergency Shelters\"" \
     -nln "Emergency Shelters" \
     $OUTFILE \
     shelters.geojson
@@ -117,7 +117,7 @@ LIBKML_NAME_FIELD="NAME" \
     -s_srs "EPSG:3857" \
     -t_srs "EPSG:4326" \
     -append \
-    -sql "SELECT *, '@icon-1703-0288D1' as OGR_STYLE from seniors" \
+    -sql "SELECT *, '@icon-1578-0F9D58' as OGR_STYLE from seniors" \
     -nln "Senior Nutrition Dining Sites" \
     $OUTFILE \
     seniors.json
