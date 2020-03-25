@@ -1,3 +1,5 @@
+#!/bin/bash
+
 OUTFILE=city-resources.kml
 
 GRAB_AND_GO_URL="https://www.google.com/maps/d/u/0/kml?mid=1_R_MQhVYaKh3A5_8oAtOtlNK2XWjzP2t"
