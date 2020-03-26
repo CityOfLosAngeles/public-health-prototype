@@ -41,7 +41,7 @@ echo "Assembling layers into $OUTFILE"
 
 echo "Writing Grab and Go Layer"
 
-# Merge the sublayers into one
+# Merge the sublayers into one.
 rm -f grabngo-merged.kmz
 ogrmerge.py \
     -f "LIBKML" \
@@ -51,20 +51,24 @@ ogrmerge.py \
     grabngo.kmz
 rm grabngo.kmz
 
-# Convert to GeoJSON for the sole purpose of dropping
-# existing styles on the features.
+# Convert to GeoJSON for the purpose of dropping
+# existing styles on the features and adding our
+# own. Also add a description field for the final
+# KML file.
 rm -f grabngo.geojson
 ogr2ogr \
     -f "GeoJSON" \
     -fieldTypeToString DateTime \
+    -sql "SELECT *, 'Nutritious meals available to all students on weekdays from 7 a.m. to 11 a.m.' AS Description, '@icon-1682-9C27B0' as OGR_STYLE from \"LAUSD Grab & Go Food Centers\"" \
     grabngo.geojson \
     grabngo-merged.kmz
 rm grabngo-merged.kmz
 
 # Add to the output layer with our own styling.
-ogr2ogr \
+LIBKML_DESCRIPTION_FIELD="Description" LIBKML_NAME_FIELD="Name" \
+    ogr2ogr \
     -f "LIBKML" \
-    -sql "SELECT *, '@icon-1682-9C27B0' as OGR_STYLE from \"LAUSD Grab & Go Food Centers\"" \
+    -sql "SELECT Name, Description FROM \"LAUSD Grab & Go Food Centers\"" \
     $OUTFILE \
     grabngo.geojson
 rm grabngo.geojson
@@ -76,15 +80,24 @@ rm grabngo.geojson
 echo "Writing Handwashing Layer"
 
 # Add to the output layer, including our own styling.
-LIBKML_NAME_FIELD="Descriptio" \
-    ogr2ogr \
-     -f "LIBKML" \
-    -append \
+# We pipe it through two ogr2ogr commands in order to
+# invoke OGR SQL twice. The first adds a new OGR_STYLE
+# column which allows us to target an icon style.
+# The second selects final columns for display.
+ogr2ogr \
+    -f "GeoJSON" \
     -sql "SELECT *, '@icon-1703-01579B' as OGR_STYLE from handwashing" \
+    handwashing2.geojson \
+    handwashing.geojson && \
+    LIBKML_NAME_FIELD="Descriptio" LIBKML_DESCRIPTION_FIELD="Category" \
+    ogr2ogr \
+    -f "LIBKML" \
+    -append \
+    -sql "SELECT Descriptio, Category FROM handwashing" \
     -nln "Handwashing Stations" \
     $OUTFILE \
-    handwashing.geojson
-rm handwashing.geojson
+    handwashing2.geojson
+rm handwashing.geojson handwashing2.geojson
 
 ############################
 # Emergency shelters layer #
@@ -103,16 +116,26 @@ ogrmerge.py \
     tier2.geojson
 rm tier1.geojson tier2.geojson
 
-# Add to our output layer, including styling
-LIBKML_NAME_FIELD="Location" \
+# Add to our output layer, including styling.
+# We pipe it through two ogr2ogr commands in order to
+# invoke OGR SQL twice. The first adds a new OGR_STYLE
+# column which allows us to target an icon style.
+# The second selects final columns for display.
+ogr2ogr \
+    -f "GeoJSON" \
+    -sql "SELECT *, '@icon-1602-A52714' as OGR_STYLE from \"Emergency Shelters\"" \
+    -fieldTypeToString "DateTime" \
+    shelters2.geojson \
+    shelters.geojson &&
+    LIBKML_NAME_FIELD="Location" LIBKML_DESCRIPTION_FIELD="Address" \
     ogr2ogr \
     -f "LIBKML" \
+    -sql "SELECT Location, ParksName AS \"Park Name\",ADARating AS \"ADA Rating\",Address,HeatedShower AS \"Heated Shower?\",ShelterCapacity as Capacity,Tier FROM \"Emergency Shelters\"" \
     -append \
-    -sql "SELECT *, '@icon-1602-A52714' as OGR_STYLE from \"Emergency Shelters\"" \
     -nln "Emergency Shelters" \
     $OUTFILE \
-    shelters.geojson
-rm shelters.geojson
+    shelters2.geojson
+rm shelters.geojson shelters2.geojson
 
 ##################################
 # Senior nutrition centers layer #
@@ -121,17 +144,30 @@ rm shelters.geojson
 echo "Writing Senior Nutrition Layer"
 
 # Add to out output layer, including styling.
-LIBKML_NAME_FIELD="NAME" \
-    ogr2ogr \
-     -f "LIBKML" \
+# We pipe it through two ogr2ogr commands in order to
+# invoke OGR SQL twice. The first adds a new OGR_STYLE
+# column which allows us to target an icon style.
+# The second selects final columns for display.
+# The first conversion uses ESRI JSON to ESRI Shapefile
+# because the GeoJSON driver incorrectly coerces the Hours
+# field to Time, when we want to keep it as a string.
+ogr2ogr \
+     -f "ESRI Shapefile" \
+    -sql "SELECT *, '@icon-1578-0F9D58' as OGR_STYLE from seniors" \
     -s_srs "EPSG:3857" \
     -t_srs "EPSG:4326" \
+    seniors \
+    seniors.json && \
+    LIBKML_NAME_FIELD="NAME" LIBKML_DESCRIPTION_FIELD="Address" \
+    ogr2ogr \
+     -f "LIBKML" \
     -append \
-    -sql "SELECT *, '@icon-1578-0F9D58' as OGR_STYLE from seniors" \
+    -sql "SELECT NAME, Address, Hours, Phone FROM seniors" \
     -nln "Senior Nutrition Dining Sites" \
+    -fieldTypeToString "Time" \
     $OUTFILE \
-    seniors.json
-rm seniors.json
+    seniors
+rm -r seniors.json seniors
 
 ##################
 # Postprocessing #
