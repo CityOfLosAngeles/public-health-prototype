@@ -48,7 +48,7 @@ ogrmerge.py \
     -single \
     -nln "LAUSD Grab & Go Food Centers" \
     -o grabngo-merged.kmz \
-    grabngo.kmz
+    grabngo.kmz 2> /dev/null # Redirect invalid warning about type conversion
 rm grabngo.kmz
 
 # Convert to GeoJSON for the purpose of dropping
