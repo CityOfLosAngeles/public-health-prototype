@@ -123,14 +123,14 @@ rm tier1.geojson tier2.geojson
 # The second selects final columns for display.
 ogr2ogr \
     -f "GeoJSON" \
-    -sql "SELECT *, '@icon-1602-A52714' as OGR_STYLE from \"Emergency Shelters\"" \
+    -sql "SELECT *, 'Emergency Shelter' as Description, '@icon-1602-A52714' as OGR_STYLE from \"Emergency Shelters\"" \
     -fieldTypeToString "DateTime" \
     shelters2.geojson \
     shelters.geojson &&
-    LIBKML_NAME_FIELD="Location" LIBKML_DESCRIPTION_FIELD="Address" \
+    LIBKML_NAME_FIELD="Location" LIBKML_DESCRIPTION_FIELD="Description" \
     ogr2ogr \
     -f "LIBKML" \
-    -sql "SELECT Location, ParksName AS \"Park Name\",ADARating AS \"ADA Rating\",Address,HeatedShower AS \"Heated Shower?\",ShelterCapacity as Capacity,Tier FROM \"Emergency Shelters\"" \
+    -sql "SELECT Location, Description, ParksName AS \"Park Name\",ADARating AS \"ADA Rating\",Address,HeatedShower AS \"Heated Shower?\",ShelterCapacity as Capacity,Tier FROM \"Emergency Shelters\"" \
     -append \
     -nln "Emergency Shelters" \
     $OUTFILE \
@@ -153,16 +153,16 @@ echo "Writing Senior Nutrition Layer"
 # field to Time, when we want to keep it as a string.
 ogr2ogr \
      -f "ESRI Shapefile" \
-    -sql "SELECT *, '@icon-1578-0F9D58' as OGR_STYLE from seniors" \
+    -sql "SELECT *, 'Senior Nutrition Dining Site' as Descriptio, '@icon-1578-0F9D58' as OGR_STYLE from seniors" \
     -s_srs "EPSG:3857" \
     -t_srs "EPSG:4326" \
     seniors \
     seniors.json && \
-    LIBKML_NAME_FIELD="NAME" LIBKML_DESCRIPTION_FIELD="Address" \
+    LIBKML_NAME_FIELD="NAME" LIBKML_DESCRIPTION_FIELD="Descriptio" \
     ogr2ogr \
      -f "LIBKML" \
     -append \
-    -sql "SELECT NAME, Address, Hours, Phone FROM seniors" \
+    -sql "SELECT NAME, Descriptio, Address, Hours, Phone FROM seniors" \
     -nln "Senior Nutrition Dining Sites" \
     -fieldTypeToString "Time" \
     $OUTFILE \
