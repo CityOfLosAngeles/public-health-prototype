@@ -6,6 +6,8 @@ GRAB_AND_GO_URL="https://www.google.com/maps/d/u/0/kml?mid=1_R_MQhVYaKh3A5_8oAtO
 
 HANDWASHING_STATIONS_URL="https://services7.arcgis.com/aFfS9FqkIRSo0Ceu/arcgis/rest/services/LAHSA_PROPOSED_HAND_WASHING_LOCATIONS/FeatureServer/0/query?where=1%3D1&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&resultType=none&distance=0.0&units=esriSRUnit_Meter&returnGeodetic=false&outFields=*&returnGeometry=true&featureEncoding=esriDefault&multipatchOption=xyFootprint&maxAllowableOffset=&geometryPrecision=&outSR=&datumTransformation=&applyVCSProjection=false&returnIdsOnly=false&returnUniqueIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&returnQueryGeometry=false&returnDistinctValues=false&cacheHint=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&having=&resultOffset=&resultRecordCount=&returnZ=false&returnM=false&returnExceededLimitFeatures=true&quantizationParameters=&sqlFormat=none&f=pgeojson&token="
 
+RESTROOM_URL="https://services1.arcgis.com/X1hcdGx5Fxqn4d0j/arcgis/rest/services/Portable_Toilet_Public_View/FeatureServer/0/query?where=1%3D1&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&resultType=none&distance=0.0&units=esriSRUnit_Meter&returnGeodetic=false&outFields=*&returnGeometry=true&featureEncoding=esriDefault&multipatchOption=xyFootprint&maxAllowableOffset=&geometryPrecision=&outSR=&datumTransformation=&applyVCSProjection=false&returnIdsOnly=false&returnUniqueIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&returnQueryGeometry=false&returnDistinctValues=false&cacheHint=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&having=&resultOffset=&resultRecordCount=&returnZ=false&returnM=false&returnExceededLimitFeatures=true&quantizationParameters=&sqlFormat=none&f=pgeojson&token="
+
 TIER_1_SHELTERS_URL="https://services1.arcgis.com/X1hcdGx5Fxqn4d0j/ArcGIS/rest/services/COVID_19_Shelters_Tier1/FeatureServer/0/query?where=1%3D1&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&resultType=none&distance=0.0&units=esriSRUnit_Meter&returnGeodetic=false&outFields=*&returnGeometry=true&featureEncoding=esriDefault&multipatchOption=xyFootprint&maxAllowableOffset=&geometryPrecision=&outSR=&datumTransformation=&applyVCSProjection=false&returnIdsOnly=false&returnUniqueIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&returnQueryGeometry=false&returnDistinctValues=false&cacheHint=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&having=&resultOffset=&resultRecordCount=&returnZ=false&returnM=false&returnExceededLimitFeatures=true&quantizationParameters=&sqlFormat=none&f=pgeojson&token="
 
 TIER_2_SHELTERS_URL="https://services1.arcgis.com/X1hcdGx5Fxqn4d0j/ArcGIS/rest/services/COVID_19_Shelters_Tier2/FeatureServer/0/query?where=1%3D1&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&resultType=none&distance=0.0&units=esriSRUnit_Meter&returnGeodetic=false&outFields=*&returnGeometry=true&featureEncoding=esriDefault&multipatchOption=xyFootprint&maxAllowableOffset=&geometryPrecision=&outSR=&datumTransformation=&applyVCSProjection=false&returnIdsOnly=false&returnUniqueIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&returnQueryGeometry=false&returnDistinctValues=false&cacheHint=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&having=&resultOffset=&resultRecordCount=&returnZ=false&returnM=false&returnExceededLimitFeatures=true&quantizationParameters=&sqlFormat=none&f=pgeojson&token="
@@ -21,6 +23,9 @@ curl -s -J -L $GRAB_AND_GO_URL -o grabngo.kmz
 
 rm -f handwashing.geojson
 curl -s -J -L $HANDWASHING_STATIONS_URL -o handwashing.geojson
+
+rm -f restroom.geojson
+curl -s -J -L $RESTROOM_URL -o restroom.geojson
 
 rm -f tier1.geojson
 curl -s -J -L $TIER_1_SHELTERS_URL -o tier1.geojson
@@ -98,6 +103,32 @@ ogr2ogr \
     $OUTFILE \
     handwashing2.geojson
 rm handwashing.geojson handwashing2.geojson
+
+##################
+# Restroom layer #
+##################
+
+echo "Writing Portable Toilet Layer"
+
+# Add to the output layer, including our own styling.
+# We pipe it through two ogr2ogr commands in order to
+# invoke OGR SQL twice. The first adds a new OGR_STYLE
+# column which allows us to target an icon style.
+# The second selects final columns for display.
+ogr2ogr \
+    -f "GeoJSON" \
+    -sql "SELECT *, 'Portable Toilet' as Descriptio, '@icon-1733-424242' as OGR_STYLE from restroom" \
+    restroom2.geojson \
+    restroom.geojson && \
+    LIBKML_NAME_FIELD="Address" LIBKML_DESCRIPTION_FIELD="Descriptio" \
+    ogr2ogr \
+    -f "LIBKML" \
+    -append \
+    -sql "SELECT Descriptio, Address, Handwash_Station as \"Handwash Station?\" FROM restroom" \
+    -nln "Portable Toilets" \
+    $OUTFILE \
+    restroom2.geojson
+rm restroom.geojson restroom2.geojson
 
 ############################
 # Emergency shelters layer #
