@@ -4,8 +4,6 @@ OUTFILE=city-resources.kml
 
 GRAB_AND_GO_URL="https://www.google.com/maps/d/u/0/kml?mid=1_R_MQhVYaKh3A5_8oAtOtlNK2XWjzP2t"
 
-HANDWASHING_STATIONS_URL="https://services7.arcgis.com/aFfS9FqkIRSo0Ceu/arcgis/rest/services/LAHSA_PROPOSED_HAND_WASHING_LOCATIONS/FeatureServer/0/query?where=1%3D1&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&resultType=none&distance=0.0&units=esriSRUnit_Meter&returnGeodetic=false&outFields=*&returnGeometry=true&featureEncoding=esriDefault&multipatchOption=xyFootprint&maxAllowableOffset=&geometryPrecision=&outSR=&datumTransformation=&applyVCSProjection=false&returnIdsOnly=false&returnUniqueIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&returnQueryGeometry=false&returnDistinctValues=false&cacheHint=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&having=&resultOffset=&resultRecordCount=&returnZ=false&returnM=false&returnExceededLimitFeatures=true&quantizationParameters=&sqlFormat=none&f=pgeojson&token="
-
 RESTROOM_URL="https://services1.arcgis.com/X1hcdGx5Fxqn4d0j/arcgis/rest/services/Portable_Toilet_Public_View/FeatureServer/0/query?where=1%3D1&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&resultType=none&distance=0.0&units=esriSRUnit_Meter&returnGeodetic=false&outFields=*&returnGeometry=true&featureEncoding=esriDefault&multipatchOption=xyFootprint&maxAllowableOffset=&geometryPrecision=&outSR=&datumTransformation=&applyVCSProjection=false&returnIdsOnly=false&returnUniqueIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&returnQueryGeometry=false&returnDistinctValues=false&cacheHint=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&having=&resultOffset=&resultRecordCount=&returnZ=false&returnM=false&returnExceededLimitFeatures=true&quantizationParameters=&sqlFormat=none&f=pgeojson&token="
 
 TIER_1_SHELTERS_URL="https://services1.arcgis.com/X1hcdGx5Fxqn4d0j/ArcGIS/rest/services/COVID_19_Shelters_Tier1/FeatureServer/0/query?where=1%3D1&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&resultType=none&distance=0.0&units=esriSRUnit_Meter&returnGeodetic=false&outFields=*&returnGeometry=true&featureEncoding=esriDefault&multipatchOption=xyFootprint&maxAllowableOffset=&geometryPrecision=&outSR=&datumTransformation=&applyVCSProjection=false&returnIdsOnly=false&returnUniqueIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&returnQueryGeometry=false&returnDistinctValues=false&cacheHint=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&having=&resultOffset=&resultRecordCount=&returnZ=false&returnM=false&returnExceededLimitFeatures=true&quantizationParameters=&sqlFormat=none&f=pgeojson&token="
@@ -20,9 +18,6 @@ echo "Downloading resources"
 
 rm -f grabngo.kmz
 curl -s -J -L $GRAB_AND_GO_URL -o grabngo.kmz
-
-rm -f handwashing.geojson
-curl -s -J -L $HANDWASHING_STATIONS_URL -o handwashing.geojson
 
 rm -f restroom.geojson
 curl -s -J -L $RESTROOM_URL -o restroom.geojson
@@ -91,18 +86,21 @@ echo "Writing Handwashing Layer"
 # The second selects final columns for display.
 ogr2ogr \
     -f "GeoJSON" \
-    -sql "SELECT *, '@icon-1703-01579B' as OGR_STYLE from handwashing" \
-    handwashing2.geojson \
-    handwashing.geojson && \
-    LIBKML_NAME_FIELD="Descriptio" LIBKML_DESCRIPTION_FIELD="Category" \
+    -fieldTypeToString DateTime \
+    -s_srs "EPSG:2229" \
+    -t_srs "EPSG:4326" \
+    -sql "SELECT *, 'Handwashing Station' AS description, '@icon-1703-01579B' AS OGR_STYLE FROM HandwashStations_Public_View_KML_April12020 WHERE Status_Exi = 'ACTIVE'" \
+    handwashing.geojson \
+    /vsizip/HandwashStations_Public_View_KML_April12020.zip && \
+    LIBKML_NAME_FIELD="Address" LIBKML_DESCRIPTION_FIELD="description" \
     ogr2ogr \
     -f "LIBKML" \
     -append \
-    -sql "SELECT Descriptio, Category FROM handwashing" \
+    -sql "SELECT Address, description FROM HandwashStations_Public_View_KML_April12020" \
     -nln "Handwashing Stations" \
     $OUTFILE \
-    handwashing2.geojson
-rm handwashing.geojson handwashing2.geojson
+    handwashing.geojson
+rm handwashing.geojson
 
 ##################
 # Restroom layer #
