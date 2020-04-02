@@ -130,25 +130,35 @@ rm restroom.geojson restroom2.geojson
 echo "Writing Emergency Shelter Layer"
 
 # Add to our output layer, including styling.
-# We pipe it through two ogr2ogr commands in order to
-# invoke OGR SQL twice. The first adds a new OGR_STYLE
+# We pipe it through three ogr2ogr commands in order to
+# invoke OGR SQL three times. The first adds a new OGR_STYLE
 # column which allows us to target an icon style.
-# The second selects final columns for display.
+# The second uses the SQLITE dialect in order to COALESCE the
+# feature name since it is missing in some of them.
+# The third selects final columns for display.
 ogr2ogr \
     -f "GeoJSON" \
     -sql "SELECT *, 'Emergency Shelter' as Description, '@icon-1602-A52714' as OGR_STYLE from shelters" \
     -fieldTypeToString "DateTime" \
+    -nln "shelters" \
     shelters2.geojson \
     shelters.geojson &&
-    LIBKML_NAME_FIELD="Location" LIBKML_DESCRIPTION_FIELD="Description" \
+ogr2ogr \
+    -f "GeoJSON" \
+    -dialect SQLITE \
+    -sql "SELECT *, COALESCE(Location, ParksName) as Name FROM shelters" \
+    -nln "shelters" \
+    shelters3.geojson \
+    shelters2.geojson &&
+    LIBKML_NAME_FIELD="Name" LIBKML_DESCRIPTION_FIELD="Description" \
     ogr2ogr \
     -f "LIBKML" \
-    -sql "SELECT Location, Description, ParksName AS \"Park Name\",ADARating AS \"ADA Rating\",Address,HeatedShower AS \"Heated Shower?\",total_capacity as Capacity,Tier FROM shelters" \
+    -sql "SELECT Name, Description, ParksName AS \"Park Name\",ADARating AS \"ADA Rating\",Address,HeatedShower AS \"Heated Shower?\",total_capacity as Capacity,Tier FROM shelters" \
     -append \
     -nln "Emergency Shelters" \
     $OUTFILE \
-    shelters2.geojson
-rm shelters.geojson shelters2.geojson
+    shelters3.geojson
+rm shelters.geojson shelters2.geojson shelters3.geojson
 
 ##################################
 # Senior nutrition centers layer #
