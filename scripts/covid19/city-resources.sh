@@ -6,9 +6,7 @@ GRAB_AND_GO_URL="https://www.google.com/maps/d/u/0/kml?mid=1_R_MQhVYaKh3A5_8oAtO
 
 RESTROOM_URL="https://services1.arcgis.com/X1hcdGx5Fxqn4d0j/arcgis/rest/services/Portable_Toilet_Public_View/FeatureServer/0/query?where=1%3D1&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&resultType=none&distance=0.0&units=esriSRUnit_Meter&returnGeodetic=false&outFields=*&returnGeometry=true&featureEncoding=esriDefault&multipatchOption=xyFootprint&maxAllowableOffset=&geometryPrecision=&outSR=&datumTransformation=&applyVCSProjection=false&returnIdsOnly=false&returnUniqueIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&returnQueryGeometry=false&returnDistinctValues=false&cacheHint=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&having=&resultOffset=&resultRecordCount=&returnZ=false&returnM=false&returnExceededLimitFeatures=true&quantizationParameters=&sqlFormat=none&f=pgeojson&token="
 
-TIER_1_SHELTERS_URL="https://services1.arcgis.com/X1hcdGx5Fxqn4d0j/ArcGIS/rest/services/COVID_19_Shelters_Tier1/FeatureServer/0/query?where=1%3D1&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&resultType=none&distance=0.0&units=esriSRUnit_Meter&returnGeodetic=false&outFields=*&returnGeometry=true&featureEncoding=esriDefault&multipatchOption=xyFootprint&maxAllowableOffset=&geometryPrecision=&outSR=&datumTransformation=&applyVCSProjection=false&returnIdsOnly=false&returnUniqueIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&returnQueryGeometry=false&returnDistinctValues=false&cacheHint=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&having=&resultOffset=&resultRecordCount=&returnZ=false&returnM=false&returnExceededLimitFeatures=true&quantizationParameters=&sqlFormat=none&f=pgeojson&token="
-
-TIER_2_SHELTERS_URL="https://services1.arcgis.com/X1hcdGx5Fxqn4d0j/ArcGIS/rest/services/COVID_19_Shelters_Tier2/FeatureServer/0/query?where=1%3D1&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&resultType=none&distance=0.0&units=esriSRUnit_Meter&returnGeodetic=false&outFields=*&returnGeometry=true&featureEncoding=esriDefault&multipatchOption=xyFootprint&maxAllowableOffset=&geometryPrecision=&outSR=&datumTransformation=&applyVCSProjection=false&returnIdsOnly=false&returnUniqueIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&returnQueryGeometry=false&returnDistinctValues=false&cacheHint=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&having=&resultOffset=&resultRecordCount=&returnZ=false&returnM=false&returnExceededLimitFeatures=true&quantizationParameters=&sqlFormat=none&f=pgeojson&token="
+EMERGENCY_SHELTERS_URL="https://services5.arcgis.com/7nsPwEMP38bSkCjy/arcgis/rest/services/latest_shelters_v2/FeatureServer/0/query?where=1%3D1&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&resultType=none&distance=0.0&units=esriSRUnit_Meter&returnGeodetic=false&outFields=*&returnGeometry=true&featureEncoding=esriDefault&multipatchOption=xyFootprint&maxAllowableOffset=&geometryPrecision=&outSR=&datumTransformation=&applyVCSProjection=false&returnIdsOnly=false&returnUniqueIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&returnQueryGeometry=false&returnDistinctValues=false&cacheHint=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&having=&resultOffset=&resultRecordCount=&returnZ=false&returnM=false&returnExceededLimitFeatures=true&quantizationParameters=&sqlFormat=none&f=pgeojson&token="
 
 # Use ESRI JSON output format to better get field types. Otherwise some strings
 # are incorrectly interpreted as times.
@@ -22,11 +20,8 @@ curl -s -J -L $GRAB_AND_GO_URL -o grabngo.kmz
 rm -f restroom.geojson
 curl -s -J -L $RESTROOM_URL -o restroom.geojson
 
-rm -f tier1.geojson
-curl -s -J -L $TIER_1_SHELTERS_URL -o tier1.geojson
-
-rm -f tier2.geojson
-curl -s -J -L $TIER_2_SHELTERS_URL -o tier2.geojson
+rm -f shelters.geojson
+curl -s -J -L $EMERGENCY_SHELTERS_URL -o shelters.geojson
 
 rm -f seniors.json
 curl -s -J -L $SENIOR_NUTRITION_URL -o seniors.json
@@ -134,17 +129,6 @@ rm restroom.geojson restroom2.geojson
 
 echo "Writing Emergency Shelter Layer"
 
-# Merge the tier 1 and tier 2 shelters.
-rm -f shelters.geojson
-ogrmerge.py \
-     -f "GeoJSON" \
-    -single \
-    -nln "Emergency Shelters" \
-    -o shelters.geojson \
-    tier1.geojson \
-    tier2.geojson
-rm tier1.geojson tier2.geojson
-
 # Add to our output layer, including styling.
 # We pipe it through two ogr2ogr commands in order to
 # invoke OGR SQL twice. The first adds a new OGR_STYLE
@@ -152,14 +136,14 @@ rm tier1.geojson tier2.geojson
 # The second selects final columns for display.
 ogr2ogr \
     -f "GeoJSON" \
-    -sql "SELECT *, 'Emergency Shelter' as Description, '@icon-1602-A52714' as OGR_STYLE from \"Emergency Shelters\"" \
+    -sql "SELECT *, 'Emergency Shelter' as Description, '@icon-1602-A52714' as OGR_STYLE from shelters" \
     -fieldTypeToString "DateTime" \
     shelters2.geojson \
     shelters.geojson &&
     LIBKML_NAME_FIELD="Location" LIBKML_DESCRIPTION_FIELD="Description" \
     ogr2ogr \
     -f "LIBKML" \
-    -sql "SELECT Location, Description, ParksName AS \"Park Name\",ADARating AS \"ADA Rating\",Address,HeatedShower AS \"Heated Shower?\",ShelterCapacity as Capacity,Tier FROM \"Emergency Shelters\"" \
+    -sql "SELECT Location, Description, ParksName AS \"Park Name\",ADARating AS \"ADA Rating\",Address,HeatedShower AS \"Heated Shower?\",total_capacity as Capacity,Tier FROM shelters" \
     -append \
     -nln "Emergency Shelters" \
     $OUTFILE \
