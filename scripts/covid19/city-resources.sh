@@ -153,7 +153,7 @@ ogr2ogr \
     LIBKML_NAME_FIELD="Name" LIBKML_DESCRIPTION_FIELD="Description" \
     ogr2ogr \
     -f "LIBKML" \
-    -sql "SELECT Name, Description, ParksName AS \"Park Name\",ADARating AS \"ADA Rating\",Address,HeatedShower AS \"Heated Shower?\",total_capacity as Capacity,Tier FROM shelters" \
+    -sql "SELECT Name, Description, ParksName AS \"Park Name\",ADARating AS \"ADA Rating\",Address,HeatedShower AS \"Heated Shower?\" FROM shelters" \
     -append \
     -nln "Emergency Shelters" \
     $OUTFILE \
