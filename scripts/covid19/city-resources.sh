@@ -6,7 +6,7 @@ GRAB_AND_GO_URL="https://www.google.com/maps/d/u/0/kml?mid=1_R_MQhVYaKh3A5_8oAtO
 
 RESTROOM_URL="https://services1.arcgis.com/X1hcdGx5Fxqn4d0j/arcgis/rest/services/Portable_Toilet_Public_View/FeatureServer/0/query?where=1%3D1&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&resultType=none&distance=0.0&units=esriSRUnit_Meter&returnGeodetic=false&outFields=*&returnGeometry=true&featureEncoding=esriDefault&multipatchOption=xyFootprint&maxAllowableOffset=&geometryPrecision=&outSR=&datumTransformation=&applyVCSProjection=false&returnIdsOnly=false&returnUniqueIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&returnQueryGeometry=false&returnDistinctValues=false&cacheHint=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&having=&resultOffset=&resultRecordCount=&returnZ=false&returnM=false&returnExceededLimitFeatures=true&quantizationParameters=&sqlFormat=none&f=pgeojson&token="
 
-EMERGENCY_SHELTERS_URL="https://services5.arcgis.com/7nsPwEMP38bSkCjy/arcgis/rest/services/latest_shelters_v2/FeatureServer/0/query?where=1%3D1&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&resultType=none&distance=0.0&units=esriSRUnit_Meter&returnGeodetic=false&outFields=*&returnGeometry=true&featureEncoding=esriDefault&multipatchOption=xyFootprint&maxAllowableOffset=&geometryPrecision=&outSR=&datumTransformation=&applyVCSProjection=false&returnIdsOnly=false&returnUniqueIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&returnQueryGeometry=false&returnDistinctValues=false&cacheHint=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&having=&resultOffset=&resultRecordCount=&returnZ=false&returnM=false&returnExceededLimitFeatures=true&quantizationParameters=&sqlFormat=none&f=pgeojson&token="
+EMERGENCY_SHELTERS_URL="https://services7.arcgis.com/aFfS9FqkIRSo0Ceu/ArcGIS/rest/services/LARAP%20COVID19%20MPOD%20Public/FeatureServer/0/query?where=1%3D1&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&resultType=none&distance=0.0&units=esriSRUnit_Meter&returnGeodetic=false&outFields=*&returnGeometry=true&featureEncoding=esriDefault&multipatchOption=xyFootprint&maxAllowableOffset=&geometryPrecision=&outSR=&datumTransformation=&applyVCSProjection=false&returnIdsOnly=false&returnUniqueIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&returnQueryGeometry=false&returnDistinctValues=false&cacheHint=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&having=&resultOffset=&resultRecordCount=&returnZ=false&returnM=false&returnExceededLimitFeatures=true&quantizationParameters=&sqlFormat=none&f=pgeojson&token="
 
 # Use ESRI JSON output format to better get field types. Otherwise some strings
 # are incorrectly interpreted as times.
@@ -143,22 +143,15 @@ ogr2ogr \
     -nln "shelters" \
     shelters2.geojson \
     shelters.geojson &&
-ogr2ogr \
-    -f "GeoJSON" \
-    -dialect SQLITE \
-    -sql "SELECT *, COALESCE(Location, ParksName) as Name FROM shelters" \
-    -nln "shelters" \
-    shelters3.geojson \
-    shelters2.geojson &&
-    LIBKML_NAME_FIELD="Name" LIBKML_DESCRIPTION_FIELD="Description" \
+    LIBKML_NAME_FIELD="FacilityName" LIBKML_DESCRIPTION_FIELD="Description" \
     ogr2ogr \
     -f "LIBKML" \
-    -sql "SELECT Name, Description, ParksName AS \"Park Name\",ADARating AS \"ADA Rating\",Address,HeatedShower AS \"Heated Shower?\" FROM shelters" \
+    -sql "SELECT FacilityName, Description, Address, ShelterCapacity AS Capacity FROM shelters" \
     -append \
     -nln "Emergency Shelters" \
     $OUTFILE \
-    shelters3.geojson
-rm shelters.geojson shelters2.geojson shelters3.geojson
+    shelters2.geojson
+rm shelters.geojson shelters2.geojson
 
 ##################################
 # Senior nutrition centers layer #
