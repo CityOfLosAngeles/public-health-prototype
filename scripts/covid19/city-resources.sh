@@ -8,10 +8,6 @@ RESTROOM_URL="https://services1.arcgis.com/X1hcdGx5Fxqn4d0j/arcgis/rest/services
 
 EMERGENCY_SHELTERS_URL="https://services5.arcgis.com/7nsPwEMP38bSkCjy/arcgis/rest/services/latest_shelters_v2/FeatureServer/0/query?where=1%3D1&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&resultType=none&distance=0.0&units=esriSRUnit_Meter&returnGeodetic=false&outFields=*&returnGeometry=true&featureEncoding=esriDefault&multipatchOption=xyFootprint&maxAllowableOffset=&geometryPrecision=&outSR=&datumTransformation=&applyVCSProjection=false&returnIdsOnly=false&returnUniqueIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&returnQueryGeometry=false&returnDistinctValues=false&cacheHint=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&having=&resultOffset=&resultRecordCount=&returnZ=false&returnM=false&returnExceededLimitFeatures=true&quantizationParameters=&sqlFormat=none&f=pgeojson&token="
 
-# Use ESRI JSON output format to better get field types. Otherwise some strings
-# are incorrectly interpreted as times.
-SENIOR_NUTRITION_URL="https://services5.arcgis.com/7nsPwEMP38bSkCjy/arcgis/rest/services/Senior_Nutrition_Dining_Sites_COVID19_20200325/FeatureServer/0/query?where=1%3D1&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&resultType=none&distance=0.0&units=esriSRUnit_Meter&returnGeodetic=false&outFields=*&returnGeometry=true&featureEncoding=esriDefault&multipatchOption=xyFootprint&maxAllowableOffset=&geometryPrecision=&outSR=&datumTransformation=&applyVCSProjection=false&returnIdsOnly=false&returnUniqueIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&returnQueryGeometry=false&returnDistinctValues=false&cacheHint=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&having=&resultOffset=&resultRecordCount=&returnZ=false&returnM=false&returnExceededLimitFeatures=true&quantizationParameters=&sqlFormat=none&f=json&token="
-
 echo "Downloading resources"
 
 rm -f grabngo.kmz
@@ -22,9 +18,6 @@ curl -s -J -L $RESTROOM_URL -o restroom.geojson
 
 rm -f shelters.geojson
 curl -s -J -L $EMERGENCY_SHELTERS_URL -o shelters.geojson
-
-rm -f seniors.json
-curl -s -J -L $SENIOR_NUTRITION_URL -o seniors.json
 
 rm -f $OUTFILE
 
@@ -159,38 +152,6 @@ ogr2ogr \
     $OUTFILE \
     shelters3.geojson
 rm shelters.geojson shelters2.geojson shelters3.geojson
-
-##################################
-# Senior nutrition centers layer #
-##################################
-
-echo "Writing Senior Nutrition Layer"
-
-# Add to out output layer, including styling.
-# We pipe it through two ogr2ogr commands in order to
-# invoke OGR SQL twice. The first adds a new OGR_STYLE
-# column which allows us to target an icon style.
-# The second selects final columns for display.
-# The first conversion uses ESRI JSON to ESRI Shapefile
-# because the GeoJSON driver incorrectly coerces the Hours
-# field to Time, when we want to keep it as a string.
-ogr2ogr \
-     -f "ESRI Shapefile" \
-    -sql "SELECT *, 'Senior Nutrition Dining Site' as Descriptio, '@icon-1578-0F9D58' as OGR_STYLE from seniors" \
-    -s_srs "EPSG:3857" \
-    -t_srs "EPSG:4326" \
-    seniors \
-    seniors.json && \
-    LIBKML_NAME_FIELD="NAME" LIBKML_DESCRIPTION_FIELD="Descriptio" \
-    ogr2ogr \
-     -f "LIBKML" \
-    -append \
-    -sql "SELECT NAME, Descriptio, Address, Hours, Phone FROM seniors" \
-    -nln "Senior Nutrition Dining Sites" \
-    -fieldTypeToString "Time" \
-    $OUTFILE \
-    seniors
-rm -r seniors.json seniors
 
 ##################
 # Postprocessing #
