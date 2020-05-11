@@ -118,7 +118,7 @@ def case_indicators_state(state_name, start_date):
         y=alt.Y('deaths_avg3', title='3-day avg'),
         color = alt.value('#A30F23')
     ).properties(
-        title=f'{state_name} County: Deaths',
+        title=f'{state_name}: Deaths',
     ).configure_title(
         fontSize=14,
         font='Roboto',
