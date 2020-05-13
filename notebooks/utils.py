@@ -17,10 +17,24 @@ LA_CITY_URL = (
     "7175fba373f541a7a19df56b6a0617f4/data"
 )
 
+TESTING_URL = (
+    "http://lahub.maps.arcgis.com/sharing/rest/content/items/"
+    "158dab4a07b04ecb8d47fea1746303ac/data")
+
+HOSPITAL_URL = (
+    "http://lahub.maps.arcgis.com/sharing/rest/content/items/"
+    "3da1eb3e13a14743973c96b945bd1117/data"
+)
+
 CROSSWALK_URL = (
     "https://raw.githubusercontent.com/CityOfLosAngeles/aqueduct/master/dags/"
     "public-health/covid19/msa_county_pop_crosswalk.csv"
 )
+
+# Define colors
+navy = "#0A4C6A"
+maroon = "#A30F23"
+
 
 # County-level case data
 def case_indicators_county(county_name, start_date):
@@ -66,7 +80,7 @@ def case_indicators_county(county_name, start_date):
         .encode(
             x=alt.X("date", timeUnit="monthdate", title="date"),
             y=alt.Y("cases_avg7", title="7-day avg"),
-            color=alt.value("#0A4C6A"),
+            color=navy,
         )
         .properties(title=f"{county_name} County: New Cases",)
         .configure_title(fontSize=14, font="Roboto", anchor="middle", color="Black")
@@ -80,7 +94,7 @@ def case_indicators_county(county_name, start_date):
         .encode(
             x=alt.X("date", timeUnit="monthdate", title="date"),
             y=alt.Y("deaths_avg3", title="3-day avg"),
-            color=alt.value("#A30F23"),
+            color=maroon,
         )
         .properties(title=f"{county_name} County: Deaths",)
         .configure_title(fontSize=14, font="Roboto", anchor="middle", color="Black")
@@ -140,7 +154,7 @@ def case_indicators_state(state_name, start_date):
         .encode(
             x=alt.X("date", timeUnit="monthdate", title="date"),
             y=alt.Y("cases_avg7", title="7-day avg"),
-            color=alt.value("#0A4C6A"),
+            color=navy,
         )
         .properties(title=f"{state_name}: New Cases",)
         .configure_title(fontSize=14, font="Roboto", anchor="middle", color="Black")
@@ -154,7 +168,7 @@ def case_indicators_state(state_name, start_date):
         .encode(
             x=alt.X("date", timeUnit="monthdate", title="date"),
             y=alt.Y("deaths_avg3", title="3-day avg"),
-            color=alt.value("#A30F23"),
+            color=maroon,
         )
         .properties(title=f"{state_name}: Deaths",)
         .configure_title(fontSize=14, font="Roboto", anchor="middle", color="Black")
@@ -195,7 +209,7 @@ def case_indicators_lacity(start_date):
         .encode(
             x=alt.X("date:T", timeUnit="monthdate", title="date"),
             y=alt.Y("cases_avg7", title="7-day avg"),
-            color=alt.value("#0A4C6A"),
+            color=navy,
         )
         .properties(title="City of LA: New Cases",)
         .configure_title(fontSize=14, font="Roboto", anchor="middle", color="Black")
@@ -272,7 +286,7 @@ def case_indicators_msa(msa_name, start_date):
         .encode(
             x=alt.X("date", timeUnit="monthdate", title="date"),
             y=alt.Y("cases_avg7", title="7-day avg"),
-            color=alt.value("#0A4C6A"),
+            color=navy,
         )
         .properties(title=f"{cbsa_name}: New Cases",)
         .configure_title(fontSize=14, font="Roboto", anchor="middle", color="Black")
@@ -286,7 +300,7 @@ def case_indicators_msa(msa_name, start_date):
         .encode(
             x=alt.X("date", timeUnit="monthdate", title="date"),
             y=alt.Y("deaths_avg3", title="3-day avg"),
-            color=alt.value("#A30F23"),
+            color=maroon,
         )
         .properties(title=f"{cbsa_name}: New Deaths",)
         .configure_title(fontSize=14, font="Roboto", anchor="middle", color="Black")
@@ -295,5 +309,44 @@ def case_indicators_msa(msa_name, start_date):
 
     display(cases_chart)
     display(deaths_chart)
+    
+    return df
+
+
+# Make daily testing chart for City of LA
+def daily_test_lacity(start_date):
+    df = pd.read_csv(TESTING_URL)
+    df = df.assign(
+            Date = pd.to_datetime(df.Date).dt.strftime("%-m/%d/%y")
+        )
+    df = df[df.Date >= start_date]
+
+    # Make daily testing bar chart
+    bar = (alt.Chart(df)
+           .mark_bar(color=navy)
+           .encode(
+               x=alt.X("Date", timeUnit="monthdate", title="date", 
+                       axis=alt.Axis(format="%m/%d")
+                      ),
+               y=alt.Y('Performed:Q', title="Daily Tests")
+           )
+    )
+
+    line1 = (alt.Chart(pd.DataFrame({'y':[10_000]}))
+             .mark_rule(color=maroon, strokeDash=[5,2])
+             .encode(y='y')
+    )
+    line2 = (alt.Chart(pd.DataFrame({'y':[16_667]}))
+             .mark_rule(color=maroon, strokeDash=[5,2])
+             .encode(y='y')
+    )
+
+    testing_chart = ((bar + line1 + line2)
+                     .properties(title="City of LA Testing",width=600)
+                     .configure_title(fontSize=14, font="Roboto", anchor="middle", color="Black")
+                     .configure_axis(gridOpacity=0.4,)
+    )
+
+    display(testing_chart)
     
     return df
