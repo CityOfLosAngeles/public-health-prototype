@@ -35,7 +35,7 @@ CROSSWALK_URL = (
 navy = "#0A4C6A"
 maroon = "#A30F23"
 
-
+    
 # County-level case data
 def case_indicators_county(county_name, start_date):
     county_df = pd.read_csv(US_COUNTY_URL, dtype={"fips": "str"})
@@ -64,45 +64,9 @@ def case_indicators_county(county_name, start_date):
         .sort_values(["county", "state", "fips", "date"])
         .reset_index(drop=True)
     )
-
-    # Derive new columns
-    df = df.assign(
-        # 7-day rolling average for new cases
-        cases_avg7=df.new_cases.rolling(window=7).mean(),
-        # 3-day rolling average for new deaths
-        deaths_avg3=df.new_deaths.rolling(window=3).mean(),
-    )
-
-    # Make cases charts
-    cases_chart = (
-        alt.Chart(df)
-        .mark_line()
-        .encode(
-            x=alt.X("date", timeUnit="monthdate", title="date"),
-            y=alt.Y("cases_avg7", title="7-day avg"),
-            color=navy,
-        )
-        .properties(title=f"{county_name} County: New Cases",)
-        .configure_title(fontSize=14, font="Roboto", anchor="middle", color="Black")
-        .configure_axis(gridOpacity=0.4,)
-    )
-
-    # Make deaths chart
-    deaths_chart = (
-        alt.Chart(df)
-        .mark_line()
-        .encode(
-            x=alt.X("date", timeUnit="monthdate", title="date"),
-            y=alt.Y("deaths_avg3", title="3-day avg"),
-            color=maroon,
-        )
-        .properties(title=f"{county_name} County: Deaths",)
-        .configure_title(fontSize=14, font="Roboto", anchor="middle", color="Black")
-        .configure_axis(gridOpacity=0.4,)
-    )
-
-    display(cases_chart)
-    display(deaths_chart)
+    
+    name = df.county.iloc[0]
+    df = make_cases_deaths_chart(df, "county", name)
 
     return df
 
@@ -110,6 +74,7 @@ def case_indicators_county(county_name, start_date):
 # State-level case data
 def case_indicators_state(state_name, start_date):
     county_df = pd.read_csv(US_COUNTY_URL, dtype={"fips": "str"})
+    county_df["date"] = pd.to_datetime(county_df.date)
 
     keep_cols = [
         "state",
@@ -119,8 +84,6 @@ def case_indicators_state(state_name, start_date):
         "new_state_cases",
         "new_state_deaths",
     ]
-
-    county_df["date"] = pd.to_datetime(county_df.date)
 
     df = (
         county_df[(county_df.state == state_name) & (county_df.date >= start_date)][
@@ -138,45 +101,9 @@ def case_indicators_state(state_name, start_date):
         )
         .reset_index(drop=True)
     )
-
-    # Derive new columns
-    df = df.assign(
-        # 7-day rolling average for new cases
-        cases_avg7=df.new_cases.rolling(window=7).mean(),
-        # 3-day rolling average for new deaths
-        deaths_avg3=df.new_deaths.rolling(window=3).mean(),
-    )
-
-    # Make cases charts
-    cases_chart = (
-        alt.Chart(df)
-        .mark_line()
-        .encode(
-            x=alt.X("date", timeUnit="monthdate", title="date"),
-            y=alt.Y("cases_avg7", title="7-day avg"),
-            color=navy,
-        )
-        .properties(title=f"{state_name}: New Cases",)
-        .configure_title(fontSize=14, font="Roboto", anchor="middle", color="Black")
-        .configure_axis(gridOpacity=0.4,)
-    )
-
-    # Make deaths chart
-    deaths_chart = (
-        alt.Chart(df)
-        .mark_line()
-        .encode(
-            x=alt.X("date", timeUnit="monthdate", title="date"),
-            y=alt.Y("deaths_avg3", title="3-day avg"),
-            color=maroon,
-        )
-        .properties(title=f"{state_name}: Deaths",)
-        .configure_title(fontSize=14, font="Roboto", anchor="middle", color="Black")
-        .configure_axis(gridOpacity=0.4,)
-    )
-
-    display(cases_chart)
-    display(deaths_chart)
+    
+    name = df.state.iloc[0]
+    df = make_cases_deaths_chart(df, "state", name)
 
     return df
 
@@ -184,7 +111,6 @@ def case_indicators_state(state_name, start_date):
 # City of LA case data
 def case_indicators_lacity(start_date):
     city_df = pd.read_csv(LA_CITY_URL)
-
     city_df["date"] = pd.to_datetime(city_df.Date)
 
     df = (
@@ -195,28 +121,9 @@ def case_indicators_lacity(start_date):
         .sort_values("date")
         .reset_index(drop=True)
     )
-
-    # Derive new columns
-    df = df.assign(
-        # 7-day rolling average for new cases
-        cases_avg7=df.new_cases.rolling(window=7).mean(),
-    )
-
-    # Make cases charts
-    cases_chart = (
-        alt.Chart(df)
-        .mark_line()
-        .encode(
-            x=alt.X("date:T", timeUnit="monthdate", title="date"),
-            y=alt.Y("cases_avg7", title="7-day avg"),
-            color=navy,
-        )
-        .properties(title="City of LA: New Cases",)
-        .configure_title(fontSize=14, font="Roboto", anchor="middle", color="Black")
-        .configure_axis(gridOpacity=0.4,)
-    )
-
-    display(cases_chart)
+    
+    name = "City of LA"
+    df = make_cases_deaths_chart(df, "lacity", name)
 
     return df
 
@@ -231,15 +138,12 @@ def case_indicators_msa(msa_name, start_date):
     county_df["date"] = pd.to_datetime(county_df.date)
 
     pop = pd.read_csv(CROSSWALK_URL, dtype={"county_fips": "str", "cbsacode": "str"},)
-
     pop = (pop[(pop.cbsatitle==msa_name) | 
                (pop.cbsatitle.str.contains(msa_name)) | 
                (pop.cbsacode==msa_name)]
            [["cbsacode", "cbsatitle", "msa_pop", "county_fips"]]
            .assign(msa = pop.cbsatitle)
           )
-
-    cbsa_name = pop.cbsatitle.iloc[0]
 
     final_df = pd.merge(
         county_df,
@@ -271,14 +175,37 @@ def case_indicators_msa(msa_name, start_date):
             ),
     )
 
-    # Derive new columns
-    df = df.assign(
-        # 7-day rolling average for new cases
-        cases_avg7=df.new_cases.rolling(window=7).mean(),
-        # 3-day rolling average for new deaths
-        deaths_avg3=df.new_deaths.rolling(window=3).mean(),
-    )
+    name = df.msa.iloc[0]
+    df = make_cases_deaths_chart(df, "msa", name)
+    
+    return df
 
+
+def make_cases_deaths_chart(df, geog, name):
+    # Define chart titles
+    if geog == "county":
+        case_title = f"{name} County"
+    if geog=="msa":
+        case_title = f"{name} MSA"    
+    if geog in ["state", "lacity"]:
+        case_title = f"{name}"
+    
+    # Derive new columns
+    if geog != "lacity":
+        df = df.assign(
+            # 7-day rolling average for new cases
+            cases_avg7=df.new_cases.rolling(window=7).mean(),
+            # 3-day rolling average for new deaths
+            deaths_avg3=df.new_deaths.rolling(window=3).mean(),
+        )
+    
+    if geog == "lacity":
+        # Derive new columns
+        df = df.assign(
+            # 7-day rolling average for new cases
+            cases_avg7=df.new_cases.rolling(window=7).mean(),
+        )    
+    
     # Make cases charts
     cases_chart = (
         alt.Chart(df)
@@ -286,33 +213,35 @@ def case_indicators_msa(msa_name, start_date):
         .encode(
             x=alt.X("date", timeUnit="monthdate", title="date"),
             y=alt.Y("cases_avg7", title="7-day avg"),
-            color=navy,
+            color=alt.value(navy),
         )
-        .properties(title=f"{cbsa_name}: New Cases",)
+        .properties(title=f"{case_title}: New Cases",)
         .configure_title(fontSize=14, font="Roboto", anchor="middle", color="Black")
-        .configure_axis(gridOpacity=0.4,)
+        .configure_axis(gridOpacity=0, domainOpacity=0.4)
+        .configure_view(strokeOpacity=0)
     )
+    
+    display(cases_chart)
 
     # Make deaths chart
-    deaths_chart = (
-        alt.Chart(df)
-        .mark_line()
-        .encode(
-            x=alt.X("date", timeUnit="monthdate", title="date"),
-            y=alt.Y("deaths_avg3", title="3-day avg"),
-            color=maroon,
+    if geog != "lacity":
+        deaths_chart = (
+            alt.Chart(df)
+            .mark_line()
+            .encode(
+                x=alt.X("date", timeUnit="monthdate", title="date"),
+                y=alt.Y("deaths_avg3", title="3-day avg"),
+                color=alt.value(maroon),
+            )
+            .properties(title=f"{case_title}: New Deaths",)
+            .configure_title(fontSize=14, font="Roboto", anchor="middle", color="Black")
+            .configure_axis(gridOpacity=0, domainOpacity=0.4)
+            .configure_view(strokeOpacity=0)
         )
-        .properties(title=f"{cbsa_name}: New Deaths",)
-        .configure_title(fontSize=14, font="Roboto", anchor="middle", color="Black")
-        .configure_axis(gridOpacity=0.4,)
-    )
 
-    display(cases_chart)
-    display(deaths_chart)
+        display(deaths_chart)
     
-    return df
-
-
+    
 # Make daily testing chart for City of LA
 def daily_test_lacity(start_date):
     df = pd.read_csv(TESTING_URL)
@@ -326,7 +255,7 @@ def daily_test_lacity(start_date):
            .mark_bar(color=navy)
            .encode(
                x=alt.X("Date", timeUnit="monthdate", title="date", 
-                       axis=alt.Axis(format="%m/%d")
+                       axis=alt.Axis(format="%-m/%d")
                       ),
                y=alt.Y('Performed:Q', title="Daily Tests")
            )
@@ -344,7 +273,8 @@ def daily_test_lacity(start_date):
     testing_chart = ((bar + line1 + line2)
                      .properties(title="City of LA Testing",width=600)
                      .configure_title(fontSize=14, font="Roboto", anchor="middle", color="Black")
-                     .configure_axis(gridOpacity=0.4,)
+                     .configure_axis(gridOpacity=0, domainOpacity=0.4, ticks=False)
+                     .configure_view(strokeOpacity=0)
     )
 
     display(testing_chart)
