@@ -20,7 +20,8 @@ LA_CITY_URL = (
 
 TESTING_URL = (
     "http://lahub.maps.arcgis.com/sharing/rest/content/items/"
-    "158dab4a07b04ecb8d47fea1746303ac/data")
+    "158dab4a07b04ecb8d47fea1746303ac/data"
+)
 
 HOSPITAL_URL = (
     "http://lahub.maps.arcgis.com/sharing/rest/content/items/"
@@ -49,10 +50,11 @@ chart_height = 200
 def prep_us_county_time_series():
     df = pd.read_csv(US_COUNTY_URL, dtype={"fips": "str"})
     df = df.assign(
-        date = pd.to_datetime(df.date),
-        state_abbrev = df.state.map(state_abbrev_dict.us_state_abbrev)
+        date=pd.to_datetime(df.date),
+        state_abbrev=df.state.map(state_abbrev_dict.us_state_abbrev),
     )
     return df
+
 
 # County-level case data
 def case_indicators_county(county_state_name, start_date):
@@ -62,19 +64,18 @@ def case_indicators_county(county_state_name, start_date):
     if "," in county_state_name:
         state_name = county_state_name.split(",")[1].strip()
         county_name = county_state_name.split(",")[0].strip()
-        
+
         if len(state_name) > 2:
             state_name = state_abbrev_dict.us_state_abbrev[state_name]
-        
+
         # County names don't have " County" at the end. There is a TriCounty, UT though.
         if " County" in county_name:
             county_name = county_name.replace(" County", "").strip()
-    
+
     elif any(map(str.isdigit, county_state_name)):
-        state_name = df[df.fips==county_state_name].state_abbrev.iloc[0]
-        county_name = df[df.fips==county_state_name].county.iloc[0]
-        
-    
+        state_name = df[df.fips == county_state_name].state_abbrev.iloc[0]
+        county_name = df[df.fips == county_state_name].county.iloc[0]
+
     keep_cols = [
         "county",
         "state",
@@ -90,16 +91,18 @@ def case_indicators_county(county_state_name, start_date):
     ]
 
     df = (
-        df[(df.county == county_name) & 
-           (df.state_abbrev == state_name) & 
-           (df.date >= start_date)][keep_cols]
+        df[
+            (df.county == county_name)
+            & (df.state_abbrev == state_name)
+            & (df.date >= start_date)
+        ][keep_cols]
         .sort_values(["county", "state", "fips", "date"])
         .reset_index(drop=True)
     )
-    
+
     name = df.county.iloc[0]
     df = make_cases_deaths_chart(df, "county", name)
-    
+
     return df
 
 
@@ -118,8 +121,10 @@ def case_indicators_state(state_name, start_date):
     ]
 
     df = (
-        df[((df.state == state_name) | (df.state_abbrev == state_name)) & 
-           (df.date >= start_date)][keep_cols]
+        df[
+            ((df.state == state_name) | (df.state_abbrev == state_name))
+            & (df.date >= start_date)
+        ][keep_cols]
         .sort_values(["state", "date"])
         .drop_duplicates()
         .rename(
@@ -132,10 +137,10 @@ def case_indicators_state(state_name, start_date):
         )
         .reset_index(drop=True)
     )
-    
+
     name = df.state.iloc[0]
     df = make_cases_deaths_chart(df, "state", name)
-    
+
     return df
 
 
@@ -147,22 +152,15 @@ def case_indicators_msa(msa_name, start_date):
     # Merge county to MSA using crosswalk
     df = prep_us_county_time_series()
 
-    pop = pd.read_csv(CROSSWALK_URL, dtype={"county_fips": "str", 
-                                            "cbsacode": "str"},)
-    pop = (pop[(pop.cbsatitle==msa_name) | 
-               (pop.cbsatitle.str.contains(msa_name)) | 
-               (pop.cbsacode==msa_name)]
-           [["cbsacode", "cbsatitle", "msa_pop", "county_fips"]]
-           .assign(msa = pop.cbsatitle)
-          )
+    pop = pd.read_csv(CROSSWALK_URL, dtype={"county_fips": "str", "cbsacode": "str"},)
+    pop = pop[
+        (pop.cbsatitle == msa_name)
+        | (pop.cbsatitle.str.contains(msa_name))
+        | (pop.cbsacode == msa_name)
+    ][["cbsacode", "cbsatitle", "msa_pop", "county_fips"]].assign(msa=pop.cbsatitle)
 
     final_df = pd.merge(
-        df,
-        pop,
-        left_on="fips",
-        right_on="county_fips",
-        how="inner",
-        validate="m:1",
+        df, pop, left_on="fips", right_on="county_fips", how="inner", validate="m:1",
     )
 
     df = (
@@ -171,24 +169,20 @@ def case_indicators_msa(msa_name, start_date):
         .agg({"cases": "sum", "deaths": "sum"})
         .reset_index()
     )
-    
+
     # Create new cases and new deaths columns
     df = df.assign(
         new_cases=(
-            df.sort_values(group_cols)
-                .groupby(msa_group_cols)["cases"]
-                .diff(periods=1)
-            ),
+            df.sort_values(group_cols).groupby(msa_group_cols)["cases"].diff(periods=1)
+        ),
         new_deaths=(
-            df.sort_values(group_cols)
-                .groupby(msa_group_cols)["deaths"]
-                .diff(periods=1)
-            ),
+            df.sort_values(group_cols).groupby(msa_group_cols)["deaths"].diff(periods=1)
+        ),
     )
 
     name = df.msa.iloc[0]
     df = make_cases_deaths_chart(df, "msa", name)
-    
+
     return df
 
 
@@ -200,8 +194,7 @@ def case_indicators_lacity(start_date):
     df = (
         city_df[city_df.date >= start_date]
         .rename(
-            columns={"City of LA Cases": "cases", 
-                     "City of LA New Cases": "new_cases"}
+            columns={"City of LA Cases": "cases", "City of LA New Cases": "new_cases"}
         )
         .sort_values("date")
         .reset_index(drop=True)
@@ -211,8 +204,8 @@ def case_indicators_lacity(start_date):
     df = df.assign(
         # 7-day rolling average for new cases
         cases_avg7=df.new_cases.rolling(window=7).mean(),
-    ) 
-    
+    )
+
     # Make cases charts
     cases_chart = (
         alt.Chart(df)
@@ -222,15 +215,18 @@ def case_indicators_lacity(start_date):
             y=alt.Y("cases_avg7", title="7-day avg"),
             color=alt.value(navy),
         )
-        .properties(title="City of LA: New Cases", width=chart_width, height=chart_height)
-        .configure_title(fontSize=title_font_size, font=font_name, 
-                            anchor="middle", color="black")
+        .properties(
+            title="City of LA: New Cases", width=chart_width, height=chart_height
+        )
+        .configure_title(
+            fontSize=title_font_size, font=font_name, anchor="middle", color="black"
+        )
         .configure_axis(gridOpacity=grid_opacity, domainOpacity=domain_opacity)
         .configure_view(strokeOpacity=stroke_opacity)
     )
 
     display(cases_chart)
-    
+
     return df
 
 
@@ -242,7 +238,7 @@ def make_cases_deaths_chart(df, geog, name):
     if geog == "state":
         chart_title = f"{name}"
     if geog == "msa":
-        chart_title = f"{name} MSA"    
+        chart_title = f"{name} MSA"
 
     # Derive new columns
     df = df.assign(
@@ -250,7 +246,7 @@ def make_cases_deaths_chart(df, geog, name):
         deaths_avg3=df.new_deaths.rolling(window=3).mean(),
         deaths_avg7=df.new_deaths.rolling(window=7).mean(),
     )
-          
+
     # Make cases charts
     cases_chart = (
         alt.Chart(df)
@@ -260,9 +256,11 @@ def make_cases_deaths_chart(df, geog, name):
             y=alt.Y("cases_avg7", title="7-day avg"),
             color=alt.value(navy),
         )
-        .properties(title=f"{chart_title}: New Cases", width=chart_width, height=chart_height)
+        .properties(
+            title=f"{chart_title}: New Cases", width=chart_width, height=chart_height
+        )
     )
-    
+
     # Make deaths chart
     deaths_chart = (
         alt.Chart(df)
@@ -272,84 +270,96 @@ def make_cases_deaths_chart(df, geog, name):
             y=alt.Y("deaths_avg3", title="3-day avg"),
             color=alt.value(maroon),
         )
-        .properties(title=f"{chart_title}: New Deaths", width=chart_width, height=chart_height)
+        .properties(
+            title=f"{chart_title}: New Deaths", width=chart_width, height=chart_height
+        )
     )
 
     combined_chart = (
         alt.hconcat(cases_chart, deaths_chart)
-            .configure_title(fontSize=title_font_size, font=font_name, anchor="middle", color="black")
-            .configure_axis(gridOpacity=grid_opacity, domainOpacity=domain_opacity)
-            .configure_view(strokeOpacity=stroke_opacity)
+        .configure_title(
+            fontSize=title_font_size, font=font_name, anchor="middle", color="black"
+        )
+        .configure_axis(gridOpacity=grid_opacity, domainOpacity=domain_opacity)
+        .configure_view(strokeOpacity=stroke_opacity)
     )
 
     display(combined_chart)
 
-    return df   
+    return df
 
 
 # Make daily testing chart for City of LA
 def testing_lacity(start_date, daily_or_monthly, lower_bound, upper_bound):
     df = pd.read_csv(TESTING_URL)
     df = df.assign(
-            Date = pd.to_datetime(df.Date).dt.strftime("%-m/%d/%y"),
-            month = pd.to_datetime(df.Date).dt.month,
-        )
-    df = df[df.Date >= start_date]
-    
-    # Aggregate tests by month
-    df = df.assign(
-        Performed_Monthly = df.groupby("month")["Performed"].transform("sum")
+        Date=pd.to_datetime(df.Date).dt.strftime("%-m/%d/%y"),
+        month=pd.to_datetime(df.Date).dt.month,
     )
-    
-    if daily_or_monthly=="monthly":        
+    df = df[df.Date >= start_date]
+
+    # Aggregate tests by month
+    df = df.assign(Performed_Monthly=df.groupby("month")["Performed"].transform("sum"))
+
+    if daily_or_monthly == "monthly":
         format_date = "%b"
         plot_col = "Performed_Monthly:Q"
         chart_title = "Monthly Tests Performed"
         df = df.drop_duplicates(subset=["month", "Performed_Monthly"])
         chart_width = 150
-    
-    if daily_or_monthly=="daily":
+
+    if daily_or_monthly == "daily":
         format_date = "%-m/%d"
         plot_col = "Performed:Q"
         chart_title = "Daily Tests Performed"
         chart_width = 500
-    
-    make_testing_chart(df, plot_col, format_date, 
-                        lower_bound, upper_bound, 
-                        chart_title, chart_width)
-    
+
+    make_testing_chart(
+        df, plot_col, format_date, lower_bound, upper_bound, chart_title, chart_width
+    )
+
     return df
 
 
 # Sub-function to make daily testing bar chart
-def make_testing_chart(df, plot_col, format_date, lower_bound, upper_bound, 
-                        chart_title, chart_width):
-    bar = (alt.Chart(df)
-           .mark_bar(color=navy)
-           .encode(
-               x=alt.X("Date", timeUnit=time_unit, title="date", 
-                       axis=alt.Axis(format=format_date)
-                      ),
-               y=alt.Y(plot_col, title="Tests Performed")
-           )
+def make_testing_chart(
+    df, plot_col, format_date, lower_bound, upper_bound, chart_title, chart_width
+):
+    bar = (
+        alt.Chart(df)
+        .mark_bar(color=navy)
+        .encode(
+            x=alt.X(
+                "Date",
+                timeUnit=time_unit,
+                title="date",
+                axis=alt.Axis(format=format_date),
+            ),
+            y=alt.Y(plot_col, title="Tests Performed"),
+        )
     )
 
-    line1 = (alt.Chart(pd.DataFrame({'y':[lower_bound]}))
-             .mark_rule(color=maroon, strokeDash=[5,2])
-             .encode(y='y')
+    line1 = (
+        alt.Chart(pd.DataFrame({"y": [lower_bound]}))
+        .mark_rule(color=maroon, strokeDash=[5, 2])
+        .encode(y="y")
     )
-    line2 = (alt.Chart(pd.DataFrame({'y':[upper_bound]}))
-             .mark_rule(color=maroon, strokeDash=[5,2])
-             .encode(y='y')
-    )
-
-    testing_chart = ((bar + line1 + line2)
-                     .properties(title=chart_title,width=chart_width)
-                     .configure_title(fontSize=title_font_size, font=font_name, 
-                                    anchor="middle", color="black")
-                     .configure_axis(gridOpacity=grid_opacity, domainOpacity=domain_opacity, 
-                                        ticks=False)
-                     .configure_view(strokeOpacity=stroke_opacity)
+    line2 = (
+        alt.Chart(pd.DataFrame({"y": [upper_bound]}))
+        .mark_rule(color=maroon, strokeDash=[5, 2])
+        .encode(y="y")
     )
 
-    display(testing_chart) 
+    testing_chart = (
+        (bar + line1 + line2)
+        .properties(title=chart_title, width=chart_width)
+        .configure_title(
+            fontSize=title_font_size, font=font_name, anchor="middle", color="black"
+        )
+        .configure_axis(
+            gridOpacity=grid_opacity, domainOpacity=domain_opacity, ticks=False
+        )
+        .configure_view(strokeOpacity=stroke_opacity)
+    )
+
+    display(testing_chart)
