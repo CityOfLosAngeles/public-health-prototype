@@ -4,6 +4,7 @@ Use JHU county data.
 """
 import altair as alt
 import pandas as pd
+import state_abbrev_dict
 
 from IPython.display import display
 
@@ -43,13 +44,41 @@ time_unit = "monthdate"
 chart_width = 250
 chart_height = 200
 
-# County-level case data
-def case_indicators_county(county_name, start_date):
-    county_df = pd.read_csv(US_COUNTY_URL, dtype={"fips": "str"})
 
+# Prep county-level dataset
+def prep_us_county_time_series():
+    df = pd.read_csv(US_COUNTY_URL, dtype={"fips": "str"})
+    df = df.assign(
+        date = pd.to_datetime(df.date),
+        state_abbrev = df.state.map(state_abbrev_dict.us_state_abbrev)
+    )
+    return df
+
+# County-level case data
+def case_indicators_county(county_state_name, start_date):
+    df = prep_us_county_time_series()
+
+    # Parse the county_state_name into county_name and state_name (abbrev)
+    if "," in county_state_name:
+        state_name = county_state_name.split(",")[1].strip()
+        county_name = county_state_name.split(",")[0].strip()
+        
+        if len(state_name) > 2:
+            state_name = state_abbrev_dict.us_state_abbrev[state_name]
+        
+        # County names don't have " County" at the end. There is a TriCounty, UT though.
+        if " County" in county_name:
+            county_name = county_name.replace(" County", "").strip()
+    
+    elif any(map(str.isdigit, county_state_name)):
+        state_name = df[df.fips==county_state_name].state_abbrev.iloc[0]
+        county_name = df[df.fips==county_state_name].county.iloc[0]
+        
+    
     keep_cols = [
         "county",
         "state",
+        "state_abbrev",
         "fips",
         "date",
         "Lat",
@@ -60,14 +89,10 @@ def case_indicators_county(county_name, start_date):
         "new_deaths",
     ]
 
-    county_df["date"] = pd.to_datetime(county_df.date)
-
     df = (
-        county_df[((county_df.county == county_name) | 
-                   (county_df.fips == county_name))
-                  & (county_df.date >= start_date)][
-            keep_cols
-        ]
+        df[(df.county == county_name) & 
+           (df.state_abbrev == state_name) & 
+           (df.date >= start_date)][keep_cols]
         .sort_values(["county", "state", "fips", "date"])
         .reset_index(drop=True)
     )
@@ -80,11 +105,11 @@ def case_indicators_county(county_name, start_date):
 
 # State-level case data
 def case_indicators_state(state_name, start_date):
-    county_df = pd.read_csv(US_COUNTY_URL, dtype={"fips": "str"})
-    county_df["date"] = pd.to_datetime(county_df.date)
+    df = prep_us_county_time_series()
 
     keep_cols = [
         "state",
+        "state_abbrev",
         "date",
         "state_cases",
         "state_deaths",
@@ -93,8 +118,8 @@ def case_indicators_state(state_name, start_date):
     ]
 
     df = (
-        county_df[(county_df.state == state_name) & 
-                    (county_df.date >= start_date)][keep_cols]
+        df[((df.state == state_name) | (df.state_abbrev == state_name)) & 
+           (df.date >= start_date)][keep_cols]
         .sort_values(["state", "date"])
         .drop_duplicates()
         .rename(
@@ -120,8 +145,7 @@ def case_indicators_msa(msa_name, start_date):
     msa_group_cols = ["msa", "msa_pop"]
 
     # Merge county to MSA using crosswalk
-    county_df = pd.read_csv(US_COUNTY_URL, dtype={"fips": "str"})
-    county_df["date"] = pd.to_datetime(county_df.date)
+    df = prep_us_county_time_series()
 
     pop = pd.read_csv(CROSSWALK_URL, dtype={"county_fips": "str", 
                                             "cbsacode": "str"},)
@@ -133,7 +157,7 @@ def case_indicators_msa(msa_name, start_date):
           )
 
     final_df = pd.merge(
-        county_df,
+        df,
         pop,
         left_on="fips",
         right_on="county_fips",
@@ -222,10 +246,9 @@ def make_cases_deaths_chart(df, geog, name):
 
     # Derive new columns
     df = df.assign(
-        # 7-day rolling average for new cases
         cases_avg7=df.new_cases.rolling(window=7).mean(),
-        # 3-day rolling average for new deaths
         deaths_avg3=df.new_deaths.rolling(window=3).mean(),
+        deaths_avg7=df.new_deaths.rolling(window=7).mean(),
     )
           
     # Make cases charts
