@@ -4,25 +4,9 @@ library(sys)
 library(stringr)
 library(tidyverse)
 library(sf)
+library(civis) #imported to use civis api calls
 
-conn_string <- Sys.getenv('POSTGRES_URI')
-
-split <- conn_string %>% str_split(":") 
-
-username <- split[[1]][2] %>% str_remove('//')
-
-second_split <- split[[1]][3] %>% str_split('@') 
-password <- second_split[[1]][1]
-host <- second_split[[1]][2]
-
-db_name <- split[[1]][4] %>% str_remove('5432/')
-
-con <- dbConnect(RPostgres::Postgres(),
-                 dbname = db_name, 
-                 host = host,
-                 port = 5432, 
-                 user = username,
-                 password = password)
+##took out the postgres credentialing
 
 neighborhood_councils <- sf::st_read(
   "../data/neighborhood_council_boundaries.geojson"
@@ -40,31 +24,35 @@ latimes_neighborhoods <- sf::st_read(
   "http://boundaries.latimes.com/1.0/boundary-set/la-county-neighborhoods-current/?format=geojson"
 )
 
-# CORONAVIRUS 
+# CORONAVIRUS
 
 coronavirus_deaths <- read_csv(
-  "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Deaths.csv"
-)
+  "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_US.csv"
+) #old csv path not working
 coronavirus_cases <- read_csv(
-  "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Confirmed.csv"
-)
+  "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_US.csv"
+) #old csv path not working
 
 county_boundary <- sf::st_read('../data/la_county.geojson')
 
 state_boundary <- sf::st_read('../data/state-boundary.geojson')
 
-  
+#specifying table that gets passed into civis api, replaces postgres pull
+my_table <- "public_health.homelessness_cases_311"
 
 load_data <- function() {
-  data <- tbl(con, dbplyr::in_schema('"public-health"','"311-cases-homelessness"')) %>% collect()
-  
-  data$closeddate <- as_date(data$closeddate) 
-  
-  data <- data %>% drop_na('closeddate')
-  
-  #' This script loads the data files and ensures the correct data types are used
-  
-  # column names with proper spacing / underscores 
+
+  data <- read_civis(my_table,
+                     database="City of Los Angeles - Postgres")
+
+  data$closeddate <- as.Date(as.character(strptime(data$closeddate, "%m/%d/%Y")))
+  #rewrote date function since dates imported a little differently than when tbl() was used
+
+  data <- data %>% filter(!is.na(closeddate)) #tweeked code to support presumably different data types
+
+    #' This script loads the data files and ensures the correct data types are used
+
+    # column names with proper spacing / underscores
   col_names_311 <- c(
     "srn_number", "created_date", "updated_date", "action_taken",
     "owner", "request_type", "status", "request_source",
@@ -78,9 +66,8 @@ load_data <- function() {
     "neighborhood_council_code", "neighborhood_council_name",
     "police_precinct"
   )
-  
-  data <- data %>% 
-           select(-c('index')) %>%
+
+  data <- data %>%
            rename(
                   'action_taken' = 'actiontaken',
                   'address_verified' = 'addressverified',
@@ -99,23 +86,24 @@ load_data <- function() {
                   'reason_code' = 'reasoncode',
                   'request_source' = 'requestsource',
                   'request_type' = 'requesttype',
-                  'resolution_code' = 'resolutioncode', 
+                  'resolution_code' = 'resolutioncode',
                   'service_date' = 'servicedate',
                   'service_request_number' = 'srnumber',
                   'street_name' = 'streetname',
                   'updated_date' = 'updateddate'
                    )
-  # data$closed_date <- data$closed_date %>% as_datetime()
-  # data$created_date <- data$created_date %>% as_datetime()
-  
-  # only load 2016 to present.  
+
+  data$created_date <- as.Date(as.character(strptime(data$created_date, "%m/%d/%Y")))
+  #again edit on date function
+
+  # only load 2016 to present.
   data <- data %>% filter(created_date > '2016-01-01')
   return(data)
 }
 
 summarize_cleanstat <- function() {
-  cleanstat <- tbl(con, dbplyr::in_schema('"public-health"','"cleanstat"')) %>%
-    filter(Year ==  "2018") %>%
-    filter(Quarter == "Q3") %>%
-    collect()
+  #pulling from civis instead of postgres
+  cleanstat <- read_civis('public_health.cleanstat','City of Los Angeles - Postgres') %>%
+              filter(Year ==  "2018") %>%
+              filter(Quarter == "Q3")
 }
