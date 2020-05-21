@@ -12,8 +12,9 @@ source("load_data.R")
 source("value_counts.R")
 
 
-# Read data -------------------------------------------------------------------- 
+# Read data --------------------------------------------------------------------
 data <- load_data()
+
 geo_data <- data %>%
   drop_na("longitude", "latitude") %>%
   sf::st_as_sf(coords=c("longitude", "latitude"), crs=4326)
@@ -31,7 +32,7 @@ lapd_division_names <- lapd_divisions$APREC %>% unique()
 
 council_district_names <- council_districts$NAME %>% unique()
 
-# ui --------------------------------------------------------------------------- 
+# ui ---------------------------------------------------------------------------
 header <- dashboardHeader(
   title = tags$span(
     tags$img(
@@ -76,7 +77,7 @@ body <- dashboardBody(
           uiOutput("geog_name"),
           # Input: Selector for Month
           selectInput('month', "Select a Month",
-                      c('January' = 1, 
+                      c('January' = 1,
                         'Febuary' = 2,
                         'March' = 3,
                         'April' = 4,
@@ -88,7 +89,7 @@ body <- dashboardBody(
                         'October' = 10,
                         'November' = 11,
                         'December' = 12
-                      ), 
+                      ),
                       selected = 1
           ),
           selectInput('year', "Select a Year",
@@ -149,18 +150,18 @@ body <- dashboardBody(
         infoBoxOutput("coronavirusDeathsLAC")
       )
     ) # end counts tab.
-  ) # end tabItems 
+  ) # end tabItems
 ) # body
 
 ui <- dashboardPage(header, sidebar, body)
 
-# server ----------------------------------------------------------------------- 
+# server -----------------------------------------------------------------------
 server <- function(input, output) {
-  
+
   #######################################
   ##      SUMMARY STATISTICS           ##
   #######################################
-  
+
   output$code55opened <- renderInfoBox({
     infoBox(
       "CARE+ Cases Opened",
@@ -172,7 +173,7 @@ server <- function(input, output) {
       icon = icon("", class="cola-custom-icon care-plus")
     )
   })
-  
+
   output$code55closed <- renderInfoBox({
     infoBox(
       "CARE+ Cases Closed",
@@ -184,7 +185,7 @@ server <- function(input, output) {
       icon = icon("", class="cola-custom-icon care-plus")
     )
   })
-  
+
   output$code55time <- renderInfoBox({
     infoBox(
       "CARE+ Cases Average Solve Time",
@@ -199,7 +200,7 @@ server <- function(input, output) {
       icon = icon("", class="cola-custom-icon care-plus")
     )
   })
-  
+
   output$code75opened <- renderInfoBox({
     infoBox(
       "CARE Cases Opened",
@@ -211,7 +212,7 @@ server <- function(input, output) {
       icon = icon("", class="cola-custom-icon care")
     )
   })
-  
+
   output$code75closed <- renderInfoBox({
     infoBox(
       "CARE Cases Closed",
@@ -223,7 +224,7 @@ server <- function(input, output) {
       icon = icon("", class="cola-custom-icon care")
     )
   })
-  
+
   output$code75time <- renderInfoBox({
     infoBox(
       "CARE Cases Average Solve Time",
@@ -238,7 +239,7 @@ server <- function(input, output) {
       icon = icon("", class="cola-custom-icon care")
     )
   })
-  
+
   output$rapopened <- renderInfoBox({
     infoBox(
       "Rec and Park Cases Opened",
@@ -246,7 +247,7 @@ server <- function(input, output) {
       icon = icon("", class="cola-custom-icon larap")
     )
   })
-  
+
   output$rapclosed <- renderInfoBox({
     infoBox(
       "Rec and Park Cases Closed",
@@ -254,7 +255,7 @@ server <- function(input, output) {
       icon = icon("", class="cola-custom-icon larap")
     )
   })
-  
+
   output$raptime <- renderInfoBox({
     infoBox(
       "Rec and Park Cases Solve Time",
@@ -262,7 +263,7 @@ server <- function(input, output) {
       icon = icon("", class="cola-custom-icon larap")
     )
   })
-  
+
   output$cleanstatweeds <- renderInfoBox({
     infoBox(
       "CleanStat Streets with Weeds",
@@ -273,7 +274,7 @@ server <- function(input, output) {
       icon = icon("", class="cola-custom-icon lasan")
     )
   })
-  
+
   output$cleanstatbulky <- renderInfoBox({
     infoBox(
       "Cleanstat Streets with Bulky Items",
@@ -284,7 +285,7 @@ server <- function(input, output) {
       icon = icon("", class="cola-custom-icon lasan")
     )
   })
-  
+
   output$cleanstatlitter <- renderInfoBox({
     infoBox(
       "CleanStat Streets with Litter",
@@ -295,7 +296,7 @@ server <- function(input, output) {
       icon = icon("", class="cola-custom-icon lasan")
     )
   })
-  
+
   output$cleanstatillegaldumping <- renderInfoBox({
     infoBox(
       "CleanStat Streets with Illegal Dumping",
@@ -306,42 +307,46 @@ server <- function(input, output) {
       icon = icon("", class="cola-custom-icon lasan")
     )
   })
-  
+
   ## CORONAVIRUS OUTPUT
+
+  ##below changed all `Province/State` to `Province_State`, data must have changed
+  ##below changed all CA to California for same reason as above
+
   output$coronavirusCasesCA <- renderInfoBox({
     infoBox(
       "Coronavirus Cases in CA",
-      # the method below grabs all the columns with either CA or LA county, selects the "date" columns 
+      # the method below grabs all the columns with either CA or LA county, selects the "date" columns
       # then grabs the latest one and sums (or just is for rendering)
-      coronavirus_cases %>% filter(str_detect(`Province/State`, ", CA")) %>% select(ends_with("20")) %>% select(tail(names(.), 1)) %>% sum()
+      coronavirus_cases %>% filter(str_detect(`Province_State`, "California")) %>% select(ends_with("20")) %>% select(tail(names(.), 1)) %>% sum()
     )
   })
-  
+
   output$coronavirusCasesLAC <- renderInfoBox({
     infoBox(
       "Coronavirus Cases in LA County",
-      coronavirus_cases %>% filter(`Province/State` == "Los Angeles, CA") %>% select(ends_with("20")) %>% select(tail(names(.), 1))
+      coronavirus_cases %>% filter(`Admin2` == "Los Angeles") %>% select(ends_with("20")) %>% select(tail(names(.), 1))
     )
   })
-  
+
   output$coronavirusDeathsCA <- renderInfoBox({
     infoBox(
       "Coronavirus Deaths in CA",
-      coronavirus_deaths %>% filter(str_detect(`Province/State`, ", CA")) %>% select(ends_with("20")) %>% select(tail(names(.), 1)) %>% sum()
+      coronavirus_deaths %>% filter(str_detect(`Province_State`, "California")) %>% select(ends_with("20")) %>% select(tail(names(.), 1)) %>% sum()
     )
   })
-  
+
   output$coronavirusDeathsLAC <- renderInfoBox({
     infoBox(
       "Coronavirus Deaths in LA County",
-      coronavirus_deaths %>% filter(`Province/State` == "Los Angeles, CA") %>% select(ends_with("20")) %>% select(tail(names(.), 1))
+      coronavirus_deaths %>% filter(`Admin2` == "Los Angeles") %>% select(ends_with("20")) %>% select(tail(names(.), 1))
     )
   })
   ########################################
   ##       SERVICE REQUESTS MAP         ##
   ########################################
   geogType <- reactive({input$geog_type})
-  
+
   output$geog_name <- renderUI({
     if (geogType() == "cd") {
       return(selectInput("cd_selector", "Council District Member:", council_district_names))
@@ -350,7 +355,7 @@ server <- function(input, output) {
     } else if (geogType() == "lapd") {
       return(selectInput("lapd_selector", "LAPD District:", lapd_division_names))
     }
-  })             
+  })
   geogKey <- reactive({
     if(geogType() == "cd") {
       return("NAME")
@@ -380,10 +385,10 @@ server <- function(input, output) {
     return(NULL)
   })
 
-  # make the data 
+  # make the data
   timeSubset <- reactive({
-    data %>% 
-      filter(closed_date %>% year == input$year) %>% 
+    data %>%
+      filter(closed_date %>% year == input$year) %>%
       filter(closed_date %>% month == input$month)
   })
   geogJoined <- reactive({
@@ -399,7 +404,7 @@ server <- function(input, output) {
   geogTimeSubset <- reactive({
     req(input$year, input$month)
     geogSubset() %>%
-      filter(closed_date %>% year == input$year) %>% 
+      filter(closed_date %>% year == input$year) %>%
       filter(closed_date %>% month == input$month)
   })
 
@@ -414,14 +419,14 @@ server <- function(input, output) {
     req(hack())
 
     subs <- geogJoined() %>%
-      filter(closed_date %>% year == input$year) %>% 
+      filter(closed_date %>% year == input$year) %>%
       filter(closed_date %>% month == input$month)
-    
+
     if (nrow(subs) == 0) {
       leafletProxy("map") %>% clearControls() %>% clearShapes()
       return()
     }
-    
+
     map_data <- prepare_map_data(subs, geogDataset(), geogKey())
     leafletProxy("map", data=map_data) %>%
       draw_map_data(map_data, geogKey())
@@ -435,13 +440,13 @@ server <- function(input, output) {
       group_by(month) %>%
       count() %>%
       ggplot(aes (x = month, y = n )) +
-      geom_line(aes(group=1)) + 
-      ggtitle(sprintf("Service Requests Closed by Month in %s", geogSelection())) + 
-      xlab("Month") + 
+      geom_line(aes(group=1)) +
+      ggtitle(sprintf("Service Requests Closed by Month in %s", geogSelection())) +
+      xlab("Month") +
       ylab("Number of Service Requests Closed") +
       scale_x_date(labels = date_format("%b, %Y"))
   })
-  
+
   output$solveTimeCount <- renderPlot({
     geogSubset() %>%
       drop_na(closed_date, created_date) %>%
@@ -449,10 +454,10 @@ server <- function(input, output) {
       mutate(month = as.Date(cut(closed_date, breaks='month'))) %>%
       group_by(month) %>%
       summarize(average_solve_time = mean(solve_time_days)) %>%
-      ggplot(aes(x = month, y = average_solve_time )) + 
+      ggplot(aes(x = month, y = average_solve_time )) +
       geom_line(aes(group=1)) +
-      ggtitle(sprintf("Average Days Until Service Requests are Closed in %s", geogSelection())) + 
-      xlab("Month") + 
+      ggtitle(sprintf("Average Days Until Service Requests are Closed in %s", geogSelection())) +
+      xlab("Month") +
       ylab("Average Number of Days") +
       scale_x_date(labels = date_format("%b, %Y"))
   })
@@ -462,5 +467,5 @@ server <- function(input, output) {
 } # end server
 
 
-# run app ---------------------------------------------------------------------- 
+# run app ----------------------------------------------------------------------
 shinyApp(ui, server)
