@@ -6,7 +6,7 @@ services:
     image: public_health_prototype
     container_name: public_health_prototype
     volumes:
-     - ./:/home/jovyan
+     - ./:/app
     ports:
       - "8888:8888"
     environment:
@@ -15,4 +15,4 @@ services:
       - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
       - AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION}
       - POSTGRES_URI=${POSTGRES_URI}
-    command: start-notebook.sh --NotebookApp.notebook_dir=/home/jovyan --LabApp.token='' --allow-root
+    command: "jupyter-lab --no-browser --ip=\"*\" --allow-root --port=8888 --NotebookApp.notebook_dir=/app --NotebookApp.terminado_settings='{\"shell_command\": [\"bash\"]}' --LabApp.token=\"\" --LabApp.password=\"\""
